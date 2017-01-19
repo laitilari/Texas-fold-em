@@ -4,7 +4,7 @@
 
 *Pelin kehityksen tarkoituksena on luoda niin hyvä tekoäly, että sitä ei ole ainakaan ihan helppo voittaa. Tavoite on kunnianhimoinen, ja tekoälyn ominaisuuksia tullaan kehittämään ajan puitteissa.*
 
-*Käyttöliittymässä voi olla, että kortit esitetään vain tekstimuodossa, mutta jos aikaa on, voivat ne olla myös kuvina.*
+*Käyttöliittymässä voi olla, että kortit esitetään vain tekstimuodossa, mutta jos aikaa on, voivat ne olla myös kuvina. Muutenkin projektin aikararajan (7 viikkoa) vuoksi projektin lopullisia ominaisuuksia ei voida lyödä lukkoon.*
 
 **Käyttäjä(t):** Pelaaja
 
