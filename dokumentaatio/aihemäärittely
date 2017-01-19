@@ -1,21 +1,6 @@
-Aihe: Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat nimestä huolimatta samat, kuin perinteisen Texas Hold'emin. Texas Fold'emissa pelaaja pelaa vain tekoälyä vastaan.
-
-Käyttäjät: Opiskelija ja Opetushallinto
-
-Kaikkien käyttäjien toiminnot:
-
-järjestelmään kirjautuminen
-onnistuu jos salasana ja käyttäjätunnus oikein
-kaikkien kurssien listaus
-...
-Opiskelijan toiminnot:
-
-ilmoittautuminen
-onnistuu jos kurssi ei ole täynnä ja opiskelija ei ole jo kurssilla
-omien ilmoittautumisten listaus
-...
-Opetushallinnon toiminnot:
-
-uusien kurssien lisäys
-tietyn kurssin ilmoittautujien listaaminen
-...
+**Aihe:** 
+* *Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat nimestä huolimatta samat, kuin perinteisen Texas Hold'emin. Texas Fold'emissa pelaaja pelaa vain tekoälyä vastaan. Pelaajan tehtävänä on voittaa peli. Pelin voittaa, jos tekoälyltä loppuvat pelimerkit. Pelaaja häviää, jos pelaajalta itseltään loppuvat pelimerkit.* *
+**Käyttäjä(t):** Pelaaja
+**Pelaajan toiminnot:** 
+- Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttavat pelimerkkien määrä ja blindien taso sekä nousuväli.
+- Pelaaja
