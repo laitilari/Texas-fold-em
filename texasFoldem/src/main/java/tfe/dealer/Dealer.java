@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dealer;
+package tfe.dealer;
 
 import java.util.List;
 import tfe.core.ai.Ai;
@@ -37,8 +37,9 @@ public class Dealer {
     }
     
     public void dealPocketCards() {
-        List<Card> pocketCards = pack.takeMany(2);
-        player.drawPocketCards(pocketCards);
+        List<Card> pocketCards = pack.takeMany(4);
+        player.drawPocketCards(pocketCards.subList(0, 2));
+        ai.drawPocketCards(pocketCards.subList(2, 4));
     }
     
     public void dealFlop() {

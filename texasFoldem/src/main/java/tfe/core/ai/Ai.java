@@ -19,12 +19,15 @@ public class Ai {
     private List<Card> hand;
 
     public Ai() {
-        this.pocketCards = new ArrayList<>();
         this.hand = new ArrayList<>();
     }
 
-    public void setPocketCards(List<Card> pocketCards) {
+    public void drawPocketCards(List<Card> pocketCards) {
         this.pocketCards = pocketCards;
+    }
+
+    public List<Card> getPocketCards() {
+        return pocketCards;
     }
        
 }

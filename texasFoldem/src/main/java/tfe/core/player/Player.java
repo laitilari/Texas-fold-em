@@ -21,13 +21,13 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.pocketCards = new ArrayList<>();
         this.hand = new ArrayList<>();
     }
 
     public void drawPocketCards(List <Card> pocketCards) {
-        this.pocketCards.addAll(pocketCards);
+        this.pocketCards = pocketCards;
     }
+    
     
     public String getName() {
         return name;

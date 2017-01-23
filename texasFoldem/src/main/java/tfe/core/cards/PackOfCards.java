@@ -20,6 +20,7 @@ public class PackOfCards {
 
     public PackOfCards() {
         this.cards = new ArrayList<>();
+        this.removedCards = new ArrayList<>();
         assemblePack();
     }
 
