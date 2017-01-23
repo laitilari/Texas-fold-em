@@ -1,5 +1,8 @@
 package tfe;
 
+import tfe.core.cards.Card;
+import tfe.core.cards.PackOfCards;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,7 +17,16 @@ public class Main {
     
     public static void main(String[] args) {
         
-        System.out.println("test");
+        PackOfCards pack = new PackOfCards();
+        pack.assemblePack();
+        Card card = pack.takeOne();
+        System.out.println(card);
+        pack.shuffle();
+        Card card2 = pack.takeOne();
+        System.out.println(card2);
+        Card card3 = pack.takeOne();
+        System.out.println(card3);
+        
     }
     
 }

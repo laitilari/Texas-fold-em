@@ -1,3 +1,4 @@
 *.class
 
 texasFoldem/target/
+/texasFoldem/nbproject/
