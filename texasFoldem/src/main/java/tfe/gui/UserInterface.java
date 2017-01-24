@@ -5,19 +5,31 @@
  */
 package tfe.gui;
 
+import java.util.Scanner;
+import tfe.core.ai.Ai;
+import tfe.core.cards.TableCards;
+import tfe.core.player.Player;
+import tfe.core.game.Dealer;
+import tfe.core.game.Game;
+
 /**
  *
  * @author ilarilai
  */
 public class UserInterface {
- 
+
+    
+    private Game game; 
+
+    public UserInterface() {
+        this.game = new Game();
+    }
+
     public void greet() {
         System.out.println("Welcome to Texas Fold'em!");
-        System.out.println("You are going to face the famous 'Deep Glue'"
-                + "computer in this fine battle of minds");
-        System.out.println("Are you ready?");
+        game.startGame();
     }
+
     
-    
-    
+
 }

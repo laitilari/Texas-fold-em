@@ -8,26 +8,28 @@ import java.util.List;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ilarilai
  */
 public class TableCards {
-    
-    private List <Card> cards;
- 
+
+    private List<Card> cards;
+
     public TableCards() {
         this.cards = new ArrayList<>();
     }
-    
+
     public void drawFlop(List<Card> flop) {
-       this.cards.addAll(flop);
+        this.cards.addAll(flop);
     }
-    
+
     public void drawCard(Card card) {
         this.cards.add(card);
     }
 
-    
+    public List<Card> getCards() {
+        return this.cards;
+    }
+
 }

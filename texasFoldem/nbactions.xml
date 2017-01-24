@@ -17,7 +17,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                <exec.args>-classpath %classpath tfe.Main</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>/home/ad/fshome2/u2/i/ilarilai/Linux/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
             </properties>

@@ -21,7 +21,6 @@ public class PackOfCards {
     public PackOfCards() {
         this.cards = new ArrayList<>();
         this.removedCards = new ArrayList<>();
-        assemblePack();
     }
 
     public Card takeOne() {
@@ -39,7 +38,7 @@ public class PackOfCards {
         return manyCards;
     }
     
-    public void reassemblePack() {
+    public void reAssemblePack() {
         cards.addAll(removedCards);
     }
     
