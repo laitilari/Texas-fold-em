@@ -18,8 +18,7 @@ import tfe.core.game.Game;
  */
 public class UserInterface {
 
-    
-    private Game game; 
+    private Game game;
 
     public UserInterface() {
         this.game = new Game();
@@ -29,7 +28,5 @@ public class UserInterface {
         System.out.println("Welcome to Texas Fold'em!");
         game.startGame();
     }
-
-    
 
 }

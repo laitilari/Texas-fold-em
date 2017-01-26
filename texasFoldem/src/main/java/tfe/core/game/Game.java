@@ -136,6 +136,8 @@ public class Game {
             player.betBigBlind(bigBlind);
             setPotSize(bigBlind / 2 + bigBlind);
             ai.action();
+
+            //KESKEN
         }
     }
 
@@ -166,12 +168,16 @@ public class Game {
     public void askGameSpeed() {
         System.out.println("Type 'fast', 'normal' or 'slow' to determine game speed");
         String answer = scanner.nextLine();
+        setGameSpeed(answer);
+    }
+
+    public void setGameSpeed(String answer) {
         if (answer.contains("fast")) {
             setBigBlind(30);
             setStackSize(500);
         } else if (answer.contains("normal")) {
-           setBigBlind(30);
-          setStackSize(1000);
+            setBigBlind(30);
+            setStackSize(1000);
         } else if (answer.contains("slow")) {
             setBigBlind(30);
             setStackSize(2000);

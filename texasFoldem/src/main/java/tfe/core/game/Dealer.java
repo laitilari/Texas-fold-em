@@ -26,7 +26,7 @@ public class Dealer {
         this.dealerName = "James";
         this.pack = new PackOfCards();
     }
-    
+
     public void assemblePack() {
         pack.assemblePack();
     }
@@ -34,7 +34,7 @@ public class Dealer {
     public void shufflePack() {
         pack.shuffle();
     }
-    
+
     public void reAssemblePack() {
         pack.reAssemblePack();
     }

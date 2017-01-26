@@ -32,8 +32,8 @@ public class Ai {
     public List<Card> getPocketCards() {
         return pocketCards;
     }
-    
-     public void betSmallBlind(int smallBlind) {
+
+    public void betSmallBlind(int smallBlind) {
         if (this.chips - smallBlind >= 0) {
             this.chips -= smallBlind;
         } else {
@@ -70,17 +70,17 @@ public class Ai {
     public void winChips(int howMuch) {
         this.chips += howMuch;
     }
-    
+
     public void bet(int bet) {
         if (this.chips - bet >= 0) {
-        this.chips -= bet;
+            this.chips -= bet;
         }
     }
 
     public void action() {
         Card first = pocketCards.get(0);
         Card second = pocketCards.get(1);
-        
+
     }
 
 }

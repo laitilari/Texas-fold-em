@@ -29,7 +29,7 @@ public class PackOfCards {
         remove(card);
         return card;
     }
-    
+
     public List<Card> takeMany(int howMany) {
         List<Card> manyCards = new ArrayList<>();
         for (int i = 0; i < howMany; i++) {
@@ -37,17 +37,18 @@ public class PackOfCards {
         }
         return manyCards;
     }
-    
+
     public void reAssemblePack() {
         cards.addAll(removedCards);
+        removedCards.clear();
     }
-    
+
     public void remove(Card card) {
         removedCards.add(card);
     }
 
     public void assemblePack() {
-        ArrayList <String> suits = new ArrayList<>();
+        ArrayList<String> suits = new ArrayList<>();
         suits.add("spades");
         suits.add("clubs");
         suits.add("hearts");
@@ -55,15 +56,23 @@ public class PackOfCards {
         int suitNumber = 0;
         for (int i = 0; i < 4; i++) {
             String suit = suits.get(suitNumber);
-            for (int j = 2; j < 15; j++) {               
+            for (int j = 2; j < 15; j++) {
                 Card card = new Card(suit, j);
                 cards.add(card);
             }
             suitNumber++;
         }
     }
-    
+
     public void shuffle() {
         Collections.shuffle(cards);
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public List<Card> getRemovedCards() {
+        return removedCards;
     }
 }

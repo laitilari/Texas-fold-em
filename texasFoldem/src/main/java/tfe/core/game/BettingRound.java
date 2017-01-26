@@ -10,13 +10,13 @@ package tfe.core.game;
  * @author ilarilai
  */
 public class BettingRound {
-    
+
     private int bettingRoundCount;
 
     public BettingRound() {
         this.bettingRoundCount = 0;
     }
-    
+
     public void increaseBettingRound() {
         this.bettingRoundCount++;
     }
@@ -24,5 +24,5 @@ public class BettingRound {
     public int getBettingRoundCounr() {
         return bettingRoundCount;
     }
-    
+
 }
