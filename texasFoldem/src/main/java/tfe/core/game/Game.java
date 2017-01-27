@@ -17,7 +17,6 @@ import tfe.core.player.Player;
 public class Game {
 
     private Scanner scanner;
-    private TableCards table;
     private Player player;
     private Ai ai;
     private Dealer dealer;
@@ -28,7 +27,6 @@ public class Game {
     public Game() {
         this.player = new Player();
         this.scanner = new Scanner(System.in);
-        this.table = new TableCards();
         this.ai = new Ai();
         this.dealer = new Dealer();
         this.bigBlind = 0;
@@ -56,9 +54,9 @@ public class Game {
     }
 
     public void clearCards() {
-        table.getCards().clear();
         player.getPocketCards().clear();
         ai.getPocketCards().clear();
+        dealer.clearTable();
         dealer.reAssemblePack();
     }
 
@@ -88,24 +86,24 @@ public class Game {
 
     public void flop() {
         System.out.println("Flop is:");
-        dealer.dealFlop(table);
+        dealer.dealFlop();
         showTableCards();
     }
 
     public void turn() {
         System.out.println("Turn:");
-        dealer.dealTurn(table);
+        dealer.dealTurn();
         showTableCards();
     }
 
     public void river() {
         System.out.println("River:");
-        dealer.dealRiver(table);
+        dealer.dealRiver();
         showTableCards();
     }
 
     public void showTableCards() {
-        System.out.println(table.getCards().toString());
+        dealer.tellTableCards();
     }
 
     public void bettingRound() {

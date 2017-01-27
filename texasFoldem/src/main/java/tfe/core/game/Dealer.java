@@ -21,10 +21,12 @@ public class Dealer {
 
     private PackOfCards pack;
     private String dealerName;
+    private TableCards table;
 
     public Dealer() {
         this.dealerName = "James";
         this.pack = new PackOfCards();
+        this.table = new TableCards();
     }
 
     public void assemblePack() {
@@ -39,6 +41,10 @@ public class Dealer {
         pack.reAssemblePack();
     }
 
+    public void clearTable() {
+        table.getCards().clear();
+    }
+
     public void dealPocketCards(Player player, Ai ai) {
         List<Card> playerCards = pack.takeMany(2);
         List<Card> aiCards = pack.takeMany(2);
@@ -46,22 +52,26 @@ public class Dealer {
         ai.drawPocketCards(aiCards);
     }
 
-    public void dealFlop(TableCards table) {
+    public void dealFlop() {
         List<Card> flop = pack.takeMany(3);
         table.drawFlop(flop);
     }
 
-    public void dealTurn(TableCards table) {
+    public void dealTurn() {
         table.drawCard(dealCard());
     }
 
-    public void dealRiver(TableCards table) {
+    public void dealRiver() {
         table.drawCard(dealCard());
     }
 
     public Card dealCard() {
         Card card = pack.takeOne();
         return card;
+    }
+
+    public void tellTableCards() {
+        table.getCards().toString();
     }
 
     public String getDealerName() {

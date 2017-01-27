@@ -1,3 +1,5 @@
+[![TexasFoldemClassDiagram.png](https://s30.postimg.org/ky1zat39t/Texas_Foldem_Class_Diagram.png)](https://postimg.org/image/lnkrn63t9/)
+
 **Aihe:** 
 
 *Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat samat, kuin perinteisen Texas Hold'emin säännöt. Texas Fold'emissa pelaaja pelaa tekoälyä vastaan. Pelaajan tehtävänä on voittaa peli. Pelin voittaa, jos tekoälyltä loppuvat pelimerkit. Pelaaja häviää, jos pelaajalta itseltään loppuvat pelimerkit.*
@@ -14,4 +16,4 @@
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
 - **TO BE CONTINUED**
 
-http://yuml.me/diagram/scruffy/class/
+
