@@ -21,7 +21,6 @@ public class Game {
     private Player player;
     private Ai ai;
     private Dealer dealer;
-    private BettingRound bettingRound;
     private int bigBlind;
     private int stackSize;
     private int potSize;
@@ -31,7 +30,6 @@ public class Game {
         this.scanner = new Scanner(System.in);
         this.table = new TableCards();
         this.ai = new Ai();
-        this.bettingRound = new BettingRound();
         this.dealer = new Dealer();
         this.bigBlind = 0;
         this.stackSize = 0;

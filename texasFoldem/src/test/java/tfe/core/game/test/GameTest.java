@@ -16,7 +16,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import tfe.core.ai.Ai;
 import tfe.core.cards.TableCards;
-import tfe.core.game.BettingRound;
 import tfe.core.game.Dealer;
 import tfe.core.game.Game;
 import tfe.core.player.Player;
