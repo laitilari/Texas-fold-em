@@ -14,4 +14,4 @@
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
 - **TO BE CONTINUED**
 
-[TexasFoldemClassDiagram.png](https://postimg.org/image/lnkrn63t9/)
+[![TexasFoldemClassDiagram.png](https://s30.postimg.org/ky1zat39t/Texas_Foldem_Class_Diagram.png)](https://postimg.org/image/lnkrn63t9/)
