@@ -14,4 +14,4 @@
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
 - **TO BE CONTINUED**
 
-http://yuml.me/diagram/scruffy/class/
+![TexasFoldemClassDiagram.png](https://postimg.org/image/lnkrn63t9/)
