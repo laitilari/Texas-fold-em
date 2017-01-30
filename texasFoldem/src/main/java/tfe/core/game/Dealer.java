@@ -28,6 +28,10 @@ public class Dealer {
         this.pack = new PackOfCards();
         this.table = new TableCards();
     }
+    
+    public List<Card> getTableCards() {
+        return table.getCards();
+    }
 
     public void assemblePack() {
         pack.assemblePack();

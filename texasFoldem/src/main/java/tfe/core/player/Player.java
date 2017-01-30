@@ -17,15 +17,16 @@ public class Player {
 
     private List<Card> pocketCards;
     private List<Card> hand;
-    private int chips;
+    private double chips;
     private boolean button;
 
     public Player() {
         this.hand = new ArrayList<>();
+        this.pocketCards = new ArrayList<>();
         this.button = false;
     }
 
-    public void bet(int bet) {
+    public void bet(double bet) {
         if (this.chips - bet >= 0) {
             this.chips -= bet;
         } else {
@@ -45,30 +46,30 @@ public class Player {
         if (this.chips - bigBlind >= 0) {
             this.chips -= bigBlind;
         } else {
-            int allInWith = this.chips;
+            double allInWith = this.chips;
             System.out.println("You are all-in with " + allInWith + " chips");
             this.chips = 0;
         }
     }
 
-    public void winChips(int howMuch) {
+    public void winChips(double howMuch) {
         this.chips += howMuch;
 
     }
 
     public void drawPocketCards(List<Card> pocketCards) {
-        this.pocketCards = pocketCards;
+        this.pocketCards.addAll(pocketCards);
     }
 
     public List<Card> getPocketCards() {
         return this.pocketCards;
     }
 
-    public int getChips() {
+    public double getChips() {
         return chips;
     }
 
-    public void setChips(int chips) {
+    public void setChips(double chips) {
         this.chips = chips;
     }
 

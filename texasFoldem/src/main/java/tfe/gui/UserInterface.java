@@ -19,14 +19,26 @@ import tfe.core.game.Game;
 public class UserInterface {
 
     private Game game;
+    private Player player;
+    private Ai ai;
 
     public UserInterface() {
         this.game = new Game();
+        this.player = new Player();
+        this.ai = new Ai();
     }
 
     public void greet() {
         System.out.println("Welcome to Texas Fold'em!");
         game.startGame();
     }
+    
+//    public void startGame() {
+//        game.askGameSpeed();
+//        game.preparePack();
+//        player.setChips(game.getStackSize());
+//        ai.setChips(game.getStackSize());
+//        game.newRound();
+//    }
 
 }
