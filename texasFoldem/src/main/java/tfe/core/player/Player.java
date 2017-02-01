@@ -34,7 +34,7 @@ public class Player {
         }
     }
 
-    public void betSmallBlind(int smallBlind) {
+    public void betSmallBlind(double smallBlind) {
         if (this.chips - smallBlind >= 0) {
             this.chips -= smallBlind;
         } else {
@@ -42,7 +42,7 @@ public class Player {
         }
     }
 
-    public void betBigBlind(int bigBlind) {
+    public void betBigBlind(double bigBlind) {
         if (this.chips - bigBlind >= 0) {
             this.chips -= bigBlind;
         } else {

@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tfe.core.ai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import tfe.core.cards.Card;
-import tfe.core.game.Game;
 
 /**
  *
@@ -20,11 +15,17 @@ public class Ai {
     private List<Card> hand;
     private double chips;
     private boolean button;
+    private Random random;
 
     public Ai() {
         this.hand = new ArrayList<>();
         this.pocketCards = new ArrayList<>();
         this.button = true;
+        this.random = new Random();
+    }
+
+    public double betRandomized() {
+        return random.nextDouble();
     }
 
     public List<Card> getHand(List<Card> tableCards) {
@@ -44,44 +45,129 @@ public class Ai {
         }
         return false;
     }
-    
-    public boolean medium() {
-        
+
+    public boolean good() {
+        Card first = pocketCards.get(0);
+        Card second = pocketCards.get(1);
+        if (first.getValue() >= 9 && first.getValue() <= 10
+                && first.getValue() == second.getValue()) {
+            return true;
+        }
+        if (first.getValue() + second.getValue() >= 22
+                && first.getValue() + second.getValue() <= 25) {
+            return true;
+        }
         return false;
     }
 
-    public void action(List<Card> tableCards, List<Integer> bettingHistory,
-            double pot, int bb) {
+    public boolean medium() {
         Card first = pocketCards.get(0);
         Card second = pocketCards.get(1);
-        int cardValue = first.getValue() + second.getValue();
-        if (tableCards.isEmpty()) {
-            if (getChips() >= 8 * bb) {
-                if (bettingHistory.size() < 3) {
-                    if (cardValue >= 16) {
-                        bet(bb * 2.5);
-                        System.out.println("AI bets " + bb * 2.5);
-                    }
-                } else if (bettingHistory.size() > 2) {
-                    if (bettingHistory.get(bettingHistory.size()) < 3 * bb) {
-                        if (cardValue >= 16) {
-                            bet(bettingHistory.get(bettingHistory.size()
-                                    - bettingHistory.get(bettingHistory.size()
-                                            - 1)));
-                        } else if (cardValue) {
-                            
-                        }
-                    }
-                }
-            } else {
-                allIn();
-            }
+        if (first.getValue() >= 7 && first.getValue() <= 8
+                && first.getValue() == second.getValue()) {
+            return true;
         }
+        if (first.getValue() >= 13 || second.getValue() >= 13) {
+            return true;
+        }
+        if (first.getValue() >= 12 && second.getValue() >= 7 || second.getValue() >= 12
+                && first.getValue() >= 7) {
+            return true;
+        }
+        if (first.getValue() + second.getValue() >= 15) {
+            return true;
+        }
+        return false;
     }
 
-    public void allIn() {
+    public String action(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bb, double playerChips) {
+        Card first = pocketCards.get(0);
+        Card second = pocketCards.get(1);
+        double lastBet = 0.0;
+        if (!bettingHistory.isEmpty()) {
+            lastBet = bettingHistory.get(bettingHistory.size() - 1);
+        }
+        //Preflop
+        if (tableCards.isEmpty()) {                                             //Preflop action
+            if (getChips() >= 12 * bb) {
+                //If out of position
+                if (bettingHistory.size() < 3) {
+                    if (premium() || good() || medium()) {
+                        bet(bb * 2.5);
+                        return "AI bets " + bb * 2.5 * betRandomized();
+                    }
+                    return "AI folds";
+                } else if (bettingHistory.size() > 2) {
+                    if (playerChips == lastBet && lastBet > getChips() / 2) {   //If player is all in with large stack
+                        if (premium() || good()) {
+                            bet(playerChips);
+                            return "AI bets " + playerChips;
+                        } else if (getChips() > 10 * bb) {
+                            return "AI folds";
+                        } else {
+                            return allIn();
+                        }
+                    } else if (playerChips == lastBet && lastBet < getChips() / 2) { //Jos pelaaja all in with small stack
+                        if (premium() || good() || medium()) {
+                            bet(playerChips);
+                            System.out.println("AI bets " + playerChips);
+                        } else {
+                            return "AI folds";
+                        }
+                    }
+                    if (lastBet <= 3 * bb) {
+                        if (premium() || good()) {
+                            bet(lastBet * 3 * betRandomized());
+                            return "AI bets " + bb * 3 * betRandomized();
+                        } else if (medium()) {
+                            bet(bettingHistory.get(bettingHistory.size() - 1)
+                                    - bettingHistory.get(bettingHistory.size() - 2));
+                            System.out.println("AI calls");
+                        } else {
+                            return "AI folds";
+                        }
+                    } else if (lastBet > 3 * bb && lastBet < 6 * bb) {
+                        if (premium()) {
+                            if (getChips() < 12 * bb) {
+                                return allIn();
+                            } else {
+                                bet(lastBet * 3 * betRandomized());
+                                return "AI bets " + bb * 3 * betRandomized();
+                            }
+                        } else if (good()) {
+                            if (getChips() < 10 * bb) {
+                                return allIn();
+                            } else {
+                                bet(lastBet * 3 * betRandomized());
+                                return "AI bets " + bb * 3 * betRandomized();
+                            }
+                        } else if (medium()) {
+                            bet(bettingHistory.get(bettingHistory.size() - 1)
+                                    - bettingHistory.get(bettingHistory.size() - 2));
+                            return "AI calls";
+                        }
+                    } else {
+                        if (premium() || good()) {
+                            return allIn();
+                        }
+                        return "AI folds";
+                    }
+                }
+            } else if (getChips() <= 11 * bb) {
+                if (medium() || good() || premium()) {
+                    return allIn();
+                } else {
+                    return "AI folds";
+                }
+            }
+        }
+        return "";
+    }
+
+    public String allIn() {
         bet(getChips());
-        System.out.println("AI is goes all-in with " + getChips() + " chips!!!");
+        return "AI is goes all-in with " + getChips() + " chips!!!";
     }
 
     public void drawPocketCards(List<Card> pocketCards) {
@@ -92,7 +178,7 @@ public class Ai {
         return pocketCards;
     }
 
-    public void betSmallBlind(int smallBlind) {
+    public void betSmallBlind(double smallBlind) {
         if (this.chips - smallBlind >= 0) {
             this.chips -= smallBlind;
         } else {
@@ -100,7 +186,7 @@ public class Ai {
         }
     }
 
-    public void betBigBlind(int bigBlind) {
+    public void betBigBlind(double bigBlind) {
         if (this.chips - bigBlind >= 0) {
             this.chips -= bigBlind;
         } else {

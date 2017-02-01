@@ -5,7 +5,6 @@
  */
 package tfe.core.game;
 
-import java.util.ArrayList;
 import java.util.List;
 import tfe.core.ai.Ai;
 import tfe.core.cards.Card;
@@ -74,8 +73,8 @@ public class Dealer {
         return card;
     }
 
-    public void tellTableCards() {
-        table.getCards().toString();
+    public String tellTableCards() {
+        return table.getCards().toString();
     }
 
     public String getDealerName() {

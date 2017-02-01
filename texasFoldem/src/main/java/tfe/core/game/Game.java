@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tfe.core.game;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import tfe.core.ai.Ai;
-import tfe.core.cards.TableCards;
 import tfe.core.player.Player;
 
 /**
@@ -19,18 +11,16 @@ import tfe.core.player.Player;
  */
 public class Game {
 
-    private Scanner scanner;
     private Player player;
     private Ai ai;
     private Dealer dealer;
-    private int bigBlind;
+    private double bigBlind;
     private double stackSize;
     private double potSize;
-    private List<Integer> bettingHistory;
+    private List<Double> bettingHistory;
 
     public Game() {
         this.player = new Player();
-        this.scanner = new Scanner(System.in);
         this.ai = new Ai();
         this.dealer = new Dealer();
         this.bigBlind = 0;
@@ -39,55 +29,23 @@ public class Game {
         this.bettingHistory = new ArrayList<>();
     }
 
-    public void startGame() {
-        setGameSpeed(askGameSpeed());
-        preparePack();
-        player.setChips(stackSize);
-        ai.setChips(stackSize);
-        newRound();
+    public void setPlayerChips() {
+        player.setChips(getStackSize());
     }
 
-    public String askGameSpeed() {
-        System.out.println("Type 'fast', 'normal' or 'slow' to determine game speed");
-        String answer = scanner.nextLine();
-        return answer;
-    }
-
-    public void setGameSpeed(String answer) {
-        if (answer.contains("fast")) {
-            setBigBlind(30);
-            setStackSize(500);
-        } else if (answer.contains("normal")) {
-            setBigBlind(30);
-            setStackSize(1000);
-        } else if (answer.contains("slow")) {
-            setBigBlind(30);
-            setStackSize(2000);
-        } else {
-            System.out.println("I didn't understand. Let's try again.");
-            startGame();
-        }
+    public void setAiChips() {
+        ai.setChips(getStackSize());
     }
 
     public void preparePack() {
         dealer.assemblePack();
     }
 
-    public void newRound() {
+    public void prepareForNewRound() {
         buttonChange();
         clearPot();
         clearCards();
         clearBettingHistory();
-        shuffle();
-        blinds();
-        pocketCards();
-        bettingRound();
-        flop();
-        bettingRound();
-        turn();
-        bettingRound();
-        river();
-        bettingRound();
     }
 
     public void clearBettingHistory() {
@@ -110,97 +68,116 @@ public class Game {
         dealer.reAssemblePack();
     }
 
-    public void shuffle() {
-        System.out.println("*Shuffling*");
+    public String shuffle() {
         dealer.shufflePack();
+        return "Shuffling...";
     }
 
-    public void blinds() {
+    public void addBlindsToBettingHistory() {
+        bettingHistory.add(bigBlind / 2);
+        bettingHistory.add(bigBlind);
+    }
+
+    public void addBlindsToPot() {
+        addToPot(bigBlind / 2 + bigBlind);
+        addBlindsToBettingHistory();
+    }
+
+    public String blinds() {
         if (!player.isButton()) {
             player.betSmallBlind(bigBlind / 2);
             ai.betBigBlind(bigBlind);
+            addBlindsToPot();
+            addBlindsToBettingHistory();
+            return "AI bets big blind (" + bigBlind + ")"
+                    + ", you bet small blind (" + bigBlind / 2 + ")";
 
         }
         if (player.isButton()) {
             ai.betSmallBlind(bigBlind / 2);
             player.betBigBlind(bigBlind);
-
+            addBlindsToPot();
+            addBlindsToBettingHistory();
+            return "You bet big blind (" + bigBlind + ")"
+                    + ", AI bets small blind (" + bigBlind / 2 + ")";
         }
-        addToPot(bigBlind / 2 + bigBlind);
-        bettingHistory.add(bigBlind / 2);
-        bettingHistory.add(bigBlind);
+        return "Something went wrong";
     }
 
-    public void pocketCards() {
-        System.out.println("*Dealing pocket cards*");
+    public String pocketCards() {
         dealer.dealPocketCards(this.player, this.ai);
-        System.out.println("Your pocket cards:");
-        System.out.println(player.getPocketCards().toString());
-        System.out.println("Ai:");
-        System.out.println(ai.getPocketCards().toString());
-    }
-
-    public void bettingInstructions() {
-        System.out.println("type 'c' for call/check, 'r' for raise 'f' for fold");
+        return "Your pocket cards: " + player.getPocketCards().toString()
+                + "(DEVELOPMENT AI pocket cards: " + ai.getPocketCards().toString();
     }
 
     public void addToPot(double amount) {
         this.potSize += amount;
     }
 
-    public void playerAction(String action) {
-        if (action.equals("c")) {
-            if (bettingHistory.isEmpty()) {
-                System.out.println("Player checked");
+    public double playerChipsLeft() {
+        return player.getChips();
+    }
 
-            } else if (bettingHistory.size() == 1) {
-                player.bet(bettingHistory.get(0));
-                addToPot(bettingHistory.get(0));
+    public double aiChipsLeft() {
+        return ai.getChips();
+    }
 
-            } else {    
-                player.bet(subtractLastTwoBets());
-                addToPot(subtractLastTwoBets());
-            }
+    public String checkOrCall() {
+        if (bettingHistory.isEmpty()) {
+            return "Player checked";
 
-        } else if (action.equals("r")) {
-            System.out.println("How much?");
-            int howMuch = Integer.parseInt(scanner.nextLine());
-            player.bet(howMuch);
-            bettingHistory.add(howMuch);
-            addToPot(howMuch);
-
-        } else if (action.equals("f")) {
-            ai.winChips(potSize);
-            newRound();
+        } else if (bettingHistory.size() == 1) {
+            player.bet(bettingHistory.get(0));
+            addToPot(bettingHistory.get(0));
+            return "Player called";
 
         } else {
-            bettingInstructions();
-            playerAction(action);
-
+            player.bet(subtractLastTwoBets());
+            addToPot(subtractLastTwoBets());
+            return "Player called";
         }
     }
     
-    public double subtractLastTwoBets() {
-        return bettingHistory.get(bettingHistory.size()) 
-                - bettingHistory.get(bettingHistory.size() - 1);
+    public void aiCalls() {
+        addToPot(subtractLastTwoBets());
+        bettingHistory.add(subtractLastTwoBets());
+    }
+    
+    public void aiBets(String action) {
+        addToPot(subtractLastTwoBets());
     }
 
-    public void bettingRound() {
-        bettingInstructions();
+    public String raise(double amount) {
+        player.bet(amount);
+        bettingHistory.add(amount);
+        addToPot(amount);
+        return "Player raised " + amount;
+    }
+
+    public String aiWinsRound() {
+        ai.winChips(potSize);
+        return "AI wins the pot";
+    }
+    
+    public String playerWinsRound() {
+        player.winChips(potSize);
+        return "Player wins the pot";
+    }
+
+    public double subtractLastTwoBets() {
+        return bettingHistory.get(bettingHistory.size() - 1)
+                - bettingHistory.get(bettingHistory.size() - 2);
+    }
+
+    public boolean bettingOrder() {
         if (!player.isButton()) {
-            String action = scanner.nextLine();
-            playerAction(action);
-            ai.action(dealer.getTableCards(), getBettingHistory(), potSize, bigBlind);
+            return false;
         }
-        if (player.isButton()) {
-            ai.action(dealer.getTableCards(), getBettingHistory(), potSize, bigBlind);
-            String action = scanner.nextLine();
-            playerAction(action);
-        }
-        // potSize += ai action
-        // Jos AI reissaa, add bettinghistory ja playerAction()
-        // Jos foldaa, pelaaja voittaa, uusi rundi
-        // Jos checkaa, jatkuu  
+        return true;
+    }
+
+    public String aiAction() {
+        return ai.action(dealer.getTableCards(), getBettingHistory(), potSize, bigBlind, player.getChips());
     }
 
     public boolean end() {
@@ -208,37 +185,34 @@ public class Game {
         return true;
     }
 
-    public List<Integer> getBettingHistory() {
+    public List<Double> getBettingHistory() {
         return bettingHistory;
     }
 
-    public void flop() {
-        System.out.println("Flop is:");
+    public String flop() {
         dealer.dealFlop();
-        showTableCards();
+        return showTableCards();
     }
 
-    public void turn() {
-        System.out.println("Turn:");
+    public String turn() {
         dealer.dealTurn();
-        showTableCards();
+        return showTableCards();
     }
 
-    public void river() {
-        System.out.println("River:");
+    public String river() {
         dealer.dealRiver();
-        showTableCards();
+        return showTableCards();
     }
 
-    public void showTableCards() {
-        dealer.tellTableCards();
+    public String showTableCards() {
+        return dealer.tellTableCards();
     }
 
     public double getPotSize() {
         return potSize;
     }
 
-    public int getBigBlind() {
+    public double getBigBlind() {
         return bigBlind;
     }
 

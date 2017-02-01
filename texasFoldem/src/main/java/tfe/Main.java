@@ -15,11 +15,9 @@ import tfe.gui.UserInterface;
 public class Main {
 
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
         UserInterface ui = new UserInterface();
         ui.greet();
-
+        ui.go();
     }
 
 }
