@@ -40,7 +40,7 @@ public class UserInterface {
         setGameSpeed(askGameSpeed());
         game.preparePack();
         game.setPlayerChips();
-        game.setAiChips();    
+        game.setAiChips();
         newRound();
     }
 
@@ -49,12 +49,17 @@ public class UserInterface {
     }
 
     public void chipSituation() {
+        System.out.println("There is " + game.getPotSize() + " chips in the pot");
         System.out.println("AI has " + game.aiChipsLeft() + "chips left");
         System.out.println("You have " + game.playerChipsLeft() + "chips left");
     }
-    
+
     public void prepareForNewRound() {
         game.prepareForNewRound();
+    }
+
+    public void buttonChange() {
+        game.buttonChange();
     }
 
     public void newRound() {
@@ -114,17 +119,30 @@ public class UserInterface {
         System.out.println(game.playerWinsRound());
     }
 
+    public void aiCalls() {
+        System.out.println(game.aiCalls());
+    }
+
+    public void aiBets(String action) {
+        System.out.println(game.aiBets(action));
+    }
+
+    public void aiAllIn(String action) {
+        System.out.println(game.aiAllIn(action));
+    }
+
     public void aiAction() {
         String action = game.aiAction();
-        System.out.println(action);
         if (action.equals("AI folds")) {
             playerWinsRound();
+            System.out.println(action);
             newRound();
         } else if (action.equals("AI calls")) {
-            game.aiCalls(); 
+            aiCalls();
         } else if (action.contains("bet")) {
-            game.aiBets(action);
-            // JATKA TÄSTÄ. MITEN AI:n BET AMOUNT NUMEROINA GAME LUOKALLE?
+            aiBets(action);
+        } else if (action.contains("all-in")) {
+            aiAllIn(action);
         }
     }
 

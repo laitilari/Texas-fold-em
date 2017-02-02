@@ -5,20 +5,11 @@
  */
 package tfe.core.game.test;
 
-import java.io.ByteArrayInputStream;
-import static java.lang.System.in;
-import java.util.Scanner;
-import org.junit.After;
-import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import tfe.core.ai.Ai;
-import tfe.core.cards.TableCards;
-import tfe.core.game.Dealer;
 import tfe.core.game.Game;
-import tfe.core.player.Player;
+
 
 /**
  *
@@ -36,25 +27,11 @@ public class GameTest {
         game = new Game();
     }
 
-//    @Test
-//    public void testGameSpeedFast() {
-//        Scanner keyboard = new Scanner(in);
-//        System.out.println("Type 'fast', 'normal' or 'slow' to determine game speed");
-//        String input = keyboard.nextLine();
-//        game.setGameSpeed(input);
-//        assertEquals(game.getBigBlind(), 30);
-//        assertEquals(game.getStackSize(), 500);
-//    }
-//    @Test
-//    public void testGameSpeedNormal() {
-//        game.askGameSpeed();
-//        assertEquals(game.getBigBlind(), 30);
-//        assertEquals(game.getStackSize(), 1000);
-//    }
-//    @Test
-//    public void testGameSpeedSlow() {
-//        game.askGameSpeed();
-//        assertEquals(game.getBigBlind(), 30);
-//        assertEquals(game.getStackSize(), 2000);
-//    }
+    @Test
+    public void testAiBets() {
+        String given = "Ai bets:42.0";
+        game.aiBets(given);
+        assertEquals(game.getPotSize(), 42.0, 0);
+    }
+    
 }

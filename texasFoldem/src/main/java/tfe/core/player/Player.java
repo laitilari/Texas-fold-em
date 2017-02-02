@@ -54,7 +54,6 @@ public class Player {
 
     public void winChips(double howMuch) {
         this.chips += howMuch;
-
     }
 
     public void drawPocketCards(List<Card> pocketCards) {
@@ -78,7 +77,7 @@ public class Player {
     }
 
     public void buttonChange() {
-        if (this.button = false) {
+        if (this.button == false) {
             this.button = true;
         } else {
             this.button = false;

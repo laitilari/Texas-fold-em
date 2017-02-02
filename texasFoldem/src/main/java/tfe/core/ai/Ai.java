@@ -25,7 +25,7 @@ public class Ai {
     }
 
     public double betRandomized() {
-        return random.nextDouble();
+        return random.nextDouble() + 1;
     }
 
     public List<Card> getHand(List<Card> tableCards) {
@@ -94,63 +94,58 @@ public class Ai {
                 //If out of position
                 if (bettingHistory.size() < 3) {
                     if (premium() || good() || medium()) {
-                        bet(bb * 2.5);
-                        return "AI bets " + bb * 2.5 * betRandomized();
+                        bet(bb * 2.5 * betRandomized());
+                        return "AI bets:" + bb * 2.5 * betRandomized();
+                    } else {
+                        return "AI folds";
                     }
-                    return "AI folds";
                 } else if (bettingHistory.size() > 2) {
                     if (playerChips == lastBet && lastBet > getChips() / 2) {   //If player is all in with large stack
                         if (premium() || good()) {
                             bet(playerChips);
-                            return "AI bets " + playerChips;
+                            return "AI bets:" + playerChips;
                         } else if (getChips() > 10 * bb) {
                             return "AI folds";
                         } else {
                             return allIn();
                         }
-                    } else if (playerChips == lastBet && lastBet < getChips() / 2) { //Jos pelaaja all in with small stack
+                    } else if (playerChips == lastBet && lastBet < getChips() / 2) { //If player all in with small stack
                         if (premium() || good() || medium()) {
                             bet(playerChips);
-                            System.out.println("AI bets " + playerChips);
+                            return "AI bets:" + playerChips;
                         } else {
                             return "AI folds";
                         }
                     }
-                    if (lastBet <= 3 * bb) {
+                    if (lastBet <= 3 * bb && lastBet > 0) {
                         if (premium() || good()) {
                             bet(lastBet * 3 * betRandomized());
-                            return "AI bets " + bb * 3 * betRandomized();
+                            return "AI bets:" + bb * 3 * betRandomized();
                         } else if (medium()) {
                             bet(bettingHistory.get(bettingHistory.size() - 1)
                                     - bettingHistory.get(bettingHistory.size() - 2));
-                            System.out.println("AI calls");
+                            return "AI calls";
                         } else {
                             return "AI folds";
                         }
                     } else if (lastBet > 3 * bb && lastBet < 6 * bb) {
-                        if (premium()) {
+                        if (premium() || good()) {
                             if (getChips() < 12 * bb) {
                                 return allIn();
                             } else {
                                 bet(lastBet * 3 * betRandomized());
-                                return "AI bets " + bb * 3 * betRandomized();
-                            }
-                        } else if (good()) {
-                            if (getChips() < 10 * bb) {
-                                return allIn();
-                            } else {
-                                bet(lastBet * 3 * betRandomized());
-                                return "AI bets " + bb * 3 * betRandomized();
+                                return "AI bets:" + bb * 3 * betRandomized();
                             }
                         } else if (medium()) {
                             bet(bettingHistory.get(bettingHistory.size() - 1)
                                     - bettingHistory.get(bettingHistory.size() - 2));
                             return "AI calls";
+                        } else {
+                            return "AI folds";
                         }
+                    } else if (premium() || good()) {
+                        return allIn();
                     } else {
-                        if (premium() || good()) {
-                            return allIn();
-                        }
                         return "AI folds";
                     }
                 }
@@ -161,13 +156,21 @@ public class Ai {
                     return "AI folds";
                 }
             }
+        } else if (lastBet == 0) {
+            if (premium() || good()) {
+                return "AI bets:" + 0.5 * pot * betRandomized();
+            }
+        } else {
+            bet(bettingHistory.get(bettingHistory.size() - 1)
+                    - bettingHistory.get(bettingHistory.size() - 2));
+            return "AI calls";
         }
-        return "";
+        return "Something went wrong";
     }
 
     public String allIn() {
         bet(getChips());
-        return "AI is goes all-in with " + getChips() + " chips!!!";
+        return "AI is all-in with " + getChips() + " chips!!!";
     }
 
     public void drawPocketCards(List<Card> pocketCards) {
@@ -190,8 +193,6 @@ public class Ai {
         if (this.chips - bigBlind >= 0) {
             this.chips -= bigBlind;
         } else {
-            double allInWith = this.chips;
-            System.out.println("You are all-in with " + allInWith + " chips");
             this.chips = 0;
         }
     }
@@ -205,11 +206,15 @@ public class Ai {
     }
 
     public void buttonChange() {
-        if (this.button = false) {
+        if (this.button == false) {
             this.button = true;
         } else {
             this.button = false;
         }
+    }
+
+    public boolean getButton() {
+        return this.button;
     }
 
     public void winChips(double howMuch) {
@@ -219,11 +224,8 @@ public class Ai {
     public void bet(double bet) {
         if (this.chips - bet >= 0) {
             this.chips -= bet;
-            if (this.chips > 0) {
-                System.out.println("AI bets " + bet);
-            } else {
-                allIn();
-            }
+        } else {
+            this.chips = 0;
         }
     }
 

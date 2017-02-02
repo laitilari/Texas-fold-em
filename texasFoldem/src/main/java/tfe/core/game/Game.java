@@ -123,14 +123,8 @@ public class Game {
     }
 
     public String checkOrCall() {
-        if (bettingHistory.isEmpty()) {
+        if (bettingHistory.get(bettingHistory.size() - 1) == 0) {
             return "Player checked";
-
-        } else if (bettingHistory.size() == 1) {
-            player.bet(bettingHistory.get(0));
-            addToPot(bettingHistory.get(0));
-            return "Player called";
-
         } else {
             player.bet(subtractLastTwoBets());
             addToPot(subtractLastTwoBets());
@@ -138,13 +132,27 @@ public class Game {
         }
     }
     
-    public void aiCalls() {
+    public String aiCalls() {
         addToPot(subtractLastTwoBets());
         bettingHistory.add(subtractLastTwoBets());
+        if (subtractLastTwoBets() == 0) {
+            return "AI checks";
+        }
+        return "AI calls " + subtractLastTwoBets() * -1;  
     }
     
-    public void aiBets(String action) {
-        addToPot(subtractLastTwoBets());
+    public String aiBets(String action) {
+        String[] parts = action.split(":");
+        double amount = Double.parseDouble(parts[1]);
+        bettingHistory.add(amount);
+        addToPot(amount);
+        return action;
+    }
+    
+    public String aiAllIn(String action) {
+        addToPot(ai.getChips());
+        bettingHistory.add(ai.getChips());
+        return action;
     }
 
     public String raise(double amount) {
