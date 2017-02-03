@@ -1,4 +1,4 @@
-[![TexasFoldemClassDiagram.png](https://s30.postimg.org/ky1zat39t/Texas_Foldem_Class_Diagram.png)](https://postimg.org/image/lnkrn63t9/)
+[![TexasFoldemClassDiagram.png](http://i64.tinypic.com/2qiwmwx.png)
 
 **Aihe:** 
 
