@@ -95,19 +95,33 @@ public class UserInterface {
         System.out.println(game.river());
     }
 
+    public void playerRaise() {
+        System.out.println("How much?");
+        while (true) {
+            double amount = Integer.parseInt(scanner.use());
+            if (amount >= 2
+                    * game.getBettingHistory().get(game.getBettingHistory().size()
+                            - 1) && amount >= game.getBigBlind()) {
+                System.out.println(game.raise(amount));
+                break;
+            } else {
+                System.out.println("You must raise atleast twice "
+                        + "the amount of last bet");
+            }
+        }
+    }
+
     public void playerAction() {
         String action = scanner.use();
         if (action.equals("c")) {
             System.out.println(game.checkOrCall());
         } else if (action.equals("r")) {
-            System.out.println("How much?");
-            double amount = Integer.parseInt(scanner.use());
-            System.out.println(game.raise(amount));
+            playerRaise();
         } else if (action.equals("f")) {
             aiWinsRound();
             newRound();
         } else {
-            bettingRound();
+            playerAction();
         }
     }
 
@@ -141,6 +155,7 @@ public class UserInterface {
             aiCalls();
         } else if (action.contains("bet")) {
             aiBets(action);
+            playerAction();
         } else if (action.contains("all-in")) {
             aiAllIn(action);
         }

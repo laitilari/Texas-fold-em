@@ -131,16 +131,16 @@ public class Game {
             return "Player called";
         }
     }
-    
+
     public String aiCalls() {
-        addToPot(subtractLastTwoBets());
-        bettingHistory.add(subtractLastTwoBets());
-        if (subtractLastTwoBets() == 0) {
+        if (bettingHistory.get(bettingHistory.size() - 1) == 0.0) {
             return "AI checks";
         }
-        return "AI calls " + subtractLastTwoBets() * -1;  
+        addToPot(subtractLastTwoBets());
+        bettingHistory.add(subtractLastTwoBets());
+        return "AI calls " + subtractLastTwoBets() * -1;
     }
-    
+
     public String aiBets(String action) {
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
@@ -148,7 +148,7 @@ public class Game {
         addToPot(amount);
         return action;
     }
-    
+
     public String aiAllIn(String action) {
         addToPot(ai.getChips());
         bettingHistory.add(ai.getChips());
@@ -166,15 +166,18 @@ public class Game {
         ai.winChips(potSize);
         return "AI wins the pot";
     }
-    
+
     public String playerWinsRound() {
         player.winChips(potSize);
         return "Player wins the pot";
     }
 
     public double subtractLastTwoBets() {
-        return bettingHistory.get(bettingHistory.size() - 1)
-                - bettingHistory.get(bettingHistory.size() - 2);
+        if (!bettingHistory.isEmpty()) {
+            return bettingHistory.get(bettingHistory.size() - 1)
+                    - bettingHistory.get(bettingHistory.size() - 2);
+        }
+        return 0.0;
     }
 
     public boolean bettingOrder() {
@@ -234,5 +237,17 @@ public class Game {
 
     public void setStackSize(int stackSize) {
         this.stackSize = stackSize;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Ai getAi() {
+        return ai;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
     }
 }

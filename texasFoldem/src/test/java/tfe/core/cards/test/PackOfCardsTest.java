@@ -75,10 +75,22 @@ public class PackOfCardsTest {
 
     @Test
     public void testShuffle() {
+        ArrayList<Card> first = new ArrayList<>();
+        ArrayList<Card> second = new ArrayList<>();
         Card card = pack.getCards().get(0);
+        Card card2 = pack.getCards().get(1);
+        Card card3 = pack.getCards().get(2);
+        first.add(card);
+        first.add(card2);
+        first.add(card3);
         pack.shuffle();
-        Card card2 = pack.getCards().get(0);
-        assertNotEquals(card, card2);
+        card = pack.getCards().get(0);
+        card2 = pack.getCards().get(1);
+        card3 = pack.getCards().get(2);
+        second.add(card);
+        second.add(card2);
+        second.add(card3);
+        assertNotEquals(first, second);
     }
 
 }

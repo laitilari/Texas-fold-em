@@ -19,17 +19,11 @@ import tfe.core.player.Player;
 public class Dealer {
 
     private PackOfCards pack;
-    private String dealerName;
     private TableCards table;
 
     public Dealer() {
-        this.dealerName = "James";
         this.pack = new PackOfCards();
         this.table = new TableCards();
-    }
-    
-    public List<Card> getTableCards() {
-        return table.getCards();
     }
 
     public void assemblePack() {
@@ -77,7 +71,7 @@ public class Dealer {
         return table.getCards().toString();
     }
 
-    public String getDealerName() {
-        return this.dealerName;
+    public List<Card> getTableCards() {
+        return table.getCards();
     }
 }

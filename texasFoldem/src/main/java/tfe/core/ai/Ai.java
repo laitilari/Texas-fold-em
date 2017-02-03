@@ -120,12 +120,21 @@ public class Ai {
                     if (lastBet <= 3 * bb && lastBet > 0) {
                         if (premium() || good()) {
                             bet(lastBet * 3 * betRandomized());
-                            return "AI bets:" + bb * 3 * betRandomized();
+                            return "AI bets:" + lastBet * 3 * betRandomized();
                         } else if (medium()) {
-                            bet(bettingHistory.get(bettingHistory.size() - 1)
-                                    - bettingHistory.get(bettingHistory.size() - 2));
-                            return "AI calls";
+                            if (lastBet == bb / 2) {
+                                bet(0.0);
+                                return "AI calls";
+                            } else {
+                                bet(bettingHistory.get(bettingHistory.size() - 1)
+                                        - bettingHistory.get(bettingHistory.size() - 2));
+                                return "AI calls";
+                            }
                         } else {
+                            if (lastBet == bb / 2) {
+                                bet(0.0);
+                                return "AI calls";
+                            }
                             return "AI folds";
                         }
                     } else if (lastBet > 3 * bb && lastBet < 6 * bb) {
@@ -134,7 +143,7 @@ public class Ai {
                                 return allIn();
                             } else {
                                 bet(lastBet * 3 * betRandomized());
-                                return "AI bets:" + bb * 3 * betRandomized();
+                                return "AI bets:" + lastBet * 3 * betRandomized();
                             }
                         } else if (medium()) {
                             bet(bettingHistory.get(bettingHistory.size() - 1)
