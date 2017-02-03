@@ -4,3 +4,6 @@
 [aiheen kuvaus](dokumentaatio/aiheenKuvausJaMaarittely.md)
 
 [tuntikirjanpito](dokumentaatio/tuntikirjanpito.md)
+
+[pit-raportti](https://htmlpreview.github.io/?https://github.com/laitilari/Texas-fold-em/tree/master/dokumentaatio/pit/201702032348)
+
