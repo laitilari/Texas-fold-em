@@ -25,7 +25,7 @@ public class Ai {
     }
 
     public double betRandomized() {
-        return random.nextDouble() + 1;
+        return random.nextDouble() + 0.5;
     }
 
     public List<Card> getHand(List<Card> tableCards) {
@@ -165,14 +165,25 @@ public class Ai {
                     return "AI folds";
                 }
             }
-        } else if (lastBet == 0) {
+        } else if (lastBet == 0 || bettingHistory.isEmpty()) {
             if (premium() || good()) {
                 return "AI bets:" + 0.5 * pot * betRandomized();
+            } else {
+                bet(0.0);
+                return "AI calls";
             }
-        } else {
-            bet(bettingHistory.get(bettingHistory.size() - 1)
-                    - bettingHistory.get(bettingHistory.size() - 2));
-            return "AI calls";
+        } else if (bettingHistory.size() >= 2) {
+            if (premium() || good()) {
+                return allIn();
+            }
+        } else if (bettingHistory.size() > 0 && bettingHistory.size() < 2
+                || lastBet < 0.75 * pot) {
+            if (premium() || good()) {
+                return allIn();
+            } else {
+                bet(lastBet);
+                return "AI calls";
+            }
         }
         return "Something went wrong";
     }

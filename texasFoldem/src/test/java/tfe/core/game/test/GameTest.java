@@ -9,7 +9,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import tfe.core.ai.Ai;
 import tfe.core.game.Game;
+import tfe.core.player.Player;
 
 /**
  *
@@ -84,7 +86,7 @@ public class GameTest {
         game.getBettingHistory().add(0.0);
         game.getBettingHistory().add(25.0);
         x = game.checkOrCall();
-        assertEquals(x, "Player called");
+        assertEquals(x, "Player called " + game.subtractLastTwoBets());
     }
 
     @Test

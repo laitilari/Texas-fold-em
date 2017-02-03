@@ -40,5 +40,4 @@ public class DealerTest {
         player.drawPocketCards(playerCards);
         assertEquals(playerCards, player.getPocketCards());
     }
-
 }

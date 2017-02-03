@@ -70,12 +70,15 @@ public class UserInterface {
         chipSituation();
         bettingRound();
         flop();
+        game.clearBettingHistory();
         chipSituation();
         bettingRound();
         turn();
+        game.clearBettingHistory();
         chipSituation();
         bettingRound();
         river();
+        game.clearBettingHistory();
         chipSituation();
         bettingRound();
     }
@@ -99,24 +102,26 @@ public class UserInterface {
         System.out.println("How much?");
         while (true) {
             double amount = Integer.parseInt(scanner.use());
-            if (amount >= 2
-                    * game.getBettingHistory().get(game.getBettingHistory().size()
-                            - 1) && amount >= game.getBigBlind()) {
+            if (amount >= game.getBigBlind()) {
                 System.out.println(game.raise(amount));
                 break;
+            } else if (amount >= game.playerChipsLeft()) {
+                System.out.println(game.playerAllIn());
+                break;
             } else {
-                System.out.println("You must raise atleast twice "
-                        + "the amount of last bet");
+                System.out.println("You must raise atleast big blind");
             }
         }
     }
 
     public void playerAction() {
+        bettingInstructions();
         String action = scanner.use();
         if (action.equals("c")) {
             System.out.println(game.checkOrCall());
         } else if (action.equals("r")) {
             playerRaise();
+            //uusi aiaction, jos tämä on rundin päättävä action
         } else if (action.equals("f")) {
             aiWinsRound();
             newRound();
@@ -148,14 +153,13 @@ public class UserInterface {
     public void aiAction() {
         String action = game.aiAction();
         if (action.equals("AI folds")) {
-            playerWinsRound();
             System.out.println(action);
+            playerWinsRound();
             newRound();
         } else if (action.equals("AI calls")) {
             aiCalls();
         } else if (action.contains("bet")) {
             aiBets(action);
-            playerAction();
         } else if (action.contains("all-in")) {
             aiAllIn(action);
         }
@@ -163,12 +167,10 @@ public class UserInterface {
 
     public void bettingRound() {
         if (!game.bettingOrder()) {
-            bettingInstructions();
             playerAction();
             aiAction();
         } else {
             aiAction();
-            bettingInstructions();
             playerAction();
         }
     }

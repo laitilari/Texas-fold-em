@@ -18,7 +18,7 @@ public class ScannerClass {
     public ScannerClass() {
         scanner = new Scanner(System.in);
     }
-    
+
     public String use() {
         String returned = scanner.nextLine();
         return returned;

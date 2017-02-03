@@ -24,13 +24,14 @@ public class Player {
         this.hand = new ArrayList<>();
         this.pocketCards = new ArrayList<>();
         this.button = false;
+        this.chips = 0.0;
     }
 
     public void bet(double bet) {
         if (this.chips - bet >= 0) {
             this.chips -= bet;
         } else {
-            System.out.println("Dealer: you don't have that many chips!");
+            this.chips = 0;
         }
     }
 
