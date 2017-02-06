@@ -365,6 +365,26 @@ public class AiTest {
         assertTrue(!ai.normalEnemyBet(bettingHistory, bet, bigBlind));
     }
     
+    @Test
+    public void testGoodOrPremium() {
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 14);
+        Card card2 = new Card("Heart", 14);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.goodOrPremium());    
+    }
     
+    @Test
+    public void testNotGoodOrPremium() {
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 3);
+        Card card2 = new Card("Heart", 2);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(!ai.goodOrPremium());
+    }
     
 }

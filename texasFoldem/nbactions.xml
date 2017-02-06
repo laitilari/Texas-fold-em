@@ -19,7 +19,7 @@
         <properties>
             <exec.args>-classpath %classpath tfe.Main</exec.args>
             <exec.executable>java</exec.executable>
-            <exec.workingdir>/home/ad/fshome2/u2/i/ilarilai/Linux/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
+            <exec.workingdir>/home/ilarilai/cs/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
         </properties>
     </action>
     <action>
@@ -35,7 +35,7 @@
             <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
             <exec.executable>java</exec.executable>
             <jpda.listen>true</jpda.listen>
-            <exec.workingdir>/home/ad/fshome2/u2/i/ilarilai/Linux/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
+            <exec.workingdir>/home/ilarilai/cs/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
         </properties>
     </action>
     <action>
@@ -50,7 +50,7 @@
         <properties>
             <exec.args>-classpath %classpath ${packageClassName}</exec.args>
             <exec.executable>java</exec.executable>
-            <exec.workingdir>/home/ad/fshome2/u2/i/ilarilai/Linux/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
+            <exec.workingdir>/home/ilarilai/cs/NetBeansProjects/Texas-fold-em/texasFoldem</exec.workingdir>
         </properties>
     </action>
     <action>
