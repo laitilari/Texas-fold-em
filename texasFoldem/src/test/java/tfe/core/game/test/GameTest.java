@@ -102,7 +102,7 @@ public class GameTest {
     @Test
     public void testAiBets() {
         String given = "Ai bets:42.0";
-        game.aiBets(given);
+        game.aiBetsOrRaises(given);
         assertEquals(game.getPotSize(), 42.0, 0.1);
     }
 

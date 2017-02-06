@@ -20,14 +20,10 @@ import tfe.core.support.ScannerClass;
 public class UserInterface {
 
     private Game game;
-    private Player player;
-    private Ai ai;
     private ScannerClass scanner;
 
     public UserInterface() {
         this.game = new Game();
-        this.player = new Player();
-        this.ai = new Ai();
         scanner = new ScannerClass();
     }
 
@@ -143,7 +139,7 @@ public class UserInterface {
     }
 
     public void aiBets(String action) {
-        System.out.println(game.aiBets(action));
+        System.out.println(game.aiBetsOrRaises(action));
     }
 
     public void aiAllIn(String action) {

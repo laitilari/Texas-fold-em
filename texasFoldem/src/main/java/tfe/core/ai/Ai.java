@@ -80,91 +80,180 @@ public class Ai {
         return false;
     }
 
-    public String action(List<Card> tableCards, List<Double> bettingHistory,
-            double pot, double bb, double playerChips) {
-        Card first = pocketCards.get(0);
-        Card second = pocketCards.get(1);
+    public Double lastBet(List<Double> bettingHistory) {
         double lastBet = 0.0;
         if (!bettingHistory.isEmpty()) {
             lastBet = bettingHistory.get(bettingHistory.size() - 1);
+            return lastBet;
         }
+        return null;
+    }
+
+    public Double secondLastBet(List<Double> bettingHistory) {
+        double secondLastBet = 0.0;
+        if (!bettingHistory.isEmpty() || bettingHistory.size() >= 2) {
+            secondLastBet = bettingHistory.get(bettingHistory.size() - 2);
+            return secondLastBet;
+        }
+        return null;
+    }
+
+    public boolean preFlop(List<Card> tableCards) {
+        if (tableCards.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean healthyStack(double bigBlind) {
+        if (getChips() >= 20 * bigBlind) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean dangeredStack(double bigBlind) {
+        if (getChips() >= 10 * bigBlind && healthyStack(bigBlind) == false) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean veryLowStack(double bigBlind) {
+        if (getChips() < 10 * bigBlind) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean playablePocketCards() {
+        if (premium() || good() || medium()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean goodOrPremium() {
+        if (premium() || good()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean normalEnemyBet(List<Double> bettingHistory, double lastBet,
+            double bigBlind) {
+        if (lastBet <= 3 * bigBlind) {
+            return true;
+        }
+        return false;
+    }
+
+    public String betNormalBet(double bigBlind) {
+        bet(bigBlind * 2.5 * betRandomized());
+        return "AI bets:" + bigBlind * 2.5 * betRandomized();
+    }
+
+    public String aiFolds() {
+        return "AI folds";
+    }
+
+    public String aiRaises(double lastBet) {
+        return "AI bets:" + lastBet * 3 * betRandomized();
+    }
+
+    public boolean hasEnoughChips(double bet) {
+        if (getChips() - bet >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public String aiCalls(List<Double> bettingHistory) {
+        double amount = secondLastBet(bettingHistory);
+        if (hasEnoughChips(amount)) {
+            bet(amount);
+            return "AI calls";
+        }
+        return allIn();
+    }
+
+    public boolean noRaises(List<Double> bettingHistory) {
+        if (bettingHistory.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    public String actionToNormalEnemyBetPreFlop(double lastBet, List<Double> bettingHistory) {
+        if (goodOrPremium()) {
+            return aiRaises(lastBet);
+        } else if (medium()) {
+            return aiCalls(bettingHistory);
+        }
+        return aiFolds();
+    }
+
+    public String actionToNotNormalEnemyBetPreFlop(double lastBet, List<Double> bettingHistory) {
+        if (goodOrPremium()) {
+            return aiCalls(bettingHistory);
+        }
+        return aiFolds();
+    }
+
+    public String actionToEmptyBettingHistoryPreFlop(double bigBlind) {
+        if (playablePocketCards()) {
+            return betNormalBet(bigBlind);
+        }
+        return aiFolds();
+    }
+
+    public String outOfPositionPreFlopAction(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (noRaises(bettingHistory)) {
+            return actionToEmptyBettingHistoryPreFlop(bigBlind);
+        }
+        return aiCalls(bettingHistory);
+    }
+
+    public String inPositionPreFlopAction(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (normalEnemyBet(bettingHistory, lastBet, bigBlind)) {
+            return actionToNormalEnemyBetPreFlop(lastBet, bettingHistory);
+        }
+        return actionToNotNormalEnemyBetPreFlop(lastBet, bettingHistory);
+    }
+
+    public String healthyStackPreFlopAction(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (!getButton()) {                         // if out of position
+            return outOfPositionPreFlopAction(tableCards, bettingHistory,
+                    pot, bigBlind, playerChips, lastBet);
+        }
+        return inPositionPreFlopAction(tableCards, bettingHistory,
+                pot, bigBlind, playerChips, lastBet);
+    }
+
+    public String preFlopActionDecider(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (healthyStack(bigBlind)) {
+            healthyStackPreFlopAction(tableCards, bettingHistory, pot, bigBlind,
+                    playerChips, lastBet);
+        } else if (dangeredStack(bigBlind)) {
+
+        }
+        return "Something went wrong with preflopactiondecider";
+    }
+
+    public String action(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips) {
+        Card first = pocketCards.get(0);
+        Card second = pocketCards.get(1);
+        double lastBet = lastBet(bettingHistory);
         //Preflop
-        if (tableCards.isEmpty()) {                                             //Preflop action
-            if (getChips() >= 12 * bb) {
-                //If out of position
-                if (bettingHistory.size() < 3) {
-                    if (premium() || good() || medium()) {
-                        bet(bb * 2.5 * betRandomized());
-                        return "AI bets:" + bb * 2.5 * betRandomized();
-                    } else {
-                        return "AI folds";
-                    }
-                } else if (bettingHistory.size() > 2) {
-                    if (playerChips == lastBet && lastBet > getChips() / 2) {   //If player is all in with large stack
-                        if (premium() || good()) {
-                            bet(playerChips);
-                            return "AI bets:" + playerChips;
-                        } else if (getChips() > 10 * bb) {
-                            return "AI folds";
-                        } else {
-                            return allIn();
-                        }
-                    } else if (playerChips == lastBet && lastBet < getChips() / 2) { //If player all in with small stack
-                        if (premium() || good() || medium()) {
-                            bet(playerChips);
-                            return "AI bets:" + playerChips;
-                        } else {
-                            return "AI folds";
-                        }
-                    }
-                    if (lastBet <= 3 * bb && lastBet > 0) {
-                        if (premium() || good()) {
-                            bet(lastBet * 3 * betRandomized());
-                            return "AI bets:" + lastBet * 3 * betRandomized();
-                        } else if (medium()) {
-                            if (lastBet == bb / 2) {
-                                bet(0.0);
-                                return "AI calls";
-                            } else {
-                                bet(bettingHistory.get(bettingHistory.size() - 1)
-                                        - bettingHistory.get(bettingHistory.size() - 2));
-                                return "AI calls";
-                            }
-                        } else {
-                            if (lastBet == bb / 2) {
-                                bet(0.0);
-                                return "AI calls";
-                            }
-                            return "AI folds";
-                        }
-                    } else if (lastBet > 3 * bb && lastBet < 6 * bb) {
-                        if (premium() || good()) {
-                            if (getChips() < 12 * bb) {
-                                return allIn();
-                            } else {
-                                bet(lastBet * 3 * betRandomized());
-                                return "AI bets:" + lastBet * 3 * betRandomized();
-                            }
-                        } else if (medium()) {
-                            bet(bettingHistory.get(bettingHistory.size() - 1)
-                                    - bettingHistory.get(bettingHistory.size() - 2));
-                            return "AI calls";
-                        } else {
-                            return "AI folds";
-                        }
-                    } else if (premium() || good()) {
-                        return allIn();
-                    } else {
-                        return "AI folds";
-                    }
-                }
-            } else if (getChips() <= 11 * bb) {
-                if (medium() || good() || premium()) {
-                    return allIn();
-                } else {
-                    return "AI folds";
-                }
-            }
+        if (preFlop(tableCards)) {                              //Preflop action
+            return preFlopActionDecider(tableCards, bettingHistory,
+                    pot, bigBlind, playerChips, lastBet);
+
         } else if (lastBet == 0 || bettingHistory.isEmpty()) {
             if (premium() || good()) {
                 return "AI bets:" + 0.5 * pot * betRandomized();

@@ -88,7 +88,7 @@ public class Game {
             player.betSmallBlind(bigBlind / 2);
             ai.betBigBlind(bigBlind);
             addBlindsToPot();
-            addBlindsToBettingHistory();
+//            addBlindsToBettingHistory();
             return "AI bets big blind (" + bigBlind + ")"
                     + ", you bet small blind (" + bigBlind / 2 + ")";
 
@@ -97,7 +97,7 @@ public class Game {
             ai.betSmallBlind(bigBlind / 2);
             player.betBigBlind(bigBlind);
             addBlindsToPot();
-            addBlindsToBettingHistory();
+//            addBlindsToBettingHistory();
             return "You bet big blind (" + bigBlind + ")"
                     + ", AI bets small blind (" + bigBlind / 2 + ")";
         }
@@ -137,7 +137,9 @@ public class Game {
     }
 
     public String aiCalls() {
-        if (bettingHistory.get(bettingHistory.size() - 1) == 0.0) {
+        if (bettingHistory.isEmpty()) {
+            return "AI checks";
+        } else if (bettingHistory.get(bettingHistory.size() - 1) == 0.0) {
             return "AI checks";
         }
         addToPot(subtractLastTwoBets());
@@ -145,7 +147,7 @@ public class Game {
         return "AI calls " + subtractLastTwoBets() * -1;
     }
 
-    public String aiBets(String action) {
+    public String aiBetsOrRaises(String action) {
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
         bettingHistory.add(amount);
