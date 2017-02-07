@@ -264,4 +264,9 @@ public class Game {
     public Dealer getDealer() {
         return dealer;
     }
+
+    public void setPotSize(double potSize) {
+        this.potSize = potSize;
+    }
+
 }

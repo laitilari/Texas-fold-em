@@ -21,24 +21,24 @@ import tfe.core.cards.Card;
  * @author Ilari
  */
 public class AiTest {
-
+    
     Ai ai;
-
+    
     public AiTest() {
     }
-
+    
     @Before
     public void setUp() {
         this.ai = new Ai();
     }
-
+    
     @Test
     public void testBetRandomized() {
         double x = ai.betRandomized();
         double y = ai.betRandomized();
         assertNotEquals(x, y);
     }
-
+    
     @Test
     public void testGetHand() {
         List<Card> list = new ArrayList<>();
@@ -50,7 +50,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(ai.getHand(list2).size() == 2);
     }
-
+    
     @Test
     public void testNotPremium() {
         List<Card> list = new ArrayList<>();
@@ -61,7 +61,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(!ai.premium());
     }
-
+    
     @Test
     public void testPremiumWithPair() {
         List<Card> list = new ArrayList<>();
@@ -72,7 +72,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(ai.premium());
     }
-
+    
     @Test
     public void testPremiumWithOutPair() {
         List<Card> list = new ArrayList<>();
@@ -83,7 +83,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(ai.premium());
     }
-
+    
     @Test
     public void testNotGood() {
         List<Card> list = new ArrayList<>();
@@ -94,7 +94,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(!ai.premium());
     }
-
+    
     @Test
     public void testGoodWithPair() {
         List<Card> list = new ArrayList<>();
@@ -105,7 +105,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(ai.good());
     }
-
+    
     @Test
     public void testGoodWithOutPair() {
         List<Card> list = new ArrayList<>();
@@ -116,7 +116,7 @@ public class AiTest {
         ai.drawPocketCards(list);
         assertTrue(ai.good());
     }
-
+    
     @Test
     public void testNotMedium() {
         List<Card> list = new ArrayList<>();
@@ -130,7 +130,7 @@ public class AiTest {
     
     @Test
     public void testMediumWithPair() {
-    List<Card> list = new ArrayList<>();
+        List<Card> list = new ArrayList<>();
         Card c = new Card("Spade", 7);
         Card c2 = new Card("Heart", 7);
         list.add(c);
@@ -170,7 +170,7 @@ public class AiTest {
     public void testAiWinChips() {
         double chips = 50.0;
         ai.winChips(chips);
-        assertEquals(ai.getChips(), 50, 0.1);    
+        assertEquals(ai.getChips(), 50, 0.1);
     }
     
     @Test
@@ -303,14 +303,14 @@ public class AiTest {
     public void testVeryLowStack() {
         ai.setChips(1000);
         double bigBlind = 120;
-        assertTrue(ai.veryLowStack(bigBlind)); 
+        assertTrue(ai.veryLowStack(bigBlind));
     }
     
     @Test
     public void testNotVeryLowStack() {
         ai.setChips(1000);
         double bigBlind = 10;
-        assertTrue(!ai.veryLowStack(bigBlind)); 
+        assertTrue(!ai.veryLowStack(bigBlind));
     }
     
     @Test
@@ -339,7 +339,7 @@ public class AiTest {
     public void testNormalAiBet() {
         double bigBlind = 30.0;
         ai.setChips(2000);
-        assertTrue(ai.betNormalBet(bigBlind) != ai.betNormalBet(bigBlind));
+        assertTrue(!ai.betNormalBet(bigBlind).equals(ai.betNormalBet(bigBlind)));
     }
     
     @Test
@@ -373,7 +373,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.goodOrPremium());    
+        assertTrue(ai.goodOrPremium());
     }
     
     @Test
@@ -385,6 +385,170 @@ public class AiTest {
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
         assertTrue(!ai.goodOrPremium());
+    }
+    
+    @Test
+    public void testAiRaises() {
+        double y = 50.0;
+        String x = ai.aiRaises(y);
+        assertTrue(!ai.aiRaises(y).equals(ai.aiRaises(y)));
+    }
+    
+    @Test
+    public void testHasEnoughChips() {
+        double x = 50;
+        ai.setChips(100);
+        assertTrue(ai.hasEnoughChips(x));
+    }
+    
+    @Test
+    public void testHasNotEnoughChips() {
+        double x = 50;
+        ai.setChips(49);
+        assertTrue(!ai.hasEnoughChips(x));
+    }
+    
+    @Test
+    public void testAiCalls() {
+        ai.setChips(400);
+        List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(80.0);
+        assertEquals(ai.aiCalls(bettingHistory, 80), "AI calls");
+    }
+    
+    @Test
+    public void testAiCallsAndGoesAllIn() {
+        ai.setChips(40);
+        List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(80.0);
+        assertEquals(ai.aiCalls(bettingHistory, 80), "AI is all-in with "
+                + ai.getChips() + " chips!!!");
+    }
+    
+    @Test
+    public void testNoRaises() {
+        List<Double> bettingHistory = new ArrayList<>();
+        assertTrue(ai.noRaises(bettingHistory));
+    }
+    
+    @Test
+    public void testYesRaises() {
+        List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(40.0);
+        assertTrue(!ai.noRaises(bettingHistory));
+    }
+    
+    @Test
+    public void testActionToNormalEnemyBetPreFlopWithPremiumOrGoodCards() {
+        List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 14);
+        Card card2 = new Card("Heart", 14);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+                .contains("AI bets"));
+    }
+    
+    @Test
+    public void testActionToNormalEnemyBetPreFlopWithMedimumCards() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 8);
+        Card card2 = new Card("Heart", 8);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+                .equals("AI calls"));
+    }
+    
+    @Test
+    public void testActionToNormalEnemyBetPreFlopWithBadCards() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 2);
+        Card card2 = new Card("Heart", 3);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+                .equals("AI folds"));
+    }
+    
+    @Test
+    public void testActionToNotNormalEnemyBetPreFlopWithGoodOrPremium() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 13);
+        Card card2 = new Card("Heart", 13);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToNotNormalEnemyBetPreFlop(40, bettingHistory)
+                .equals("AI calls"));
+    }
+    
+    @Test
+    public void testActionToNotNormalEnemyBetPreFlopWithMedium() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 7);
+        Card card2 = new Card("Heart", 7);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToNotNormalEnemyBetPreFlop(40, bettingHistory)
+                .equals("AI folds"));
+    }
+    
+    @Test
+    public void testActionToEmptyBettingHistoryPreFlop() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 7);
+        Card card2 = new Card("Heart", 8);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        assertTrue(ai.actionToEmptyBettingHistoryPreFlop(40)
+                .contains("AI bets"));
+    }
+    
+    @Test
+    public void testHealthyStackPreFlopAction() {
+        List<Double> bettingHistory = new ArrayList<>();
+        double pot = 500.0;
+        double bigBlind = 30.0;      
+        double playerChips = 2000.0;
+        double lastBet = 60.0;
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 13);
+        Card card2 = new Card("Heart", 13);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        ai.setChips(10000);
+        if (!ai.getButton()) {
+            assertTrue(ai.outOfPositionPreFlopAction(bettingHistory
+                    ,pot, bigBlind, playerChips, lastBet).contains("AI bets"));
+        }
+        if (ai.getButton()) {
+            assertTrue(ai.inPositionPreFlopAction(bettingHistory,
+                    pot, bigBlind, playerChips, lastBet).contains("AI bets"));
+        }
     }
     
 }

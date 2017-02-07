@@ -5,13 +5,13 @@
  */
 package tfe.core.game.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import tfe.core.ai.Ai;
 import tfe.core.game.Game;
-import tfe.core.player.Player;
 
 /**
  *
@@ -64,6 +64,14 @@ public class GameTest {
     }
 
     @Test
+    public void testAddBlindsToBettingHistory() {
+        game.addBlindsToBettingHistory();
+        assertEquals(game.getBettingHistory()
+                .get(game.getBettingHistory().size() - 1), 30, 0.1);
+        assertEquals(game.getBettingHistory().size(), 2);
+    }
+
+    @Test
     public void testBlinds() {
         String x = game.blinds();
         if (game.bettingOrder()) {
@@ -100,10 +108,81 @@ public class GameTest {
     }
 
     @Test
-    public void testAiBets() {
+    public void testSubstractLastTwoBetsReturnsLastBetIfOnlyOneBet() {
+        game.getBettingHistory().add(0.5);
+        assertEquals(game.subtractLastTwoBets(), 0.5, 0.1);
+    }
+
+    @Test
+    public void testSubstractLastTwoBetsReturnsZeroIfHistoryEmpty() {
+        assertEquals(game.subtractLastTwoBets(), 0.0, 0.0);
+    }
+
+    @Test
+    public void testEnd() {
+        assertTrue(game.end());
+    }
+
+    @Test
+    public void testGetBettingHistory() {
+        List<Double> bettingHistory2 = new ArrayList<>();
+        bettingHistory2 = game.getBettingHistory();
+        assertEquals(game.getBettingHistory(), bettingHistory2);
+    }
+
+    @Test
+    public void testSetPotSize() {
+        game.setPotSize(100);
+        assertEquals(game.getPotSize(), 100, 0.1);
+    }
+
+    @Test
+    public void testAiBetsOrRaises() {
         String given = "Ai bets:42.0";
         game.aiBetsOrRaises(given);
         assertEquals(game.getPotSize(), 42.0, 0.1);
+        assertEquals(game.getBettingHistory().size(), 1);
+    }
+
+    @Test
+    public void testPlayerAllIn() {
+        game.playerAllIn();
+        assertEquals(game.getPotSize(), game.playerChipsLeft(), 0.1);
+        assertEquals(game.getBettingHistory()
+                .get(game.getBettingHistory().size() - 1),
+                game.playerChipsLeft(), 0.1);
+    }
+
+    @Test
+    public void testAiAllIn() {
+        String x = "AI is all-in";
+        game.aiAllIn(x);
+        assertEquals(game.getPotSize(), game.aiChipsLeft(), 0.1);
+        assertEquals(game.getBettingHistory()
+                .get(game.getBettingHistory().size() - 1),
+                game.aiChipsLeft(), 0.1);
+        assertTrue(game.aiAllIn(x).contains("AI is all"));
+    }
+
+    @Test
+    public void testRaise() {
+        double amount = 50.0;
+        game.raise(amount);
+        assertEquals(game.getPotSize(), amount, 0.1);
+        assertEquals(game.getBettingHistory()
+                .get(game.getBettingHistory().size() - 1),
+                amount, 0.1);
+        assertEquals(game.raise(amount), "Player raised " + amount);
+    }
+
+    @Test
+    public void testAiWinsRound() {
+        assertEquals(game.aiWinsRound(), "AI wins the pot");
+    }
+
+    @Test
+    public void testPlayerWinsRound() {
+        assertEquals(game.playerWinsRound(), "Player wins the pot");
     }
 
     @Test
