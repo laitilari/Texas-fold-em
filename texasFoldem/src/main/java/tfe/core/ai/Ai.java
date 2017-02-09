@@ -6,8 +6,9 @@ import java.util.Random;
 import tfe.core.cards.Card;
 
 /**
- *
- * @author ilarilai
+ * Tässä luokka vastaa pelin tekoälystä. Luokka suorittaa metodeissa 
+ * määriteltyjen sääntöjen ja metodien parametreina tulevien tietojen
+ * perusteella tekoälyn valinnat pelissä.
  */
 public class Ai {
 
@@ -253,26 +254,6 @@ public class Ai {
         if (preFlop(tableCards)) {                              //Preflop action
             return preFlopActionDecider(tableCards, bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
-
-        } else if (lastBet == 0 || bettingHistory.isEmpty()) {
-            if (premium() || good()) {
-                return "AI bets:" + 0.5 * pot * betRandomized();
-            } else {
-                bet(0.0);
-                return "AI calls";
-            }
-        } else if (bettingHistory.size() >= 2) {
-            if (premium() || good()) {
-                return allIn();
-            }
-        } else if (bettingHistory.size() > 0 && bettingHistory.size() < 2
-                || lastBet < 0.75 * pot) {
-            if (premium() || good()) {
-                return allIn();
-            } else {
-                bet(lastBet);
-                return "AI calls";
-            }
         }
         return "Something went wrong";
     }

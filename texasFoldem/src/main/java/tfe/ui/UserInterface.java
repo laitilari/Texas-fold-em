@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package tfe.gui;
+package tfe.ui;
 
 import java.util.Scanner;
 import tfe.core.ai.Ai;
@@ -14,8 +9,9 @@ import tfe.core.game.Game;
 import tfe.core.support.ScannerClass;
 
 /**
- *
- * @author ilarilai
+ * Käyttöliittymäluokka, joka tarjoaa tekstikäyttöliittymän pelin pelaamiseen.
+ * Luokka hoitaa kaiken tulostamisen ja kutsuu Game-luokkaa sekä ScannerClass-
+ * luokkaa toimintojensa toteuttamiseen.
  */
 public class UserInterface {
 
@@ -32,6 +28,9 @@ public class UserInterface {
         go();
     }
 
+    /**
+     * Metodi kutsuu pelin valmisteluun liittyviä metodeja.
+     */
     public void go() {
         setGameSpeed(askGameSpeed());
         game.preparePack();
@@ -40,45 +39,73 @@ public class UserInterface {
         newRound();
     }
 
+    /**
+     * Ohjeet pelaajalle valintojen tekemiseen.
+     */
     public void bettingInstructions() {
         System.out.println("type 'c' for call/check, 'r' for raise 'f' for fold");
     }
 
+    /**
+     * Tulostaa pelin osapuolten pelimerkkien määrän, jotta pelaajan on helpompi
+     * seurata pelin kulkua ja tehdä valintoja pelimerkkien määrän perusteella.
+     */
     public void chipSituation() {
         System.out.println("There is " + game.getPotSize() + " chips in the pot");
         System.out.println("AI has " + game.aiChipsLeft() + "chips left");
         System.out.println("You have " + game.playerChipsLeft() + "chips left");
     }
 
+    /**
+     * Kutsuu uuden kierroksen valmisteluun liittyviä metodeja.
+     */
     public void prepareForNewRound() {
         game.prepareForNewRound();
+        shuffle();
+        blinds();
+        pocketCards();
     }
 
     public void buttonChange() {
         game.buttonChange();
     }
 
+    /**
+     * Starts the betting round for current street.
+     */
+    public void streetActions() {
+        prepareForNewStreet();
+        bettingRound();
+    }
+    
+    /**
+     * Prepares the game for current street and betting round.
+     */
+    public void prepareForNewStreet() {
+        clearBettingHistory();
+        chipSituation();
+    }
+     
+    /**
+     * Kutsuu käden suoritukseen liittyviä metodeja.
+     */
     public void newRound() {
         prepareForNewRound();
-        shuffle();
-        blinds();
-        pocketCards();
         chipSituation();
         bettingRound();
         flop();
-        game.clearBettingHistory();
-        chipSituation();
-        bettingRound();
+        streetActions();
         turn();
-        game.clearBettingHistory();
-        chipSituation();
-        bettingRound();
+        streetActions();
         river();
-        game.clearBettingHistory();
-        chipSituation();
-        bettingRound();
+        streetActions();
     }
 
+    /**
+     * Suorittaa Flopin.
+     * @see #turn()
+     * @see #river()
+     */
     public void flop() {
         System.out.println("Flop is:");
         System.out.println(game.flop());
@@ -94,6 +121,10 @@ public class UserInterface {
         System.out.println(game.river());
     }
 
+    /**
+     * Kun pelaaja valitsee raise-vaihtoehdon. Kysyy uudestaan, jos annettu
+     * pelimerkkien määrä on liian pieni.
+     */
     public void playerRaise() {
         System.out.println("How much?");
         while (true) {
@@ -110,6 +141,9 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Kysyy pelaajan pelivalinnan ja kutsuu sen mukaista metodia.
+     */
     public void playerAction() {
         bettingInstructions();
         String action = scanner.use();
@@ -146,6 +180,9 @@ public class UserInterface {
         System.out.println(game.aiAllIn(action));
     }
 
+    /**
+     * AI:n valintoja seuraava metodi, joka kutsuu valinnan mukaisia metodeja.
+     */
     public void aiAction() {
         String action = game.aiAction();
         if (action.equals("AI folds")) {
@@ -161,6 +198,9 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Määrittelee pelijärjestyksen Game-luokan bettingOrder metodin avulla.
+     */
     public void bettingRound() {
         if (!game.bettingOrder()) {
             playerAction();
@@ -171,12 +211,20 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Kysyy pelaajalta pelinopeuden.
+     * @return pelaajan valinta pelin nopeudesta
+     */
     public String askGameSpeed() {
         System.out.println("Type 'fast', 'normal' or 'slow' to determine game speed");
         String answer = scanner.use();
         return answer;
     }
 
+    /**
+     * Asettaa pelin nopeuden.
+     * @param answer Pelaajan valitsema nopeus
+     */
     public void setGameSpeed(String answer) {
         if (answer.contains("fast")) {
             game.setBigBlind(30);
@@ -193,6 +241,10 @@ public class UserInterface {
         }
     }
 
+    public void clearBettingHistory() {
+        game.clearBettingHistory();
+    }
+
     public void shuffle() {
         System.out.println(game.shuffle());
     }
@@ -201,6 +253,10 @@ public class UserInterface {
         System.out.println(game.blinds());
     }
 
+    /**
+     * Kertoo pelaajalle, että uudet käskikortit jaetaan ja kutsuu Game-luokan
+     * metodia, joka vie pyynnön Dealer-luokalle.
+     */
     public void pocketCards() {
         System.out.println("Dealing pocket cards...");
         System.out.println(game.pocketCards());

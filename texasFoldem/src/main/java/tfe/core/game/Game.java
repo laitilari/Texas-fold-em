@@ -6,8 +6,8 @@ import tfe.core.ai.Ai;
 import tfe.core.player.Player;
 
 /**
- *
- * @author ilarilai
+ * Tässä luokassa tapahtuu pelin suorittamisen keskeisin logiikka. Luokka
+ * tarjoaa useita Texas Hold'em pelille ominaisia metodeja.
  */
 public class Game {
 
@@ -19,6 +19,9 @@ public class Game {
     private double potSize;
     private List<Double> bettingHistory;
 
+    /**
+     * Luodaan pelissä tarvittavat oliot ja alustetaan tarvittavat muuttujat.
+     */
     public Game() {
         this.player = new Player();
         this.ai = new Ai();
@@ -29,18 +32,9 @@ public class Game {
         this.bettingHistory = new ArrayList<>();
     }
 
-    public void setPlayerChips() {
-        player.setChips(getStackSize());
-    }
-
-    public void setAiChips() {
-        ai.setChips(getStackSize());
-    }
-
-    public void preparePack() {
-        dealer.assemblePack();
-    }
-
+    /**
+     * Valmistelee pelin uutta kättä varten.
+     */
     public void prepareForNewRound() {
         buttonChange();
         clearPot();
@@ -48,10 +42,21 @@ public class Game {
         clearBettingHistory();
     }
 
+    public void preparePack() {
+        dealer.assemblePack();
+    }
+
+    /**
+     * Tyhjentää panostushistorian, joka on apuna AI:n ratkaisujen tekemisessä.
+     */
     public void clearBettingHistory() {
         bettingHistory.clear();
     }
 
+    /**
+     * Määrää pelaajat vaihtamaan pelijärjestystään. Kutsutaan jokaisen käden
+     * jälkeen.
+     */
     public void buttonChange() {
         player.buttonChange();
         ai.buttonChange();
@@ -61,6 +66,10 @@ public class Game {
         this.potSize = 0;
     }
 
+    /**
+     * Kutsuu pelaajia ja dealeria tyhjentämään korttinsa seuraavaa kättä
+     * varten.
+     */
     public void clearCards() {
         player.getPocketCards().clear();
         ai.getPocketCards().clear();
@@ -73,37 +82,61 @@ public class Game {
         return "Shuffling...";
     }
 
+    /**
+     * Lisää blindit panostushistoriaan.
+     */
     public void addBlindsToBettingHistory() {
         bettingHistory.add(bigBlind / 2);
         bettingHistory.add(bigBlind);
     }
 
+    /**
+     * Lisää blindit pottiin.
+     */
     public void addBlindsToPot() {
         addToPot(bigBlind / 2 + bigBlind);
         addBlindsToBettingHistory();
     }
 
+    /**
+     * Kutsuu pelaajia asettamaan blindinsa.
+     *
+     * @return Palauttaa tiedon blindien asettamisesta ja niiden koosta
+     * @see #aiInPosition()
+     * @see #playerInPosition()
+     */
     public String blinds() {
         if (!player.isButton()) {
-            player.betSmallBlind(bigBlind / 2);
-            ai.betBigBlind(bigBlind);
-            addBlindsToPot();
-//            addBlindsToBettingHistory();
-            return "AI bets big blind (" + bigBlind + ")"
-                    + ", you bet small blind (" + bigBlind / 2 + ")";
-
+            return aiInPosition();
         }
         if (player.isButton()) {
-            ai.betSmallBlind(bigBlind / 2);
-            player.betBigBlind(bigBlind);
-            addBlindsToPot();
-//            addBlindsToBettingHistory();
-            return "You bet big blind (" + bigBlind + ")"
-                    + ", AI bets small blind (" + bigBlind / 2 + ")";
+            return playerInPosition();
         }
         return "Something went wrong";
     }
 
+    public String aiInPosition() {
+        player.betSmallBlind(bigBlind / 2);
+        ai.betBigBlind(bigBlind);
+        addBlindsToPot();
+//            addBlindsToBettingHistory();
+        return "AI bets big blind (" + bigBlind + ")"
+                + ", you bet small blind (" + bigBlind / 2 + ")";
+    }
+
+    public String playerInPosition() {
+        ai.betSmallBlind(bigBlind / 2);
+        player.betBigBlind(bigBlind);
+        addBlindsToPot();
+//            addBlindsToBettingHistory();
+        return "You bet big blind (" + bigBlind + ")"
+                + ", AI bets small blind (" + bigBlind / 2 + ")";
+    }
+
+    /**
+     * Kutsuu dealeria jakamaan käsikortit.
+     * @return Tieto pelaajan käsikorteista UI:luokalle printattavaksi
+     */
     public String pocketCards() {
         dealer.dealPocketCards(this.player, this.ai);
         return "Your pocket cards: " + player.getPocketCards().toString()
@@ -122,6 +155,10 @@ public class Game {
         return ai.getChips();
     }
 
+    /**
+     * Pelaajan checkaamisesta tai callaamisesta aiheutuvat toiminnot peliin.
+     * @return Tieto pelaajan valinnasta
+     */
     public String checkOrCall() {
         if (bettingHistory.isEmpty()) {
             return "Player checked";
@@ -136,6 +173,10 @@ public class Game {
         }
     }
 
+    /**
+     * Tekoälyn callaamisesta aiheutuvat toiminnot peliin.
+     * @return Tieto tekoälyn valinnasta
+     */
     public String aiCalls() {
         if (bettingHistory.isEmpty()) {
             return "AI checks";
@@ -147,6 +188,11 @@ public class Game {
         return "AI calls " + subtractLastTwoBets() * -1;
     }
 
+    /**
+     * Tekoälyn panostuksesta aiheutuva toiminta.
+     * @param action tekoälyn valinta ja tieto, paljonko merkkejä panostaa
+     * @return tekoälyn toiminnan tekstimuotoinen esitys
+     */
     public String aiBetsOrRaises(String action) {
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
@@ -155,18 +201,33 @@ public class Game {
         return action;
     }
 
+    /**
+     * Pelaaja all-in, siitä peliin aiheutuvat vaikutukset.
+     * @return tekstiesitys
+     */
     public String playerAllIn() {
         addToPot(playerChipsLeft());
         bettingHistory.add(playerChipsLeft());
         return "Player is all-in with " + playerChipsLeft();
     }
 
+    /**
+     * AI all-in.
+     * @see #playerAllIn()
+     * @param action AI:n valinta
+     * @return tekstiesitys AI:n valinnasta
+     */
     public String aiAllIn(String action) {
         addToPot(ai.getChips());
         bettingHistory.add(ai.getChips());
         return action;
     }
 
+    /**
+     * Pelaaja nostaa.
+     * @param amount paljonko?
+     * @return tesktiesitys pelaajan nostosta.
+     */
     public String raise(double amount) {
         player.bet(amount);
         bettingHistory.add(amount);
@@ -174,16 +235,32 @@ public class Game {
         return "Player raised " + amount;
     }
 
+    /**
+     * AI voittaa kierroksen
+     * @return tekstiesitys
+     */
     public String aiWinsRound() {
         ai.winChips(potSize);
         return "AI wins the pot";
     }
 
+    /**
+     * Pelaaja voittaa kierroksen.
+     * @see #aiWinsRound()
+     * @return tekstiesitys
+     */
     public String playerWinsRound() {
         player.winChips(potSize);
         return "Player wins the pot";
     }
 
+    /**
+     * Vähentää panostushistorian kaksi viimeisintä panosta toisistaan. Tätä
+     * toiminnallisuutta tarvitaan, jotta pelaajan jo panostamia pelimerkkejä
+     * ei unohdettaisi, kun pelaaja callaa tai re-reissaa vastapuolen
+     * panostuksen.
+     * @return erotuksen tulos
+     */
     public double subtractLastTwoBets() {
         if (bettingHistory.size() >= 2) {
             return bettingHistory.get(bettingHistory.size() - 1)
@@ -194,6 +271,10 @@ public class Game {
         return 0.0;
     }
 
+    /**
+     * Ottaa selvää peliä varten pelijärjestyksestä.
+     * @return tieto pelijärjestyksestä
+     */
     public boolean bettingOrder() {
         if (!player.isButton()) {
             return false;
@@ -201,10 +282,20 @@ public class Game {
         return true;
     }
 
+    /**
+     * Lähettää AI:lle tiedot pelin sen hetkisestä tilanteesta, jotta AI voi
+     * toimia tilanteen mukaan.
+     * @return tekstiesitys AI:n toiminnasta.
+     */
     public String aiAction() {
-        return ai.action(dealer.getTableCards(), getBettingHistory(), potSize, bigBlind, player.getChips());
+        return ai.action(dealer.getTableCards(), getBettingHistory(),
+                potSize, bigBlind, player.getChips());
     }
 
+    /**
+     * Pelin lopettava metodi.
+     * @return totuusarvo, onko peli loppu (on, jos pelimerkit loppu)
+     */
     public boolean end() {
         //Jos pelimerkit loppu, palauta false
         return true;
@@ -263,5 +354,13 @@ public class Game {
 
     public Dealer getDealer() {
         return dealer;
+    }
+
+    public void setPlayerChips() {
+        player.setChips(getStackSize());
+    }
+
+    public void setAiChips() {
+        ai.setChips(getStackSize());
     }
 }

@@ -1,16 +1,10 @@
 package tfe;
 
 import java.util.Scanner;
-import tfe.gui.UserInterface;
+import tfe.ui.UserInterface;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author ilarilai
+ * Main luokka avaa ohjelman käyttöliittymän, joka aloittaa pelin.
  */
 public class Main {
 

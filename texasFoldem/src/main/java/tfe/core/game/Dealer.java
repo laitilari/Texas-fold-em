@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tfe.core.game;
 
 import java.util.List;
@@ -13,8 +8,11 @@ import tfe.core.cards.TableCards;
 import tfe.core.player.Player;
 
 /**
- *
- * @author ilarilai
+ * Luokka on apuluokka, joka on luotu siitä syystä, että haluttiin luoda 
+ * korttipakalle joku käyttäjä. Näin vältytään tilanteelta,
+ * jossa luokissa kutsuttaisiin korttipakkaa jakamaan 
+ * kortteja itsestään. Luokka myös lisää koodin luettavuutta. Vrt. esim: "dealer.
+ * dealFlop() vs. pack.takeFlopCardsAndPutOnTable().
  */
 public class Dealer {
 
@@ -42,6 +40,11 @@ public class Dealer {
         table.getCards().clear();
     }
 
+    /**
+     * Jakaa käsikortit pelaajalle ja AI:lle.
+     * @param player pelaaja jolle jaetaan
+     * @param ai AI jolle jaetaan
+     */
     public void dealPocketCards(Player player, Ai ai) {
         List<Card> playerCards = pack.takeMany(2);
         List<Card> aiCards = pack.takeMany(2);
@@ -49,6 +52,11 @@ public class Dealer {
         ai.drawPocketCards(aiCards);
     }
 
+    /**
+     * Jakaa flopin kortit pöydälle.
+     * @see #dealTurn()
+     * @see #dealRiver()
+     */
     public void dealFlop() {
         List<Card> flop = pack.takeMany(3);
         table.drawFlop(flop);
@@ -62,11 +70,19 @@ public class Dealer {
         table.drawCard(dealCard());
     }
 
+    /**
+     * Nostaa ja jakaa pakasta yhden kortin.
+     * @return kortti
+     */
     public Card dealCard() {
         Card card = pack.takeOne();
         return card;
     }
 
+    /**
+     * Lukee pelaajalle, mitkä kortit pöydällä on.
+     * @return tekstiesitys pöytäkorteista
+     */
     public String tellTableCards() {
         return table.getCards().toString();
     }
