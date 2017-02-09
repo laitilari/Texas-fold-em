@@ -356,6 +356,7 @@ public class Game {
         return dealer;
     }
 
+<<<<<<< HEAD
     public void setPlayerChips() {
         player.setChips(getStackSize());
     }
@@ -363,4 +364,10 @@ public class Game {
     public void setAiChips() {
         ai.setChips(getStackSize());
     }
+=======
+    public void setPotSize(double potSize) {
+        this.potSize = potSize;
+    }
+
+>>>>>>> 25c6fa0f543985ebfb4b942d8c321a316f6b16ed
 }
