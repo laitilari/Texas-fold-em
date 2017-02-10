@@ -1,4 +1,4 @@
-![TexasFoldemClassDiagram.png](http://i64.tinypic.com/2qiwmwx.png)
+![Luokkakaavio](/github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
 
 **Aihe:** 
 
