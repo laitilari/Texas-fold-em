@@ -11,9 +11,8 @@
 **Käyttäjä(t):** Pelaaja
 
 **Pelaajan toiminnot:** 
-- Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttavat pelimerkkien määrä ja blindien taso sekä niiden nousuväli.
-- Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään.
+- Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
+- Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
-- **TO BE CONTINUED**
 
 
