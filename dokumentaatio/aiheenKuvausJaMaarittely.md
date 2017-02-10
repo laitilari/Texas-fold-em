@@ -1,4 +1,4 @@
-![Luokkakaavio](/github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
+![Luokkakaavio](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
 
 **Aihe:** 
 
