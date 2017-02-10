@@ -26,7 +26,7 @@ under the License.
     <copyright>&#169;2017</copyright>
     <item>
       <title>File: 10,
-             Errors: 13,
+             Errors: 2,
              Warnings: 0,
              Infos: 0
       </title>
@@ -125,7 +125,21 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tfe.ui.UserInterface.java">tfe/ui/UserInterface.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -168,20 +182,6 @@ under the License.
                 </td>
                 <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tfe.gui.UserInterface.java">tfe/gui/UserInterface.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
                 </td>
               </tr>
                       </tbody>

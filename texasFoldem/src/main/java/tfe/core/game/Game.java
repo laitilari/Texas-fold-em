@@ -135,6 +135,7 @@ public class Game {
 
     /**
      * Kutsuu dealeria jakamaan käsikortit.
+     *
      * @return Tieto pelaajan käsikorteista UI:luokalle printattavaksi
      */
     public String pocketCards() {
@@ -157,6 +158,7 @@ public class Game {
 
     /**
      * Pelaajan checkaamisesta tai callaamisesta aiheutuvat toiminnot peliin.
+     *
      * @return Tieto pelaajan valinnasta
      */
     public String checkOrCall() {
@@ -175,6 +177,7 @@ public class Game {
 
     /**
      * Tekoälyn callaamisesta aiheutuvat toiminnot peliin.
+     *
      * @return Tieto tekoälyn valinnasta
      */
     public String aiCalls() {
@@ -190,6 +193,7 @@ public class Game {
 
     /**
      * Tekoälyn panostuksesta aiheutuva toiminta.
+     *
      * @param action tekoälyn valinta ja tieto, paljonko merkkejä panostaa
      * @return tekoälyn toiminnan tekstimuotoinen esitys
      */
@@ -203,6 +207,7 @@ public class Game {
 
     /**
      * Pelaaja all-in, siitä peliin aiheutuvat vaikutukset.
+     *
      * @return tekstiesitys
      */
     public String playerAllIn() {
@@ -213,6 +218,7 @@ public class Game {
 
     /**
      * AI all-in.
+     *
      * @see #playerAllIn()
      * @param action AI:n valinta
      * @return tekstiesitys AI:n valinnasta
@@ -225,6 +231,7 @@ public class Game {
 
     /**
      * Pelaaja nostaa.
+     *
      * @param amount paljonko?
      * @return tesktiesitys pelaajan nostosta.
      */
@@ -237,6 +244,7 @@ public class Game {
 
     /**
      * AI voittaa kierroksen
+     *
      * @return tekstiesitys
      */
     public String aiWinsRound() {
@@ -246,6 +254,7 @@ public class Game {
 
     /**
      * Pelaaja voittaa kierroksen.
+     *
      * @see #aiWinsRound()
      * @return tekstiesitys
      */
@@ -256,9 +265,9 @@ public class Game {
 
     /**
      * Vähentää panostushistorian kaksi viimeisintä panosta toisistaan. Tätä
-     * toiminnallisuutta tarvitaan, jotta pelaajan jo panostamia pelimerkkejä
-     * ei unohdettaisi, kun pelaaja callaa tai re-reissaa vastapuolen
-     * panostuksen.
+     * toiminnallisuutta tarvitaan, jotta pelaajan jo panostamia pelimerkkejä ei
+     * unohdettaisi, kun pelaaja callaa tai re-reissaa vastapuolen panostuksen.
+     *
      * @return erotuksen tulos
      */
     public double subtractLastTwoBets() {
@@ -273,6 +282,7 @@ public class Game {
 
     /**
      * Ottaa selvää peliä varten pelijärjestyksestä.
+     *
      * @return tieto pelijärjestyksestä
      */
     public boolean bettingOrder() {
@@ -285,6 +295,7 @@ public class Game {
     /**
      * Lähettää AI:lle tiedot pelin sen hetkisestä tilanteesta, jotta AI voi
      * toimia tilanteen mukaan.
+     *
      * @return tekstiesitys AI:n toiminnasta.
      */
     public String aiAction() {
@@ -294,6 +305,7 @@ public class Game {
 
     /**
      * Pelin lopettava metodi.
+     *
      * @return totuusarvo, onko peli loppu (on, jos pelimerkit loppu)
      */
     public boolean end() {

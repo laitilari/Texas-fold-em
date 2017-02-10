@@ -6,7 +6,7 @@ import java.util.Random;
 import tfe.core.cards.Card;
 
 /**
- * Tässä luokka vastaa pelin tekoälystä. Luokka suorittaa metodeissa
+ * Tämä luokka vastaa pelin tekoälystä. Luokka suorittaa metodeissa
  * määriteltyjen sääntöjen ja metodien parametreina tulevien tietojen
  * perusteella tekoälyn valinnat pelissä.
  */
@@ -296,7 +296,7 @@ public class Ai {
     }
 
     public String playerHasBet(List<Double> bettingHistory, double lastBet) {
-        
+        return "";
     }
 
     public String actionDecider(List<Card> tableCards, List<Double> bettingHistory,
@@ -342,7 +342,7 @@ public class Ai {
     }
 
     public boolean pair() {
-
+        return false;
     }
 
     public String allIn() {

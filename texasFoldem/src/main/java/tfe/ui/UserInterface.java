@@ -77,7 +77,7 @@ public class UserInterface {
         prepareForNewStreet();
         bettingRound();
     }
-    
+
     /**
      * Prepares the game for current street and betting round.
      */
@@ -85,7 +85,7 @@ public class UserInterface {
         clearBettingHistory();
         chipSituation();
     }
-     
+
     /**
      * Kutsuu käden suoritukseen liittyviä metodeja.
      */
@@ -102,6 +102,7 @@ public class UserInterface {
 
     /**
      * Suorittaa Flopin.
+     *
      * @see #turn()
      * @see #river()
      */
@@ -212,6 +213,7 @@ public class UserInterface {
 
     /**
      * Kysyy pelaajalta pelinopeuden.
+     *
      * @return pelaajan valinta pelin nopeudesta
      */
     public String askGameSpeed() {
@@ -222,6 +224,7 @@ public class UserInterface {
 
     /**
      * Asettaa pelin nopeuden.
+     *
      * @param answer Pelaajan valitsema nopeus
      */
     public void setGameSpeed(String answer) {
