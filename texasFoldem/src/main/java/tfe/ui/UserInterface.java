@@ -91,8 +91,7 @@ public class UserInterface {
      */
     public void newRound() {
         prepareForNewRound();
-        chipSituation();
-        bettingRound();
+        streetActions();
         flop();
         streetActions();
         turn();

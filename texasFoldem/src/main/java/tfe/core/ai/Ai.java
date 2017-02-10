@@ -6,7 +6,7 @@ import java.util.Random;
 import tfe.core.cards.Card;
 
 /**
- * Tässä luokka vastaa pelin tekoälystä. Luokka suorittaa metodeissa 
+ * Tässä luokka vastaa pelin tekoälystä. Luokka suorittaa metodeissa
  * määriteltyjen sääntöjen ja metodien parametreina tulevien tietojen
  * perusteella tekoälyn valinnat pelissä.
  */
@@ -23,10 +23,6 @@ public class Ai {
         this.pocketCards = new ArrayList<>();
         this.button = true;
         this.random = new Random();
-    }
-
-    public double betRandomized() {
-        return random.nextDouble() + 0.5;
     }
 
     public List<Card> getHand(List<Card> tableCards) {
@@ -81,24 +77,6 @@ public class Ai {
         return false;
     }
 
-    public Double lastBet(List<Double> bettingHistory) {
-        double lastBet = 0.0;
-        if (!bettingHistory.isEmpty()) {
-            lastBet = bettingHistory.get(bettingHistory.size() - 1);
-            return lastBet;
-        }
-        return null;
-    }
-
-    public Double secondLastBet(List<Double> bettingHistory) {
-        double secondLastBet = 0.0;
-        if (!bettingHistory.isEmpty() || bettingHistory.size() >= 2) {
-            secondLastBet = bettingHistory.get(bettingHistory.size() - 2);
-            return secondLastBet;
-        }
-        return null;
-    }
-
     public boolean preFlop(List<Card> tableCards) {
         if (tableCards.isEmpty()) {
             return true;
@@ -149,9 +127,23 @@ public class Ai {
         return false;
     }
 
+    public double betRandomized() {
+        return random.nextDouble() + 0.75;
+    }
+
     public String betNormalBet(double bigBlind) {
         bet(bigBlind * 2.5 * betRandomized());
         return "AI bets:" + bigBlind * 2.5 * betRandomized();
+    }
+
+    public String continuationBet(double pot) {
+        bet(0.5 * pot);
+        return "AI bets:" + 0.5 * pot;
+    }
+
+    public String check() {
+        bet(0.0);
+        return "AI bets:" + 0.0;
     }
 
     public String aiFolds() {
@@ -184,7 +176,7 @@ public class Ai {
         return false;
     }
 
-    public String actionToNormalEnemyBetPreFlop(double lastBet, List<Double> bettingHistory) {
+    public String actionToNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
         if (goodOrPremium()) {
             return aiRaises(lastBet);
         } else if (medium()) {
@@ -193,55 +185,127 @@ public class Ai {
         return aiFolds();
     }
 
-    public String actionToNotNormalEnemyBetPreFlop(double lastBet, List<Double> bettingHistory) {
+    public String actionToNotNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
         if (goodOrPremium()) {
             return aiCalls(bettingHistory, lastBet);
         }
         return aiFolds();
     }
 
-    public String actionToEmptyBettingHistoryPreFlop(double bigBlind) {
+    public String actionToEmptyBettingHistoryPreFlopHealthyStack(double bigBlind) {
         if (playablePocketCards()) {
             return betNormalBet(bigBlind);
         }
         return aiFolds();
     }
 
-    public String outOfPositionPreFlopAction(List<Double> bettingHistory,
+    public String actionToEmptyBettingHistoryPreFlopDangeredStack(double bigBlind) {
+        if (goodOrPremium()) {
+            return allIn();
+        } else if (playablePocketCards()) {
+            return betNormalBet(bigBlind);
+        }
+        return aiFolds();
+    }
+
+    public String outOfPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
         if (noRaises(bettingHistory)) {
-            return actionToEmptyBettingHistoryPreFlop(bigBlind);
+            return actionToEmptyBettingHistoryPreFlopHealthyStack(bigBlind);
         }
         return aiCalls(bettingHistory, lastBet);
     }
 
-    public String inPositionPreFlopAction(List<Double> bettingHistory,
+    public String inPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
         if (normalEnemyBet(bettingHistory, lastBet, bigBlind)) {
-            return actionToNormalEnemyBetPreFlop(lastBet, bettingHistory);
+            return actionToNormalEnemyBetPreFlopHealthyStack(lastBet, bettingHistory);
         }
-        return actionToNotNormalEnemyBetPreFlop(lastBet, bettingHistory);
+        return actionToNotNormalEnemyBetPreFlopHealthyStack(lastBet, bettingHistory);
+    }
+
+    public String outOfPositionPreFlopActionDangeredStack(List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (noRaises(bettingHistory)) {
+            return actionToEmptyBettingHistoryPreFlopDangeredStack(bigBlind);
+        }
+        return aiCalls(bettingHistory, lastBet);
     }
 
     public String healthyStackPreFlopAction(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
         if (!getButton()) {                         // if out of position
-            return outOfPositionPreFlopAction(bettingHistory,
+            return outOfPositionPreFlopActionHealthyStack(bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
         }
-        return inPositionPreFlopAction(bettingHistory,
+        return inPositionPreFlopActionHealthyStack(bettingHistory,
                 pot, bigBlind, playerChips, lastBet);
+    }
+
+    public String actionInPositionPreFlopDangeredStack(double lastBet, List<Double> bettingHistory) {
+        if (goodOrPremium()) {
+            return allIn();
+        } else if (medium()) {
+            return aiCalls(bettingHistory, lastBet);
+        }
+        return aiFolds();
+    }
+
+    public String dangeredStackPreFlopAction(List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        if (!getButton()) {
+            return outOfPositionPreFlopActionDangeredStack(bettingHistory,
+                    pot, bigBlind, playerChips, lastBet);
+        }
+        return actionInPositionPreFlopDangeredStack(lastBet, bettingHistory);
+    }
+
+    public String lowStackPreFlopAction(List<Double> bettingHistory,
+            double pot, double bigBlind, double playerChips, double lastBet) {
+        return allIn();
     }
 
     public String preFlopActionDecider(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
         if (healthyStack(bigBlind)) {
-            healthyStackPreFlopAction(bettingHistory, pot, bigBlind,
+            return healthyStackPreFlopAction(bettingHistory, pot, bigBlind,
                     playerChips, lastBet);
         } else if (dangeredStack(bigBlind)) {
-
+            return dangeredStackPreFlopAction(bettingHistory, pot, bigBlind,
+                    playerChips, lastBet);
+        } else {
+            return lowStackPreFlopAction(bettingHistory, pot, bigBlind,
+                    playerChips, lastBet);
         }
-        return "Something went wrong with preflopactiondecider";
+    }
+
+    public String actionToEmptyBet(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double playerChips, double lastBet) {
+        if (pair() || goodOrPremium()) {
+            return continuationBet(pot);
+        } else {
+            return check();
+        }
+    }
+
+    public boolean emptyOrChecked(List<Double> bettingHistory, double lastBet) {
+        if (bettingHistory.isEmpty() || lastBet == 0.0) {
+            return true;
+        }
+        return false;
+    }
+
+    public String playerHasBet(List<Double> bettingHistory, double lastBet) {
+        
+    }
+
+    public String actionDecider(List<Card> tableCards, List<Double> bettingHistory,
+            double pot, double playerChips, double lastBet) {
+        if (emptyOrChecked(bettingHistory, lastBet)) {
+            return actionToEmptyBet(tableCards, bettingHistory,
+                    pot, playerChips, lastBet);
+        }
+        return playerHasBet(bettingHistory, lastBet);
     }
 
     public String action(List<Card> tableCards, List<Double> bettingHistory,
@@ -253,8 +317,32 @@ public class Ai {
         if (preFlop(tableCards)) {                              //Preflop action
             return preFlopActionDecider(bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
+        } else {
+            return actionDecider(tableCards, bettingHistory,
+                    pot, playerChips, lastBet);
         }
-        return "Something went wrong";
+    }
+
+    public Double lastBet(List<Double> bettingHistory) {
+        double lastBet = 0.0;
+        if (!bettingHistory.isEmpty()) {
+            lastBet = bettingHistory.get(bettingHistory.size() - 1);
+            return lastBet;
+        }
+        return lastBet;
+    }
+
+    public Double secondLastBet(List<Double> bettingHistory) {
+        double secondLastBet = 0.0;
+        if (!bettingHistory.isEmpty() || bettingHistory.size() >= 2) {
+            secondLastBet = bettingHistory.get(bettingHistory.size() - 2);
+            return secondLastBet;
+        }
+        return null;
+    }
+
+    public boolean pair() {
+
     }
 
     public String allIn() {

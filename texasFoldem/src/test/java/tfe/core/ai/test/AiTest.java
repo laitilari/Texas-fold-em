@@ -248,9 +248,9 @@ public class AiTest {
     }
     
     @Test
-    public void testLastBetReturnNullIfListEmpty() {
+    public void testLastBetReturnZeroIfListEmpty() {
         List<Double> bettingHistory = new ArrayList<>();
-        assertEquals(ai.lastBet(bettingHistory), null);
+        assertEquals(ai.lastBet(bettingHistory), 0.0, 0.0);
     }
     
     @Test
@@ -448,7 +448,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .contains("AI bets"));
     }
     
@@ -463,7 +463,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI calls"));
     }
     
@@ -478,7 +478,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlop(40, bettingHistory)
+        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI folds"));
     }
     
@@ -493,7 +493,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNotNormalEnemyBetPreFlop(40, bettingHistory)
+        assertTrue(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI calls"));
     }
     
@@ -508,7 +508,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNotNormalEnemyBetPreFlop(40, bettingHistory)
+        assertTrue(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI folds"));
     }
     
@@ -523,7 +523,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToEmptyBettingHistoryPreFlop(40)
+        assertTrue(ai.actionToEmptyBettingHistoryPreFlopHealthyStack(40)
                 .contains("AI bets"));
     }
     
@@ -542,13 +542,71 @@ public class AiTest {
         ai.drawPocketCards(pocketCards);
         ai.setChips(10000);
         if (!ai.getButton()) {
-            assertTrue(ai.outOfPositionPreFlopAction(bettingHistory
+            assertTrue(ai.outOfPositionPreFlopActionHealthyStack(bettingHistory
                     ,pot, bigBlind, playerChips, lastBet).contains("AI bets"));
         }
         if (ai.getButton()) {
-            assertTrue(ai.inPositionPreFlopAction(bettingHistory,
+            assertTrue(ai.inPositionPreFlopActionHealthyStack(bettingHistory,
                     pot, bigBlind, playerChips, lastBet).contains("AI bets"));
         }
     }
     
+    @Test
+    public void testLowStackPreFlopAction() {
+        List<Double> bettingHistory = new ArrayList<>();
+        double pot = 500.0;
+        double bigBlind = 30.0;      
+        double playerChips = 2000.0;
+        double lastBet = 60.0;
+        assertEquals(ai.lowStackPreFlopAction(bettingHistory
+                    ,pot, bigBlind, playerChips, lastBet), ai.allIn());
+    }
+    
+    @Test
+    public void testDangeredStackPreFlopActionWithPremium() {
+        List<Double> bettingHistory = new ArrayList<>();
+        double pot = 500.0;
+        double bigBlind = 30.0;      
+        double playerChips = 2000.0;
+        double lastBet = 60.0;
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 13);
+        Card card2 = new Card("Heart", 13);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        ai.setChips(10000);
+        if (!ai.getButton()) {
+            assertEquals(ai.outOfPositionPreFlopActionDangeredStack(bettingHistory
+                    ,pot, bigBlind, playerChips, lastBet), ai.allIn());
+        }
+        if (ai.getButton()) {
+            assertEquals(ai.dangeredStackPreFlopAction(bettingHistory,
+                    pot, bigBlind, playerChips, lastBet), ai.allIn());
+        }
+    }
+    
+    @Test
+    public void testDangeredStackPreFlopActionWithMedium() {
+        List<Double> bettingHistory = new ArrayList<>();
+        double pot = 500.0;
+        double bigBlind = 30.0;      
+        double playerChips = 2000.0;
+        double lastBet = 60.0;
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 7);
+        Card card2 = new Card("Heart", 8);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        ai.setChips(10000);
+        if (!ai.getButton()) {
+            assertEquals(ai.outOfPositionPreFlopActionDangeredStack(bettingHistory
+                    ,pot, bigBlind, playerChips, lastBet), ai.betNormalBet(bigBlind));
+        }
+        if (ai.getButton()) {
+            assertEquals(ai.dangeredStackPreFlopAction(bettingHistory,
+                    pot, bigBlind, playerChips, lastBet), ai.aiCalls(bettingHistory, lastBet));
+        }
+    }
 }
