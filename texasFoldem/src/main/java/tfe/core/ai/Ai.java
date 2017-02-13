@@ -25,12 +25,6 @@ public class Ai {
         this.random = new Random();
     }
 
-    public List<Card> getHand(List<Card> tableCards) {
-        this.hand.addAll(this.pocketCards);
-        this.hand.addAll(tableCards);
-        return this.hand;
-    }
-
     public boolean premium() {
         Card first = pocketCards.get(0);
         Card second = pocketCards.get(1);
@@ -138,7 +132,7 @@ public class Ai {
 
     public String continuationBet(double pot) {
         bet(0.5 * pot);
-        return "AI bets:" + 0.5 * pot;
+        return "AI bets:" + 1 * pot;
     }
 
     public String check() {
@@ -281,7 +275,7 @@ public class Ai {
 
     public String actionToEmptyBet(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double playerChips, double lastBet) {
-        if (pair() || goodOrPremium()) {
+        if (pair(tableCards) || goodOrPremium()) {
             return continuationBet(pot);
         } else {
             return check();
@@ -295,8 +289,12 @@ public class Ai {
         return false;
     }
 
-    public String playerHasBet(List<Double> bettingHistory, double lastBet) {
-        return "";
+    public String playerHasBet(List<Double> bettingHistory, List<Card> tableCards, double lastBet) {
+        if (pair(tableCards) || goodOrPremium()) {
+            return aiCalls(bettingHistory, lastBet);
+        } else {
+            return aiFolds();
+        }
     }
 
     public String actionDecider(List<Card> tableCards, List<Double> bettingHistory,
@@ -305,16 +303,13 @@ public class Ai {
             return actionToEmptyBet(tableCards, bettingHistory,
                     pot, playerChips, lastBet);
         }
-        return playerHasBet(bettingHistory, lastBet);
+        return playerHasBet(bettingHistory, tableCards, lastBet);
     }
 
     public String action(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips) {
-        Card first = pocketCards.get(0);
-        Card second = pocketCards.get(1);
         double lastBet = lastBet(bettingHistory);
-        //Preflop
-        if (preFlop(tableCards)) {                              //Preflop action
+        if (preFlop(tableCards)) {
             return preFlopActionDecider(bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
         } else {
@@ -341,7 +336,15 @@ public class Ai {
         return null;
     }
 
-    public boolean pair() {
+    public boolean pair(List<Card> tableCards) {
+        Card first = pocketCards.get(0);
+        Card second = pocketCards.get(1);
+        for (Card card : tableCards) {
+            if (card.getValue() == first.getValue()
+                    || card.getValue() == second.getValue()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -388,6 +391,12 @@ public class Ai {
         } else {
             this.button = false;
         }
+    }
+
+    public List<Card> getHand(List<Card> tableCards) {
+        this.hand.addAll(this.pocketCards);
+        this.hand.addAll(tableCards);
+        return this.hand;
     }
 
     public boolean getButton() {

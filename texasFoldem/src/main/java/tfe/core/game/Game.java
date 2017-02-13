@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import tfe.core.ai.Ai;
 import tfe.core.player.Player;
+import tfe.ui.UserInterface;
 
 /**
  * Tässä luokassa tapahtuu pelin suorittamisen keskeisin logiikka. Luokka
@@ -18,6 +19,7 @@ public class Game {
     private double stackSize;
     private double potSize;
     private List<Double> bettingHistory;
+    private HandComparator handComparator;
 
     /**
      * Luodaan pelissä tarvittavat oliot ja alustetaan tarvittavat muuttujat.
@@ -31,6 +33,15 @@ public class Game {
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
     }
+    
+    /**
+     * Valmistelee korttipakan ja asettaa pelimerkit.
+     */
+    public void prepareGame() {
+        preparePack();
+        setPlayerChips();
+        setAiChips();
+    }
 
     /**
      * Valmistelee pelin uutta kättä varten.
@@ -40,6 +51,10 @@ public class Game {
         clearPot();
         clearCards();
         clearBettingHistory();
+    }
+    
+    public void showDown() {
+        
     }
 
     public void preparePack() {
@@ -309,8 +324,10 @@ public class Game {
      * @return totuusarvo, onko peli loppu (on, jos pelimerkit loppu)
      */
     public boolean end() {
-        //Jos pelimerkit loppu, palauta false
-        return true;
+        if (player.getChips() == stackSize * 2 || ai.getChips() == stackSize * 2) {
+            return true;
+        }
+        return false;
     }
 
     public List<Double> getBettingHistory() {

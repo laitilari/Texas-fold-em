@@ -33,27 +33,8 @@ public class UserInterface {
      */
     public void go() {
         setGameSpeed(askGameSpeed());
-        game.preparePack();
-        game.setPlayerChips();
-        game.setAiChips();
+        game.prepareGame();
         newRound();
-    }
-
-    /**
-     * Ohjeet pelaajalle valintojen tekemiseen.
-     */
-    public void bettingInstructions() {
-        System.out.println("type 'c' for call/check, 'r' for raise 'f' for fold");
-    }
-
-    /**
-     * Tulostaa pelin osapuolten pelimerkkien määrän, jotta pelaajan on helpompi
-     * seurata pelin kulkua ja tehdä valintoja pelimerkkien määrän perusteella.
-     */
-    public void chipSituation() {
-        System.out.println("There is " + game.getPotSize() + " chips in the pot");
-        System.out.println("AI has " + game.aiChipsLeft() + "chips left");
-        System.out.println("You have " + game.playerChipsLeft() + "chips left");
     }
 
     /**
@@ -82,7 +63,7 @@ public class UserInterface {
      * Prepares the game for current street and betting round.
      */
     public void prepareForNewStreet() {
-        clearBettingHistory();
+        game.clearBettingHistory();
         chipSituation();
     }
 
@@ -90,14 +71,17 @@ public class UserInterface {
      * Kutsuu käden suoritukseen liittyviä metodeja.
      */
     public void newRound() {
-        prepareForNewRound();
-        streetActions();
-        flop();
-        streetActions();
-        turn();
-        streetActions();
-        river();
-        streetActions();
+        while (!game.end()) {
+            prepareForNewRound();
+            streetActions();
+            flop();
+            streetActions();
+            turn();
+            streetActions();
+            river();
+            streetActions();
+            game.showDown();
+        }
     }
 
     /**
@@ -242,9 +226,22 @@ public class UserInterface {
             go();
         }
     }
+    
+    /**
+     * Ohjeet pelaajalle valintojen tekemiseen.
+     */
+    public void bettingInstructions() {
+        System.out.println("type 'c' for call/check, 'r' for raise 'f' for fold");
+    }
 
-    public void clearBettingHistory() {
-        game.clearBettingHistory();
+    /**
+     * Tulostaa pelin osapuolten pelimerkkien määrän, jotta pelaajan on helpompi
+     * seurata pelin kulkua ja tehdä valintoja pelimerkkien määrän perusteella.
+     */
+    public void chipSituation() {
+        System.out.println("There is " + game.getPotSize() + " chips in the pot");
+        System.out.println("AI has " + game.aiChipsLeft() + "chips left");
+        System.out.println("You have " + game.playerChipsLeft() + "chips left");
     }
 
     public void shuffle() {
