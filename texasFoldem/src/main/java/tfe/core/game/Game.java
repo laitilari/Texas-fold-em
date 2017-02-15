@@ -338,17 +338,7 @@ public class Game {
         dealer.dealFlop();
         return showTableCards();
     }
-
-    public String turn() {
-        dealer.dealTurn();
-        return showTableCards();
-    }
-
-    public String river() {
-        dealer.dealRiver();
-        return showTableCards();
-    }
-
+    
     public String showTableCards() {
         return dealer.tellTableCards();
     }

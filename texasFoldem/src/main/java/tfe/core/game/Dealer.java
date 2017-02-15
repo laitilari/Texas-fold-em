@@ -62,14 +62,6 @@ public class Dealer {
         table.drawFlop(flop);
     }
 
-    public void dealTurn() {
-        table.drawCard(dealCard());
-    }
-
-    public void dealRiver() {
-        table.drawCard(dealCard());
-    }
-
     /**
      * Nostaa ja jakaa pakasta yhden kortin.
      * @return kortti

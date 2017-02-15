@@ -76,10 +76,6 @@ public class UserInterface {
             streetActions();
             flop();
             streetActions();
-            turn();
-            streetActions();
-            river();
-            streetActions();
             game.showDown();
         }
     }
@@ -93,16 +89,6 @@ public class UserInterface {
     public void flop() {
         System.out.println("Flop is:");
         System.out.println(game.flop());
-    }
-
-    public void turn() {
-        System.out.println("Turn is:");
-        System.out.println(game.turn());
-    }
-
-    public void river() {
-        System.out.println("River is:");
-        System.out.println(game.river());
     }
 
     /**
