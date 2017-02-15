@@ -36,17 +36,49 @@ public class HandComparatorTest {
 
     @Before
     public void setUp() {
+    }
+
+    @Test
+    public void testStraightFlush() {
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 6));
-        tableCards.add(new Card("Hearts", 7)); 
+        tableCards.add(new Card("Hearts", 7));
+        playerPocketCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Hearts", 3));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.straightFlush(tableCards));
     }
-    
+
     @Test
     public void testStraight() {
+        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Hearts", 6));
+        tableCards.add(new Card("Hearts", 7));
         playerPocketCards.add(new Card("Hearts", 4));
         playerPocketCards.add(new Card("Diamonds", 3));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.straight(tableCards));
+    }
+
+//    @Test
+//    public void testPair() {
+//        tableCards.add(new Card("Hearts", 5));
+//        tableCards.add(new Card("Hearts", 6));
+//        tableCards.add(new Card("Hearts", 7));
+//        playerPocketCards.add(new Card("Hearts", 5));
+//        playerPocketCards.add(new Card("Diamonds", 3));
+//        tableCards.addAll(playerPocketCards);
+//        assertTrue(hc.pair(tableCards));
+//    }
+    
+    @Test
+    public void testSameConsecutiveValues() {
+        
+    }
+    
+    @Test
+    public void testCardsToIntArray() {
+        
     }
 
 }
