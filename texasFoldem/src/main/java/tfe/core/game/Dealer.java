@@ -8,11 +8,11 @@ import tfe.core.cards.TableCards;
 import tfe.core.player.Player;
 
 /**
- * Luokka on apuluokka, joka on luotu siitä syystä, että haluttiin luoda 
- * korttipakalle joku käyttäjä. Näin vältytään tilanteelta,
- * jossa luokissa kutsuttaisiin korttipakkaa jakamaan 
- * kortteja itsestään. Luokka myös lisää koodin luettavuutta. Vrt. esim: "dealer.
- * dealFlop() vs. pack.takeFlopCardsAndPutOnTable().
+ * Luokka on apuluokka, joka on luotu siitä syystä, että haluttiin luoda
+ * korttipakalle joku käyttäjä. Näin vältytään tilanteelta, jossa luokissa
+ * kutsuttaisiin korttipakkaa jakamaan kortteja itsestään. Luokka myös lisää
+ * koodin luettavuutta. Vrt. esim: "dealer. dealFlop() vs.
+ * pack.takeFlopCardsAndPutOnTable().
  */
 public class Dealer {
 
@@ -42,6 +42,7 @@ public class Dealer {
 
     /**
      * Jakaa käsikortit pelaajalle ja AI:lle.
+     *
      * @param player pelaaja jolle jaetaan
      * @param ai AI jolle jaetaan
      */
@@ -54,6 +55,7 @@ public class Dealer {
 
     /**
      * Jakaa flopin kortit pöydälle.
+     *
      * @see #dealTurn()
      * @see #dealRiver()
      */
@@ -62,8 +64,17 @@ public class Dealer {
         table.drawFlop(flop);
     }
 
+    public void dealTurn() {
+        table.drawCard(dealCard());
+    }
+
+    public void dealRiver() {
+        table.drawCard(dealCard());
+    }
+
     /**
      * Nostaa ja jakaa pakasta yhden kortin.
+     *
      * @return kortti
      */
     public Card dealCard() {
@@ -73,6 +84,7 @@ public class Dealer {
 
     /**
      * Lukee pelaajalle, mitkä kortit pöydällä on.
+     *
      * @return tekstiesitys pöytäkorteista
      */
     public String tellTableCards() {

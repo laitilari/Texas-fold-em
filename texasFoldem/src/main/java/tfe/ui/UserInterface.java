@@ -91,6 +91,16 @@ public class UserInterface {
         System.out.println(game.flop());
     }
 
+    public void turn() {
+        System.out.println("Turn is:");
+        System.out.println(game.turn());
+    }
+
+    public void river() {
+        System.out.println("River is:");
+        System.out.println(game.river());
+    }
+
     /**
      * Kun pelaaja valitsee raise-vaihtoehdon. Kysyy uudestaan, jos annettu
      * pelimerkkien määrä on liian pieni.
@@ -212,7 +222,7 @@ public class UserInterface {
             go();
         }
     }
-    
+
     /**
      * Ohjeet pelaajalle valintojen tekemiseen.
      */

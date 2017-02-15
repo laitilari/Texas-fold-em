@@ -43,6 +43,8 @@ public class HandComparatorTest {
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 6));
         tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 14));
+        tableCards.add(new Card("Spades", 13));
         playerPocketCards.add(new Card("Hearts", 4));
         playerPocketCards.add(new Card("Hearts", 3));
         tableCards.addAll(playerPocketCards);
@@ -50,35 +52,89 @@ public class HandComparatorTest {
     }
 
     @Test
+    public void testFlush() {
+        tableCards.add(new Card("Hearts", 1));
+        tableCards.add(new Card("Hearts", 6));
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Hearts", 5));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.flush(tableCards));
+    }
+
+    @Test
     public void testStraight() {
+        tableCards.add(new Card("Hearts", 1));
+        tableCards.add(new Card("Hearts", 6));
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Diamonds", 5));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.straight(tableCards, 1, 5));
+    }
+
+    @Test
+    public void testQuads() {
+        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Clubs", 5));
+        playerPocketCards.add(new Card("Diamonds", 5));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.quads(tableCards));
+    }
+
+    @Test
+    public void testFullHouse() {
+        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Clubs", 5));
+        playerPocketCards.add(new Card("Diamonds", 8));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.fullHouse(tableCards));
+    }
+
+    @Test
+    public void testTrips() {
+        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Clubs", 5));
+        playerPocketCards.add(new Card("Diamonds", 9));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.trips(tableCards));
+    }
+
+    @Test
+    public void testPair() {
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 6));
         tableCards.add(new Card("Hearts", 7));
-        playerPocketCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Hearts", 5));
         playerPocketCards.add(new Card("Diamonds", 3));
         tableCards.addAll(playerPocketCards);
-        assertTrue(hc.straight(tableCards));
+        assertTrue(hc.pair(tableCards));
     }
 
-//    @Test
-//    public void testPair() {
-//        tableCards.add(new Card("Hearts", 5));
-//        tableCards.add(new Card("Hearts", 6));
-//        tableCards.add(new Card("Hearts", 7));
-//        playerPocketCards.add(new Card("Hearts", 5));
-//        playerPocketCards.add(new Card("Diamonds", 3));
-//        tableCards.addAll(playerPocketCards);
-//        assertTrue(hc.pair(tableCards));
-//    }
-    
     @Test
     public void testSameConsecutiveValues() {
-        
+
     }
-    
+
     @Test
     public void testCardsToIntArray() {
-        
+
     }
 
 }

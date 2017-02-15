@@ -33,7 +33,7 @@ public class Game {
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
     }
-    
+
     /**
      * Valmistelee korttipakan ja asettaa pelimerkit.
      */
@@ -52,9 +52,9 @@ public class Game {
         clearCards();
         clearBettingHistory();
     }
-    
+
     public void showDown() {
-        
+
     }
 
     public void preparePack() {
@@ -338,7 +338,17 @@ public class Game {
         dealer.dealFlop();
         return showTableCards();
     }
-    
+
+    public String turn() {
+        dealer.dealTurn();
+        return showTableCards();
+    }
+
+    public String river() {
+        dealer.dealRiver();
+        return showTableCards();
+    }
+
     public String showTableCards() {
         return dealer.tellTableCards();
     }

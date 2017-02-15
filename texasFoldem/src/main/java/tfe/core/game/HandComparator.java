@@ -43,16 +43,19 @@ public class HandComparator {
     }
 
     public boolean fullHouse(List<Card> hand) {
-        if (pair(hand) && trips(hand)) {
+        if (trips(hand)) {
+            Collections.reverse(hand);
+            if (pair(hand)) {
             return true;
+            }
         }
         return false;
     }
 
-    public boolean straight(List<Card> hand) {
+    public boolean straight(List<Card> hand, int x, int y) {
         int[] ints = cardsToIntArray(hand);
         int prev = -1;
-        for (int i = 0; i < ints.length; i++) {
+        for (int i = x; i < y; i++) {
             if (prev == -1 || (prev + 1) == ints[i]) {
                 prev = ints[i];
             } else {
@@ -68,11 +71,11 @@ public class HandComparator {
         int diamonds = 0;
         int clubs = 0;
         for (Card card : hand) {
-            if (card.getSuit().equals(hearts)) {
+            if (card.getSuit().equals("Hearts")) {
                 hearts++;
-            } else if (card.getSuit().equals(spades)) {
+            } else if (card.getSuit().equals("Spades")) {
                 spades++;
-            } else if (card.getSuit().equals(diamonds)) {
+            } else if (card.getSuit().equals("Diamonds")) {
                 diamonds++;
             } else {
                 clubs++;
@@ -85,7 +88,8 @@ public class HandComparator {
     }
     
     public boolean straightFlush(List<Card> hand) {
-        if (straight(hand) && flush(hand)) {
+        if (straight(hand, 0, 4) && flush(hand) || straight(hand, 1, 5) && flush(hand)
+        ||straight(hand, 2,6)) {
             return true;
         }
         return false;
@@ -107,7 +111,7 @@ public class HandComparator {
     public int sameConsecutiveValues(List<Card> hand) {
         int[] ints = cardsToIntArray(hand);
         int prev = 0;
-        int counter = 0;
+        int counter = 1;
         for (int i = 0; i < ints.length; i++) {
             if (prev == ints[i]) {
                 counter++;
