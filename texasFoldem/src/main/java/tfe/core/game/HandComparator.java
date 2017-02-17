@@ -10,13 +10,19 @@ import tfe.core.cards.Card;
 /**
  * Arvottaa kädet ja määrittää paremmuuden.
  */
-
 public class HandComparator {
 
     private List<Card> tableCards;
     private List<Card> playerHand;
     private List<Card> aiHand;
 
+    /**
+     * Konstruktori.
+     *
+     * @param playerPocketCards cards
+     * @param aiPocketCards cards
+     * @param tableCards cards
+     */
     public HandComparator(List<Card> playerPocketCards, List<Card> aiPocketCards, List<Card> tableCards) {
         this.playerHand = new ArrayList<>();
         this.aiHand = new ArrayList<>();
@@ -28,6 +34,9 @@ public class HandComparator {
 
     /**
      * Pari.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean pair(List<Card> hand) {
         if (sameConsecutiveValues(hand) == 2) {
@@ -38,6 +47,9 @@ public class HandComparator {
 
     /**
      * Kolmoset.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean trips(List<Card> hand) {
         if (sameConsecutiveValues(hand) == 3) {
@@ -48,6 +60,9 @@ public class HandComparator {
 
     /**
      * Neloset.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean quads(List<Card> hand) {
         if (sameConsecutiveValues(hand) == 4) {
@@ -57,13 +72,13 @@ public class HandComparator {
     }
 
     /**
-     * Suora
+     * Suora.
+     *
      * @param hand käsi jota tarkastellaan.
      * @param x alkukohta
      * @param y päätekohta
      * @return true tai false
      */
-    
     public boolean straight(List<Card> hand, int x, int y) {
         int[] ints = cardsToIntArray(hand);
         int prev = -1;
@@ -79,6 +94,9 @@ public class HandComparator {
 
     /**
      * Laskee, onko kädessä 5 samaa väriä.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean flush(List<Card> hand) {
         int hearts = 0;
@@ -104,6 +122,9 @@ public class HandComparator {
 
     /**
      * Värisuora.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean straightFlush(List<Card> hand) {
         if (straight(hand, 0, 4) && flush(hand) || straight(hand, 1, 5) && flush(hand)
@@ -115,6 +136,9 @@ public class HandComparator {
 
     /**
      * Täyskäsi.
+     *
+     * @param hand käsi
+     * @return totuusarvo
      */
     public boolean fullHouse(List<Card> hand) {
         int[] ints = cardsToIntArray(hand);
@@ -129,11 +153,13 @@ public class HandComparator {
         }
         return false;
     }
-    
+
     /**
      * Tarkistaa, onko kädessä kolmoset.
+     *
+     * @param ints array of values
+     * @return value to be removed
      */
-
     public int fullHouseHelperMethod(int[] ints) {
         int toBeRemoved = 0;
         if (ints[0] == ints[2]) {
@@ -156,7 +182,9 @@ public class HandComparator {
 
     /**
      * Poistaa kädestä kolmoset, jotta voidaan syöttää jäljellä olevat kortit
-     * sameConseceutiveValues metodille, joka tarkistaa, onko kädessä vielä pari.
+     * sameConseceutiveValues metodille, joka tarkistaa, onko kädessä vielä
+     * pari.
+     *
      * @param hand käsi josta poistetaan.
      * @param toBeRemoved korttien arvo, jonka perusteella kortit poistetaan.
      * @return käsi, josta poistettu tietyn arvoiset kortit.
@@ -174,6 +202,7 @@ public class HandComparator {
 
     /**
      * Muuntaa List-tyyppisen käden korttien arvot Arrayksi.
+     *
      * @param hand käsi, joka muutetaan.
      * @return listan korttien arvoja.
      */
@@ -188,6 +217,7 @@ public class HandComparator {
 
     /**
      * Tarkistaa, kuinka monta samaa, arvoltaan peräkkäistä korttia kädessä on.
+     *
      * @param hand käsi, jota tarkastellaan.
      * @return lukumäärä samoista arvoista.
      */

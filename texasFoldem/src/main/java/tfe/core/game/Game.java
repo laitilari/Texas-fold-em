@@ -55,11 +55,19 @@ public class Game {
         clearBettingHistory();
     }
 
+    /**
+     * showdown.
+     *
+     * @return string
+     */
     public String showDown() {
 
         return "";
     }
 
+    /**
+     * prepares the pack.
+     */
     public void preparePack() {
         dealer.assemblePack();
     }
@@ -80,6 +88,9 @@ public class Game {
         ai.buttonChange();
     }
 
+    /**
+     * Clears the pot.
+     */
     public void clearPot() {
         this.potSize = 0;
     }
@@ -95,6 +106,11 @@ public class Game {
         dealer.reAssemblePack();
     }
 
+    /**
+     * Shuffles.
+     *
+     * @return string
+     */
     public String shuffle() {
         dealer.shufflePack();
         return "Shuffling...";
@@ -133,6 +149,11 @@ public class Game {
         return "Something went wrong";
     }
 
+    /**
+     * If ai is in position, blinds.
+     *
+     * @return string of blinds.
+     */
     public String aiInPosition() {
         player.betSmallBlind(bigBlind / 2);
         ai.betBigBlind(bigBlind);
@@ -142,6 +163,11 @@ public class Game {
                 + ", you bet small blind (" + bigBlind / 2 + ")";
     }
 
+    /**
+     * If player is in position blinds.
+     *
+     * @return blinds
+     */
     public String playerInPosition() {
         ai.betSmallBlind(bigBlind / 2);
         player.betBigBlind(bigBlind);
@@ -162,14 +188,29 @@ public class Game {
                 + "(DEVELOPMENT AI pocket cards: " + ai.getPocketCards().toString();
     }
 
+    /**
+     * Add to pot some chips.
+     *
+     * @param amount double.
+     */
     public void addToPot(double amount) {
         this.potSize += amount;
     }
 
+    /**
+     * Tells how much player has chips.
+     *
+     * @return chips.
+     */
     public double playerChipsLeft() {
         return player.getChips();
     }
 
+    /**
+     * How much ai has chips.
+     *
+     * @return chips.
+     */
     public double aiChipsLeft() {
         return ai.getChips();
     }
@@ -261,7 +302,7 @@ public class Game {
     }
 
     /**
-     * AI voittaa kierroksen
+     * AI voittaa kierroksen.
      *
      * @return tekstiesitys
      */
@@ -337,41 +378,86 @@ public class Game {
         return bettingHistory;
     }
 
+    /**
+     * flop.
+     *
+     * @return tablecards
+     */
     public String flop() {
         dealer.dealFlop();
         return showTableCards();
     }
 
+    /**
+     * turn.
+     *
+     * @return tablecards
+     */
     public String turn() {
         dealer.dealTurn();
         return showTableCards();
     }
 
+    /**
+     * river.
+     *
+     * @return tablecards
+     */
     public String river() {
         dealer.dealRiver();
         return showTableCards();
     }
 
+    /**
+     * Shows table cards.
+     *
+     * @return tablecards
+     */
     public String showTableCards() {
         return dealer.tellTableCards();
     }
 
+    /**
+     * Return pot size.
+     *
+     * @return double pot size
+     */
     public double getPotSize() {
         return potSize;
     }
 
+    /**
+     * retursn bigblind.
+     *
+     * @return bigblind double
+     */
     public double getBigBlind() {
         return bigBlind;
     }
 
+    /**
+     * sets big blind's value.
+     *
+     * @param bigBlind double
+     */
     public void setBigBlind(int bigBlind) {
         this.bigBlind = bigBlind;
     }
 
+    /**
+     * return the starting stack size of players.
+     *
+     * @return double amount
+     */
     public double getStackSize() {
         return stackSize;
     }
 
+    /**
+     * sets the starting stack size.
+     *
+     * @param stackSize amount double
+     */
     public void setStackSize(int stackSize) {
         this.stackSize = stackSize;
     }
@@ -388,14 +474,25 @@ public class Game {
         return dealer;
     }
 
+    /**
+     * gives player chips.
+     */
     public void setPlayerChips() {
         player.setChips(getStackSize());
     }
 
+    /**
+     * gives ai chips.
+     */
     public void setAiChips() {
         ai.setChips(getStackSize());
     }
 
+    /**
+     * sets potsize.
+     *
+     * @param potSize amound double.
+     */
     public void setPotSize(double potSize) {
         this.potSize = potSize;
     }

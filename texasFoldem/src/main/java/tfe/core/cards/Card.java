@@ -8,6 +8,12 @@ public class Card {
     private String suit;
     private int value;
 
+    /**
+     * Konstruktori.
+     *
+     * @param suit suit
+     * @param value value
+     */
     public Card(String suit, int value) {
         this.suit = suit;
         this.value = value;
@@ -15,6 +21,7 @@ public class Card {
 
     /**
      * Palauttaa kortin tiedot. Huomioi erityistapauksina kuvakortit.
+     *
      * @return tekstiesitys kortin arvosta ja maasta.
      */
     public String toString() {

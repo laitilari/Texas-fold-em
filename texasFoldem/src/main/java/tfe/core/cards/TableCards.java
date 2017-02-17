@@ -10,12 +10,16 @@ public class TableCards {
 
     private List<Card> cards;
 
+    /**
+     * Konstruktori.
+     */
     public TableCards() {
         this.cards = new ArrayList<>();
     }
 
     /**
      * Lisää itseensä flopin verran kortteja (3).
+     *
      * @param flop floppikortit
      */
     public void drawFlop(List<Card> flop) {
@@ -24,7 +28,8 @@ public class TableCards {
 
     /**
      * Lisää itseensä yhden kortin. Käytetään turnilla ja riverillä.
-     * @param card 
+     *
+     * @param card card
      */
     public void drawCard(Card card) {
         this.cards.add(card);

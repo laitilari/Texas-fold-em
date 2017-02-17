@@ -19,23 +19,38 @@ public class Dealer {
     private PackOfCards pack;
     private TableCards table;
 
+    /**
+     * Konstruktori.
+     */
     public Dealer() {
         this.pack = new PackOfCards();
         this.table = new TableCards();
     }
 
+    /**
+     * assembles the pack.
+     */
     public void assemblePack() {
         pack.assemblePack();
     }
 
+    /**
+     * shuffles.
+     */
     public void shufflePack() {
         pack.shuffle();
     }
 
+    /**
+     * reassembles.
+     */
     public void reAssemblePack() {
         pack.reAssemblePack();
     }
 
+    /**
+     * clears the table.
+     */
     public void clearTable() {
         table.getCards().clear();
     }
@@ -55,7 +70,6 @@ public class Dealer {
 
     /**
      * Jakaa flopin kortit pöydälle.
-     *
      * @see #dealTurn()
      * @see #dealRiver()
      */
@@ -64,17 +78,23 @@ public class Dealer {
         table.drawFlop(flop);
     }
 
+    /**
+     * Jakaa turnin.
+     */
     public void dealTurn() {
         table.drawCard(dealCard());
     }
 
+    
+    /**
+     * Jakaa riverin.
+     */
     public void dealRiver() {
         table.drawCard(dealCard());
     }
 
     /**
      * Nostaa ja jakaa pakasta yhden kortin.
-     *
      * @return kortti
      */
     public Card dealCard() {
@@ -84,7 +104,6 @@ public class Dealer {
 
     /**
      * Lukee pelaajalle, mitkä kortit pöydällä on.
-     *
      * @return tekstiesitys pöytäkorteista
      */
     public String tellTableCards() {

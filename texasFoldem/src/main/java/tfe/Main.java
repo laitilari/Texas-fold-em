@@ -11,7 +11,11 @@ import tfe.ui.UserInterface;
  * Main luokka avaa ohjelman käyttöliittymän, joka aloittaa pelin.
  */
 public class Main {
-//HUOM. (koodikatselmoija) PELI VIELÄ KESKEN.
+
+    /**
+     * KOODIKATSELMOIJA HUOM. peli vielä kesken, ei voi pelata loppuun saakka.
+     * @param args 
+     */
     public static void main(String[] args) {
         UserInterface ui = new UserInterface();
         ui.greet();

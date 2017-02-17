@@ -23,6 +23,9 @@ public class UserInterface {
         scanner = new ScannerClass();
     }
 
+    /**
+     * Tervehtii pelaajaa.
+     */
     public void greet() {
         System.out.println("Welcome to Texas Fold'em!");
         go();

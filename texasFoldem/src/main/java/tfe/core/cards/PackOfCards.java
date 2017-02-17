@@ -12,6 +12,9 @@ public class PackOfCards {
     private List<Card> cards;
     private List<Card> removedCards;
 
+    /**
+     * Konstruktori.
+     */
     public PackOfCards() {
         this.cards = new ArrayList<>();
         this.removedCards = new ArrayList<>();
@@ -19,6 +22,7 @@ public class PackOfCards {
 
     /**
      * Ottaa yhden kortin pakasta.
+     * @return card
      */
     public Card takeOne() {
         Card card = this.cards.get(0);
@@ -29,6 +33,7 @@ public class PackOfCards {
 
     /**
      * Ottaa monta korttia.
+     *
      * @param howMany montako
      * @return otetut kortit.
      */
@@ -48,6 +53,11 @@ public class PackOfCards {
         removedCards.clear();
     }
 
+    /**
+     * removes card.
+     *
+     * @param card card
+     */
     public void remove(Card card) {
         removedCards.add(card);
     }

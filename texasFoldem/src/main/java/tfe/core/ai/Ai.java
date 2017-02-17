@@ -22,6 +22,9 @@ public class Ai {
     private List<Card> tableCards;
     private List<Card> playerCards;
 
+    /**
+     * Constructor.
+     */
     public Ai() {
         this.hand = new ArrayList<>();
         this.pocketCards = new ArrayList<>();
@@ -34,6 +37,8 @@ public class Ai {
 
     /**
      * Jos kortit ovat erittäin hyvät.
+     *
+     * @return totuusarvo
      */
     public boolean premium() {
         Card first = pocketCards.get(0);
@@ -49,6 +54,8 @@ public class Ai {
 
     /**
      * Jos kortit ovat hyvät.
+     *
+     * @return totuusarvo
      */
     public boolean good() {
         Card first = pocketCards.get(0);
@@ -66,6 +73,8 @@ public class Ai {
 
     /**
      * Jos kortit ovat menettelevät.
+     *
+     * @return totuusarvo
      */
     public boolean medium() {
         Card first = pocketCards.get(0);
@@ -102,6 +111,9 @@ public class Ai {
 
     /**
      * Onko iso stack?
+     *
+     * @param bigBlind bb
+     * @return totuusarvo
      */
     public boolean healthyStack(double bigBlind) {
         if (getChips() >= 20 * bigBlind) {
@@ -112,6 +124,9 @@ public class Ai {
 
     /**
      * Onko pieni stack?
+     *
+     * @param bigBlind bb
+     * @return totuusarvo
      */
     public boolean dangeredStack(double bigBlind) {
         if (getChips() >= 10 * bigBlind && healthyStack(bigBlind) == false) {
@@ -122,6 +137,9 @@ public class Ai {
 
     /**
      * Onko todella pieni stack?
+     *
+     * @param bigBlind bb
+     * @return totuusarvo
      */
     public boolean veryLowStack(double bigBlind) {
         if (getChips() < 10 * bigBlind) {
@@ -132,6 +150,8 @@ public class Ai {
 
     /**
      * Ovatko kortit pelattavissa, eli eivät ole aivan huonot.
+     *
+     * @return totuusarvo
      */
     public boolean playablePocketCards() {
         if (premium() || good() || medium()) {
@@ -142,6 +162,8 @@ public class Ai {
 
     /**
      * Hyvät tai erityisen hyvät.
+     *
+     * @return totuusarvo
      */
     public boolean goodOrPremium() {
         if (premium() || good()) {
@@ -152,6 +174,11 @@ public class Ai {
 
     /**
      * Onko vastustajan panostus normaalin kokoinen.
+     *
+     * @param bettingHistory bh
+     * @param lastBet lastBet
+     * @param bigBlind bb
+     * @return totuusarvo
      */
     public boolean normalEnemyBet(List<Double> bettingHistory, double lastBet,
             double bigBlind) {
@@ -163,6 +190,8 @@ public class Ai {
 
     /**
      * Muuttaa AI:n panoksen kokoa.
+     *
+     * @return randomdouble
      */
     public double betRandomized() {
         return random.nextDouble() + 0.75;
@@ -170,6 +199,9 @@ public class Ai {
 
     /**
      * Panostaa normaalin panostuksen koon muutoksella höystettynä.
+     *
+     * @param bigBlind bb
+     * @return String
      */
     public String betNormalBet(double bigBlind) {
         bet(bigBlind * 2.5 * betRandomized());
@@ -178,27 +210,46 @@ public class Ai {
 
     /**
      * Panostaa normaalin jatkobetin verran.
+     *
+     * @param pot pot
+     * @return String
      */
     public String continuationBet(double pot) {
         bet(0.5 * pot);
         return "AI bets:" + 1 * pot;
     }
 
+    /**
+     * check.
+     *
+     * @return String
+     */
     public String check() {
         bet(0.0);
         return "AI bets:" + 0.0;
     }
 
+    /**
+     * fold.
+     *
+     * @return String
+     */
     public String aiFolds() {
         return "AI folds";
     }
 
+    /**
+     * raise.
+     *
+     * @param lastBet lastBet
+     * @return String
+     */
     public String aiRaises(double lastBet) {
         return "AI bets:" + lastBet * 3 * betRandomized();
     }
 
     /**
-     * Onko tarpeeksi pelimerkkejä panostukseen?
+     * Onko tarpeeksi pelimerkkejä panostukseen.
      *
      * @param bet panostuksen määrä
      * @return totuusarvo
@@ -210,6 +261,13 @@ public class Ai {
         return false;
     }
 
+    /**
+     * Calls.
+     *
+     * @param bettingHistory bh
+     * @param lastBet lastbet
+     * @return String
+     */
     public String aiCalls(List<Double> bettingHistory, double lastBet) {
         if (hasEnoughChips(lastBet)) {
             bet(lastBet);
@@ -219,7 +277,7 @@ public class Ai {
     }
 
     /**
-     * Onko aikaisemmin ollut nostoja?
+     * Onko aikaisemmin ollut nostoja.
      *
      * @param bettingHistory panostushistoria
      * @return totuusarvo
@@ -233,6 +291,10 @@ public class Ai {
 
     /**
      * Vastaus normaalinkokoiseen panostukseen.
+     *
+     * @param lastBet lastbet
+     * @param bettingHistory bh
+     * @return String
      */
     public String actionToNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
         if (goodOrPremium()) {
@@ -245,6 +307,10 @@ public class Ai {
 
     /**
      * Vastaus epänormaalinkokoiseen panostukseen.
+     *
+     * @param lastBet lastbet
+     * @param bettingHistory bh
+     * @return String
      */
     public String actionToNotNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
         if (goodOrPremium()) {
@@ -255,6 +321,9 @@ public class Ai {
 
     /**
      * Vastaus panostuksista tyhjään pöytään isolla stackilla.
+     *
+     * @param bigBlind bb
+     * @return String
      */
     public String actionToEmptyBettingHistoryPreFlopHealthyStack(double bigBlind) {
         if (playablePocketCards()) {
@@ -265,6 +334,9 @@ public class Ai {
 
     /**
      * Vastaus panostuksista tyhjään pöytään pienellä stackilla.
+     *
+     * @param bigBlind bb
+     * @return String
      */
     public String actionToEmptyBettingHistoryPreFlopDangeredStack(double bigBlind) {
         if (goodOrPremium()) {
@@ -277,6 +349,13 @@ public class Ai {
 
     /**
      * Valitsee vastauksen, jos ei ole positiossa isolla stackilla.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String outOfPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -288,6 +367,13 @@ public class Ai {
 
     /**
      * Valitsee vastauksen, jos on positiossa isolla stackilla.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String inPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -299,6 +385,13 @@ public class Ai {
 
     /**
      * Valitsee vastauksen, jos ei ole positiossa pienellä stackilla.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String outOfPositionPreFlopActionDangeredStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -310,6 +403,13 @@ public class Ai {
 
     /**
      * Valitsee vastauksen prefloppiin, jos on iso stack.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String healthyStackPreFlopAction(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -323,6 +423,10 @@ public class Ai {
 
     /**
      * Valitsee vastauksen, jos on positiossa pienellä stackilla.
+     *
+     * @param lastBet lb
+     * @param bettingHistory bh
+     * @return String
      */
     public String actionInPositionPreFlopDangeredStack(double lastBet, List<Double> bettingHistory) {
         if (goodOrPremium()) {
@@ -335,6 +439,13 @@ public class Ai {
 
     /**
      * Valitsee mitä tehdä preflop, kun on pieni stack.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String dangeredStackPreFlopAction(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -347,6 +458,13 @@ public class Ai {
 
     /**
      * Menee all-in joka tapauksessa, kun on erittäin pieni stack.
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @return String
      */
     public String lowStackPreFlopAction(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
@@ -379,6 +497,13 @@ public class Ai {
 
     /**
      * Valinta tyhjään panostushistoriaan flopin jälkeen.
+     *
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param tableCards tc
+     * @param playerChips pc
+     * @return String
      */
     public String actionToEmptyBet(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double playerChips, double lastBet) {
@@ -389,6 +514,13 @@ public class Ai {
         }
     }
 
+    /**
+     * Empty or checked.
+     *
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @return totuusarvo
+     */
     public boolean emptyOrChecked(List<Double> bettingHistory, double lastBet) {
         if (bettingHistory.isEmpty() || lastBet == 0.0) {
             return true;
@@ -414,6 +546,13 @@ public class Ai {
 
     /**
      * Valitsee muuttujien perusteella, mikä olisi paras toiminta tilanteessa.
+     *
+     * @param bettingHistory bh
+     * @param lastBet lb
+     * @param pot pot
+     * @param playerChips pc
+     * @param tableCards tc
+     * @return String
      */
     public String actionDecider(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double playerChips, double lastBet) {
@@ -426,6 +565,13 @@ public class Ai {
 
     /**
      * Onko tilanne preflop vai after flop?
+     *
+     * @param bigBlind bb
+     * @param bettingHistory bh
+     * @param pot pot
+     * @param playerChips pc
+     * @param tableCards tc
+     * @return String
      */
     public String action(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips) {
@@ -442,6 +588,9 @@ public class Ai {
 
     /**
      * Viimeisin panostus.
+     *
+     * @param bettingHistory bh
+     * @return double
      */
     public Double lastBet(List<Double> bettingHistory) {
         double lastBet = 0.0;
@@ -454,6 +603,9 @@ public class Ai {
 
     /**
      * Onko pari?
+     *
+     * @param tableCards tc
+     * @return totuusarvo
      */
     public boolean pair(List<Card> tableCards) {
         Card first = pocketCards.get(0);
@@ -468,33 +620,38 @@ public class Ai {
     }
 
     /**
-     * Toisiksi viimeisin panostus.
-     */
-    public Double secondLastBet(List<Double> bettingHistory) {
-        double secondLastBet = 0.0;
-        if (!bettingHistory.isEmpty() || bettingHistory.size() >= 2) {
-            secondLastBet = bettingHistory.get(bettingHistory.size() - 2);
-            return secondLastBet;
-        }
-        return null;
-    }
-
-    /**
      * AI panostaa kaikki merkkinsä.
+     *
+     * @return string
      */
     public String allIn() {
         bet(getChips());
         return "AI is all-in with " + getChips() + " chips!!!";
     }
 
+    /**
+     * Draw pocket cards.
+     *
+     * @param pocketCards cards
+     */
     public void drawPocketCards(List<Card> pocketCards) {
         this.pocketCards.addAll(pocketCards);
     }
 
+    /**
+     * Get pocket cards.
+     *
+     * @return pocketcards
+     */
     public List<Card> getPocketCards() {
         return pocketCards;
     }
 
+    /**
+     * Bet small blind.
+     *
+     * @param smallBlind sb
+     */
     public void betSmallBlind(double smallBlind) {
         if (this.chips - smallBlind >= 0) {
             this.chips -= smallBlind;
@@ -503,6 +660,11 @@ public class Ai {
         }
     }
 
+    /**
+     * Bet Big blind.
+     *
+     * @param bigBlind bb
+     */
     public void betBigBlind(double bigBlind) {
         if (this.chips - bigBlind >= 0) {
             this.chips -= bigBlind;
@@ -511,10 +673,20 @@ public class Ai {
         }
     }
 
+    /**
+     * getchips.
+     *
+     * @return chips
+     */
     public double getChips() {
         return chips;
     }
 
+    /**
+     * setchips.
+     *
+     * @param chips chips
+     */
     public void setChips(double chips) {
         this.chips = chips;
     }
@@ -530,12 +702,23 @@ public class Ai {
         }
     }
 
+    /**
+     * Retursn hand.
+     *
+     * @param tableCards tc
+     * @return cards
+     */
     public List<Card> getHand(List<Card> tableCards) {
         this.hand.addAll(this.pocketCards);
         this.hand.addAll(tableCards);
         return this.hand;
     }
 
+    /**
+     * Retusn button.
+     *
+     * @return boolean
+     */
     public boolean getButton() {
         return this.button;
     }
@@ -543,7 +726,7 @@ public class Ai {
     /**
      * Voittaa pelimerkkejä.
      *
-     * @param howMuch
+     * @param howMuch double
      */
     public void winChips(double howMuch) {
         this.chips += howMuch;
@@ -551,6 +734,8 @@ public class Ai {
 
     /**
      * Panostaa niin, ettei voi mennä miinukselle.
+     *
+     * @param bet bet
      */
     public void bet(double bet) {
         if (this.chips - bet >= 0) {
