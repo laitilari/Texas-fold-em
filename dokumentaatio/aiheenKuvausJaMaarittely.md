@@ -14,9 +14,12 @@
 
 *Käyttöliittymässä voi olla, että kortit esitetään vain tekstimuodossa, mutta jos aikaa on, voivat ne olla myös kuvina. Muutenkin projektin aikararajan (7 viikkoa) vuoksi projektin lopullisia ominaisuuksia ei voida lyödä lukkoon.*
 
-###Käyttäjä(t):### Pelaaja
+###Käyttäjä(t)### 
 
-####Pelaajan toiminnot:#### 
+Pelaaja
+
+####Pelaajan toiminnot#### 
+
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
 - Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
