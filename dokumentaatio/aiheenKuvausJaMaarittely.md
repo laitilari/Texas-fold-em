@@ -6,7 +6,7 @@
 ![Pelaaja nostaa](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Player raise.png)
 ![Valmistele peli](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Prepare game.png)
 
-**Aihe:** 
+##Aihe##
 
 *Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat samat, kuin perinteisen Texas Hold'emin säännöt. Texas Fold'emissa pelaaja pelaa tekoälyä vastaan. Pelaajan tehtävänä on voittaa peli. Pelin voittaa, jos tekoälyltä loppuvat pelimerkit. Pelaaja häviää, jos pelaajalta itseltään loppuvat pelimerkit.*
 
@@ -14,9 +14,9 @@
 
 *Käyttöliittymässä voi olla, että kortit esitetään vain tekstimuodossa, mutta jos aikaa on, voivat ne olla myös kuvina. Muutenkin projektin aikararajan (7 viikkoa) vuoksi projektin lopullisia ominaisuuksia ei voida lyödä lukkoon.*
 
-**Käyttäjä(t):** Pelaaja
+###Käyttäjä(t):### Pelaaja
 
-**Pelaajan toiminnot:** 
+####Pelaajan toiminnot:#### 
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
 - Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
 - Pelaaja voi myös halutessaan luovuttaa pelin kesken.
