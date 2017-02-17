@@ -1,6 +1,7 @@
 #Aiheen kuvaus ja määrittely#
+##Luokkakaavio##
 ![Luokkakaavio](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
-***Sekvenssikaaviot***
+##Sekvenssikaaviot##
 ![Aseta pelin nopeus](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Setting game speed.png)
 ![Pelaaja nostaa](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Player raise.png)
 ![Valmistele peli](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Prepare game.png)
