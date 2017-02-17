@@ -1,19 +1,22 @@
 package tfe.core.cards;
 
 /**
- *
- * @author ilarilai
+ * Korttiluokka.
  */
 public class Card {
 
     private String suit;
     private int value;
-    
+
     public Card(String suit, int value) {
         this.suit = suit;
         this.value = value;
     }
 
+    /**
+     * Palauttaa kortin tiedot. Huomioi erityistapauksina kuvakortit.
+     * @return tekstiesitys kortin arvosta ja maasta.
+     */
     public String toString() {
         switch (this.value) {
             case 11:

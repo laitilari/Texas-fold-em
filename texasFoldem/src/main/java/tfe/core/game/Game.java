@@ -32,6 +32,8 @@ public class Game {
         this.stackSize = 0.0;
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
+        this.handComparator = new HandComparator(player.getPocketCards(),
+                ai.getPocketCards(), dealer.getTableCards());
     }
 
     /**
@@ -53,8 +55,9 @@ public class Game {
         clearBettingHistory();
     }
 
-    public void showDown() {
+    public String showDown() {
 
+        return "";
     }
 
     public void preparePack() {

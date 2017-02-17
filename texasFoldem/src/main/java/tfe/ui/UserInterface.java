@@ -76,8 +76,13 @@ public class UserInterface {
             streetActions();
             flop();
             streetActions();
+            turn();
+            streetActions();
+            river();
+            streetActions();
             game.showDown();
         }
+        System.out.println("Game ended");
     }
 
     /**

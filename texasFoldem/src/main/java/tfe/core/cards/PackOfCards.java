@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tfe.core.cards;
 
 import java.util.ArrayList;
@@ -10,8 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
- * @author ilarilai
+ * Korttipakka.
  */
 public class PackOfCards {
 
@@ -23,6 +17,9 @@ public class PackOfCards {
         this.removedCards = new ArrayList<>();
     }
 
+    /**
+     * Ottaa yhden kortin pakasta.
+     */
     public Card takeOne() {
         Card card = this.cards.get(0);
         this.cards.remove(0);
@@ -30,6 +27,11 @@ public class PackOfCards {
         return card;
     }
 
+    /**
+     * Ottaa monta korttia.
+     * @param howMany montako
+     * @return otetut kortit.
+     */
     public List<Card> takeMany(int howMany) {
         List<Card> manyCards = new ArrayList<>();
         for (int i = 0; i < howMany; i++) {
@@ -38,6 +40,9 @@ public class PackOfCards {
         return manyCards;
     }
 
+    /**
+     * Lisää pakasta nostetut kortit takaisin pakkaan.
+     */
     public void reAssemblePack() {
         cards.addAll(removedCards);
         removedCards.clear();
@@ -47,12 +52,15 @@ public class PackOfCards {
         removedCards.add(card);
     }
 
+    /**
+     * Muodostaa korttipakan.
+     */
     public void assemblePack() {
         ArrayList<String> suits = new ArrayList<>();
-        suits.add("spades");
-        suits.add("clubs");
-        suits.add("hearts");
-        suits.add("diamonds");
+        suits.add("Spades");
+        suits.add("Clubs");
+        suits.add("Hearts");
+        suits.add("Diamonds");
         int suitNumber = 0;
         for (int i = 0; i < 4; i++) {
             String suit = suits.get(suitNumber);
@@ -64,6 +72,9 @@ public class PackOfCards {
         }
     }
 
+    /**
+     * Sekoittaa pakan.
+     */
     public void shuffle() {
         Collections.shuffle(cards);
     }

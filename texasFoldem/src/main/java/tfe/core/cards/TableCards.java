@@ -3,14 +3,8 @@ package tfe.core.cards;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author ilarilai
+ * Pöytäkortit.
  */
 public class TableCards {
 
@@ -20,10 +14,18 @@ public class TableCards {
         this.cards = new ArrayList<>();
     }
 
+    /**
+     * Lisää itseensä flopin verran kortteja (3).
+     * @param flop floppikortit
+     */
     public void drawFlop(List<Card> flop) {
         this.cards.addAll(flop);
     }
 
+    /**
+     * Lisää itseensä yhden kortin. Käytetään turnilla ja riverillä.
+     * @param card 
+     */
     public void drawCard(Card card) {
         this.cards.add(card);
     }

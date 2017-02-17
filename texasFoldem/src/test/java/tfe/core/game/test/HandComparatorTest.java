@@ -105,12 +105,12 @@ public class HandComparatorTest {
 
     @Test
     public void testTrips() {
-        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Hearts", 7));
         tableCards.add(new Card("Spades", 5));
         tableCards.add(new Card("Hearts", 7));
         tableCards.add(new Card("Spades", 8));
         tableCards.add(new Card("Spades", 13));
-        playerPocketCards.add(new Card("Clubs", 5));
+        playerPocketCards.add(new Card("Clubs", 7));
         playerPocketCards.add(new Card("Diamonds", 9));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.trips(tableCards));
@@ -121,20 +121,68 @@ public class HandComparatorTest {
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 6));
         tableCards.add(new Card("Hearts", 7));
-        playerPocketCards.add(new Card("Hearts", 5));
-        playerPocketCards.add(new Card("Diamonds", 3));
+        tableCards.add(new Card("Spades", 14));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Hearts", 6));
+        playerPocketCards.add(new Card("Hearts", 3));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.pair(tableCards));
     }
 
     @Test
-    public void testSameConsecutiveValues() {
+    public void testSameConsecutiveValuesWithNone() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Spades", 6));
+        playerPocketCards.add(new Card("Hearts", 7));
+        playerPocketCards.add(new Card("Hearts", 8));
+        tableCards.addAll(playerPocketCards);
+        int x = hc.sameConsecutiveValues(tableCards);
+        assertEquals(x, 1);
+    }
 
+    @Test
+    public void testSameConsecutiveValuesWithPair() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Spades", 6));
+        playerPocketCards.add(new Card("Hearts", 2));
+        playerPocketCards.add(new Card("Hearts", 8));
+        tableCards.addAll(playerPocketCards);
+        int x = hc.sameConsecutiveValues(tableCards);
+        assertEquals(x, 2);
+    }
+
+    @Test
+    public void testSameConsecutiveValuesWithThree() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 6));
+        playerPocketCards.add(new Card("Hearts", 8));
+        playerPocketCards.add(new Card("Hearts", 10));
+        tableCards.addAll(playerPocketCards);
+        int x = hc.sameConsecutiveValues(tableCards);
+        assertEquals(x, 4);
     }
 
     @Test
     public void testCardsToIntArray() {
-
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 5));
+        tableCards.add(new Card("Spades", 6));
+        playerPocketCards.add(new Card("Hearts", 7));
+        playerPocketCards.add(new Card("Hearts", 8));
+        tableCards.addAll(playerPocketCards);
+        int[] values = hc.cardsToIntArray(tableCards);
+        int[] values2 = new int[]{2, 3, 4, 5, 6, 7, 8};
+        assertEquals(values[4], values2[4]);
     }
-
 }
