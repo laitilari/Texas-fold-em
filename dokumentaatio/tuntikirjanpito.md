@@ -9,3 +9,7 @@ Päivä | Tunnit | Kuvaus
 07.02.2017 | 06 | Metodien siistimistä
 08.02.2017 | 02 | Testejä
 10.02.2017 | 05 | Logiikan jatkokehittämistä
+14.02.2017 | 06 | Javadoc, testejä ja lisää AI:n logiikkaa
+15.02.2017 | 02 | HandComaprator luokan luonti ja aloitus
+16.02.2017 | 05 | HandComparator luokan kehittäminen
+17.02.2017 | 07 | Javadocin korjausta checkstylen kanssa, sekvenssikaaviot, luokkakaavion korjaus, HandComparator valmiiksi
