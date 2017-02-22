@@ -17,10 +17,12 @@ public class UserInterface {
 
     private Game game;
     private ScannerClass scanner;
+    private int bettingRoundCounter;
 
     public UserInterface() {
         this.game = new Game();
         scanner = new ScannerClass();
+        this.bettingRoundCounter = 0;
     }
 
     /**
@@ -76,7 +78,8 @@ public class UserInterface {
     public void newRound() {
         while (!game.end()) {
             prepareForNewRound();
-            streetActions();
+            bettingRound();
+            prepareForNewStreet();
             flop();
             streetActions();
             turn();
@@ -132,20 +135,21 @@ public class UserInterface {
     /**
      * Kysyy pelaajan pelivalinnan ja kutsuu sen mukaista metodia.
      */
-    public void playerAction() {
+    public String playerAction() {
         bettingInstructions();
         String action = scanner.use();
         if (action.equals("c")) {
             System.out.println(game.checkOrCall());
+            return ("c");
         } else if (action.equals("r")) {
             playerRaise();
-            //uusi aiaction, jos tämä on rundin päättävä action
+            return "r";
         } else if (action.equals("f")) {
-            aiWinsRound();
-            newRound();
+            return "f";
         } else {
             playerAction();
         }
+        return "Something went wrong with player action";
     }
 
     public void aiWinsRound() {
@@ -170,33 +174,101 @@ public class UserInterface {
 
     /**
      * AI:n valintoja seuraava metodi, joka kutsuu valinnan mukaisia metodeja.
+     *
+     * @return ai action
      */
-    public void aiAction() {
+    public String aiAction() {
         String action = game.aiAction();
         if (action.equals("AI folds")) {
             System.out.println(action);
-            playerWinsRound();
-            newRound();
-        } else if (action.equals("AI calls")) {
+            return "f";
+        } else if (action.contains("AI calls")) {
             aiCalls();
+            return "c";
         } else if (action.contains("bet")) {
             aiBets(action);
+            return "bet";
         } else if (action.contains("all-in")) {
             aiAllIn(action);
+            return "all-in";
         }
+        return "Something went wrong with AI action";
     }
 
     /**
      * Määrittelee pelijärjestyksen Game-luokan bettingOrder metodin avulla.
      */
     public void bettingRound() {
-        if (!game.bettingOrder()) {
-            playerAction();
-            aiAction();
-        } else {
-            aiAction();
-            playerAction();
+        while (true) {
+            if (!game.bettingOrder()) {
+                String playerAction = playerAction();
+                if (bettingRoundCounter > 0 && playerAction.equals("c")) {
+                    bettingRoundCounter = 0;
+                    break;
+                }
+                if (playerAction.equals("f")) {
+                    aiWinsRound();
+                    newRound();
+                    bettingRoundCounter = 0;
+                    break;
+                }
+                String aiAction = aiAction();
+                if (aiAction.equals("f")) {
+                    playerWinsRound();
+                    newRound();
+                    bettingRoundCounter = 0;
+                    break;
+                } else if (aiAction.equals("c")) {
+                    bettingRoundCounter = 0;
+                    break;
+                } else {
+                    bettingRoundCounter++;
+                    bettingRound();
+                }
+            } else {
+                String aiAction = aiAction();
+                if (bettingRoundCounter > 0 && aiAction.equals("c")) {
+                    bettingRoundCounter = 0;
+                    break;
+                }
+                if (aiAction.equals("f")) {
+                    playerWinsRound();
+                    newRound();
+                    bettingRoundCounter = 0;
+                    break;
+                }
+                String playerAction = playerAction();
+                if (playerAction.equals("f")) {
+                    aiWinsRound();
+                    newRound();
+                    bettingRoundCounter = 0;
+                    break;
+                } else if (playerAction.equals("c")) {
+                    bettingRoundCounter = 0;
+                    break;
+                } else {
+                    bettingRoundCounter++;
+                    bettingRound();
+                }
+            }
         }
+    }
+
+    /**
+     * Jos molemmat all in, mennään kaikki streetit läpi ilman panostuksia.
+     */
+    public void allInStreets() {
+        if (game.getDealer().getTableCards().size() == 0) {
+            flop();
+            turn();
+            river();
+        } else if (game.getDealer().getTableCards().size() == 3) {
+            turn();
+            river();
+        } else {
+            river();
+        }
+        game.showDown();
     }
 
     /**

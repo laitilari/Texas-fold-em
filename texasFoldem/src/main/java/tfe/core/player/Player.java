@@ -42,12 +42,15 @@ public class Player {
      * Panostusmetodi. Pelimerkit eivät voi mennä alle nollan.
      *
      * @param bet panostuksen määrä
+     * @return bet amount
      */
-    public void bet(double bet) {
+    public double bet(double bet) {
         if (this.chips - bet >= 0) {
             this.chips -= bet;
+            return bet;
         } else {
             this.chips = 0;
+            return bet - this.chips;
         }
     }
 

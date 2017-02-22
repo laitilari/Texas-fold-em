@@ -13,13 +13,13 @@ import tfe.ui.UserInterface;
 public class Main {
 
     /**
-     * KOODIKATSELMOIJA HUOM. peli vielä kesken, ei voi pelata loppuun saakka.
-     * @param args 
+     * Käynnistää pelin.
+     *
+     * @param args args
      */
     public static void main(String[] args) {
         UserInterface ui = new UserInterface();
         ui.greet();
         ui.go();
     }
-
 }

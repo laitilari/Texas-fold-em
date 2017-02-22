@@ -14,25 +14,17 @@ import tfe.core.game.HandComparator;
 public class Ai {
 
     private List<Card> pocketCards;
-    private List<Card> hand;
     private double chips;
     private boolean button;
     private Random random;
-    private HandComparator hc;
-    private List<Card> tableCards;
-    private List<Card> playerCards;
 
     /**
      * Constructor.
      */
     public Ai() {
-        this.hand = new ArrayList<>();
         this.pocketCards = new ArrayList<>();
         this.button = true;
         this.random = new Random();
-        this.tableCards = new ArrayList<>();
-        this.playerCards = new ArrayList<>();
-        this.hc = new HandComparator(playerCards, pocketCards, tableCards);
     }
 
     /**
@@ -46,10 +38,7 @@ public class Ai {
         if (first.getValue() >= 11 && first.getValue() == second.getValue()) {
             return true;
         }
-        if (first.getValue() + second.getValue() >= 26) {
-            return true;
-        }
-        return false;
+        return first.getValue() + second.getValue() >= 26;
     }
 
     /**
@@ -64,11 +53,8 @@ public class Ai {
                 && first.getValue() == second.getValue()) {
             return true;
         }
-        if (first.getValue() + second.getValue() >= 22
-                && first.getValue() + second.getValue() <= 25) {
-            return true;
-        }
-        return false;
+        return first.getValue() + second.getValue() >= 22
+                && first.getValue() + second.getValue() <= 25;
     }
 
     /**
@@ -79,7 +65,7 @@ public class Ai {
     public boolean medium() {
         Card first = pocketCards.get(0);
         Card second = pocketCards.get(1);
-        if (first.getValue() >= 7 && first.getValue() <= 8
+        if (first.getValue() >= 5 && first.getValue() <= 8
                 && first.getValue() == second.getValue()) {
             return true;
         }
@@ -90,10 +76,7 @@ public class Ai {
                 && first.getValue() >= 7) {
             return true;
         }
-        if (first.getValue() + second.getValue() >= 15) {
-            return true;
-        }
-        return false;
+        return first.getValue() + second.getValue() >= 15;
     }
 
     /**
@@ -103,10 +86,7 @@ public class Ai {
      * @return totuusarvo.
      */
     public boolean preFlop(List<Card> tableCards) {
-        if (tableCards.isEmpty()) {
-            return true;
-        }
-        return false;
+        return tableCards.isEmpty();
     }
 
     /**
@@ -116,10 +96,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean healthyStack(double bigBlind) {
-        if (getChips() >= 20 * bigBlind) {
-            return true;
-        }
-        return false;
+        return getChips() >= 20 * bigBlind;
     }
 
     /**
@@ -129,10 +106,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean dangeredStack(double bigBlind) {
-        if (getChips() >= 10 * bigBlind && healthyStack(bigBlind) == false) {
-            return true;
-        }
-        return false;
+        return getChips() >= 10 * bigBlind && healthyStack(bigBlind) == false;
     }
 
     /**
@@ -142,10 +116,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean veryLowStack(double bigBlind) {
-        if (getChips() < 10 * bigBlind) {
-            return true;
-        }
-        return false;
+        return getChips() < 10 * bigBlind;
     }
 
     /**
@@ -154,10 +125,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean playablePocketCards() {
-        if (premium() || good() || medium()) {
-            return true;
-        }
-        return false;
+        return premium() || good() || medium();
     }
 
     /**
@@ -166,10 +134,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean goodOrPremium() {
-        if (premium() || good()) {
-            return true;
-        }
-        return false;
+        return premium() || good();
     }
 
     /**
@@ -182,19 +147,7 @@ public class Ai {
      */
     public boolean normalEnemyBet(List<Double> bettingHistory, double lastBet,
             double bigBlind) {
-        if (lastBet <= 3 * bigBlind) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Muuttaa AI:n panoksen kokoa.
-     *
-     * @return randomdouble
-     */
-    public double betRandomized() {
-        return random.nextDouble() + 0.75;
+        return lastBet <= 3 * bigBlind;
     }
 
     /**
@@ -204,8 +157,7 @@ public class Ai {
      * @return String
      */
     public String betNormalBet(double bigBlind) {
-        bet(bigBlind * 2.5 * betRandomized());
-        return "AI bets:" + bigBlind * 2.5 * betRandomized();
+        return "AI bets:" + bigBlind * 2.5;
     }
 
     /**
@@ -215,8 +167,7 @@ public class Ai {
      * @return String
      */
     public String continuationBet(double pot) {
-        bet(0.5 * pot);
-        return "AI bets:" + 1 * pot;
+        return "AI bets:" + 0.5 * pot;
     }
 
     /**
@@ -225,7 +176,6 @@ public class Ai {
      * @return String
      */
     public String check() {
-        bet(0.0);
         return "AI bets:" + 0.0;
     }
 
@@ -245,7 +195,7 @@ public class Ai {
      * @return String
      */
     public String aiRaises(double lastBet) {
-        return "AI bets:" + lastBet * 3 * betRandomized();
+        return "AI bets:" + lastBet * 3;
     }
 
     /**
@@ -255,10 +205,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean hasEnoughChips(double bet) {
-        if (getChips() - bet > 0) {
-            return true;
-        }
-        return false;
+        return getChips() - bet > 0;
     }
 
     /**
@@ -269,11 +216,7 @@ public class Ai {
      * @return String
      */
     public String aiCalls(List<Double> bettingHistory, double lastBet) {
-        if (hasEnoughChips(lastBet)) {
-            bet(lastBet);
-            return "AI calls";
-        }
-        return allIn();
+        return "AI calls";
     }
 
     /**
@@ -283,10 +226,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean noRaises(List<Double> bettingHistory) {
-        if (bettingHistory.isEmpty()) {
-            return true;
-        }
-        return false;
+        return bettingHistory.get(bettingHistory.size() - 1) == 30;
     }
 
     /**
@@ -297,10 +237,17 @@ public class Ai {
      * @return String
      */
     public String actionToNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
-        if (goodOrPremium()) {
-            return aiRaises(lastBet);
-        } else if (medium()) {
-            return aiCalls(bettingHistory, lastBet);
+        if (bettingHistory.size() < 4) {
+            if (goodOrPremium()) {
+                return aiRaises(lastBet);
+            } else if (medium()) { 
+                return aiCalls(bettingHistory, lastBet);
+            }
+        } else {
+            if (goodOrPremium()) {
+                return allIn();
+            }
+            return aiFolds();
         }
         return aiFolds();
     }
@@ -503,11 +450,12 @@ public class Ai {
      * @param pot pot
      * @param tableCards tc
      * @param playerChips pc
+     * @param hc hc
      * @return String
      */
     public String actionToEmptyBet(List<Card> tableCards, List<Double> bettingHistory,
-            double pot, double playerChips, double lastBet) {
-        if (pair(tableCards) || goodOrPremium()) {
+            double pot, double playerChips, double lastBet, HandComparator hc) {
+        if (hc.pairOrBetter(getHand(tableCards)) || goodOrPremium()) {
             return continuationBet(pot);
         } else {
             return check();
@@ -522,10 +470,7 @@ public class Ai {
      * @return totuusarvo
      */
     public boolean emptyOrChecked(List<Double> bettingHistory, double lastBet) {
-        if (bettingHistory.isEmpty() || lastBet == 0.0) {
-            return true;
-        }
-        return false;
+        return bettingHistory.isEmpty() || lastBet == 0.0;
     }
 
     /**
@@ -534,14 +479,15 @@ public class Ai {
      * @param bettingHistory panostushistoria
      * @param tableCards pöytäkortit
      * @param lastBet viimeisin panostus
+     * @param hc hc
      * @return AI:n päätös.
      */
-    public String playerHasBet(List<Double> bettingHistory, List<Card> tableCards, double lastBet) {
-        if (pair(tableCards) || goodOrPremium()) {
+    public String playerHasBet(List<Double> bettingHistory, List<Card> tableCards,
+            double lastBet, HandComparator hc) {
+        if (hc.pairOrBetter(getHand(tableCards))) {
             return aiCalls(bettingHistory, lastBet);
-        } else {
-            return aiFolds();
         }
+        return aiFolds();
     }
 
     /**
@@ -552,15 +498,16 @@ public class Ai {
      * @param pot pot
      * @param playerChips pc
      * @param tableCards tc
+     * @param hc hc
      * @return String
      */
     public String actionDecider(List<Card> tableCards, List<Double> bettingHistory,
-            double pot, double playerChips, double lastBet) {
+            double pot, double playerChips, double lastBet, HandComparator hc) {
         if (emptyOrChecked(bettingHistory, lastBet)) {
             return actionToEmptyBet(tableCards, bettingHistory,
-                    pot, playerChips, lastBet);
+                    pot, playerChips, lastBet, hc);
         }
-        return playerHasBet(bettingHistory, tableCards, lastBet);
+        return playerHasBet(bettingHistory, tableCards, lastBet, hc);
     }
 
     /**
@@ -576,13 +523,14 @@ public class Ai {
     public String action(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips) {
         double lastBet = lastBet(bettingHistory);
-        this.tableCards = tableCards;
-        if (preFlop(this.tableCards)) {
+        this.pocketCards.addAll(tableCards);
+        HandComparator hc = new HandComparator();
+        if (preFlop(tableCards)) {
             return preFlopActionDecider(bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
         } else {
-            return actionDecider(this.tableCards, bettingHistory,
-                    pot, playerChips, lastBet);
+            return actionDecider(tableCards, bettingHistory,
+                    pot, playerChips, lastBet, hc);
         }
     }
 
@@ -599,24 +547,6 @@ public class Ai {
             return lastBet;
         }
         return lastBet;
-    }
-
-    /**
-     * Onko pari?
-     *
-     * @param tableCards tc
-     * @return totuusarvo
-     */
-    public boolean pair(List<Card> tableCards) {
-        Card first = pocketCards.get(0);
-        Card second = pocketCards.get(1);
-        for (Card card : tableCards) {
-            if (card.getValue() == first.getValue()
-                    || card.getValue() == second.getValue()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -703,19 +633,7 @@ public class Ai {
     }
 
     /**
-     * Retursn hand.
-     *
-     * @param tableCards tc
-     * @return cards
-     */
-    public List<Card> getHand(List<Card> tableCards) {
-        this.hand.addAll(this.pocketCards);
-        this.hand.addAll(tableCards);
-        return this.hand;
-    }
-
-    /**
-     * Retusn button.
+     * Returns button.
      *
      * @return boolean
      */
@@ -736,13 +654,27 @@ public class Ai {
      * Panostaa niin, ettei voi mennä miinukselle.
      *
      * @param bet bet
+     * @return bet amount
      */
-    public void bet(double bet) {
+    public double bet(double bet) {
         if (this.chips - bet >= 0) {
             this.chips -= bet;
+            return bet;
         } else {
             this.chips = 0;
+            return bet - this.chips;
         }
+    }
+
+    /**
+     * Adds tablecards to pocketcards and returns.
+     *
+     * @return list of cards
+     * @param tableCards table cards
+     */
+    public List<Card> getHand(List<Card> tableCards) {
+        this.pocketCards.addAll(tableCards);
+        return this.pocketCards;
     }
 
 }

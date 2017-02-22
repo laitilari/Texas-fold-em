@@ -6,7 +6,6 @@
 package tfe.core.game.test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,8 +29,7 @@ public class HandComparatorTest {
         this.playerPocketCards = new ArrayList<>();
         this.aiPocketCards = new ArrayList<>();
         this.tableCards = new ArrayList<>();
-        this.hc = new HandComparator(playerPocketCards,
-                aiPocketCards, tableCards);
+        this.hc = new HandComparator();
     }
 
     @Before
@@ -120,11 +118,11 @@ public class HandComparatorTest {
     public void testPair() {
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 6));
-        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Hearts", 8));
         tableCards.add(new Card("Spades", 14));
         tableCards.add(new Card("Spades", 13));
-        playerPocketCards.add(new Card("Hearts", 6));
-        playerPocketCards.add(new Card("Hearts", 3));
+        playerPocketCards.add(new Card("Hearts", 7));
+        playerPocketCards.add(new Card("Hearts", 7));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.pair(tableCards));
     }

@@ -32,8 +32,6 @@ public class Game {
         this.stackSize = 0.0;
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
-        this.handComparator = new HandComparator(player.getPocketCards(),
-                ai.getPocketCards(), dealer.getTableCards());
     }
 
     /**
@@ -56,17 +54,16 @@ public class Game {
     }
 
     /**
-     * showdown.
+     * Käsien vertailu.
      *
      * @return string
      */
     public String showDown() {
-
         return "";
     }
 
     /**
-     * prepares the pack.
+     * Valmistelee pakan.
      */
     public void preparePack() {
         dealer.assemblePack();
@@ -89,7 +86,7 @@ public class Game {
     }
 
     /**
-     * Clears the pot.
+     * Tyhjentää potin.
      */
     public void clearPot() {
         this.potSize = 0;
@@ -107,7 +104,7 @@ public class Game {
     }
 
     /**
-     * Shuffles.
+     * Sekoittaa.
      *
      * @return string
      */
@@ -117,19 +114,10 @@ public class Game {
     }
 
     /**
-     * Lisää blindit panostushistoriaan.
-     */
-    public void addBlindsToBettingHistory() {
-        bettingHistory.add(bigBlind / 2);
-        bettingHistory.add(bigBlind);
-    }
-
-    /**
      * Lisää blindit pottiin.
      */
     public void addBlindsToPot() {
         addToPot(bigBlind / 2 + bigBlind);
-        addBlindsToBettingHistory();
     }
 
     /**
@@ -157,8 +145,9 @@ public class Game {
     public String aiInPosition() {
         player.betSmallBlind(bigBlind / 2);
         ai.betBigBlind(bigBlind);
+        getBettingHistory().add(bigBlind / 2);
+        getBettingHistory().add(bigBlind);
         addBlindsToPot();
-//            addBlindsToBettingHistory();
         return "AI bets big blind (" + bigBlind + ")"
                 + ", you bet small blind (" + bigBlind / 2 + ")";
     }
@@ -171,8 +160,9 @@ public class Game {
     public String playerInPosition() {
         ai.betSmallBlind(bigBlind / 2);
         player.betBigBlind(bigBlind);
+        getBettingHistory().add(bigBlind / 2);
+        getBettingHistory().add(bigBlind);
         addBlindsToPot();
-//            addBlindsToBettingHistory();
         return "You bet big blind (" + bigBlind + ")"
                 + ", AI bets small blind (" + bigBlind / 2 + ")";
     }
@@ -189,7 +179,7 @@ public class Game {
     }
 
     /**
-     * Add to pot some chips.
+     * Lisää pottiin chippejä.
      *
      * @param amount double.
      */
@@ -198,7 +188,7 @@ public class Game {
     }
 
     /**
-     * Tells how much player has chips.
+     * Kertoo paljonko chippejä jäljellä.
      *
      * @return chips.
      */
@@ -207,7 +197,7 @@ public class Game {
     }
 
     /**
-     * How much ai has chips.
+     * Paljonko AI:lla chippejä jäljellä.
      *
      * @return chips.
      */
@@ -216,21 +206,41 @@ public class Game {
     }
 
     /**
+     * Viimeisin panostus.
+     *
+     * @return määrä.
+     */
+    public double lastBet() {
+        if (this.bettingHistory.isEmpty()) {
+            return 0.0;
+        }
+        return this.bettingHistory.get(bettingHistory.size() - 1);
+    }
+
+    /**
      * Pelaajan checkaamisesta tai callaamisesta aiheutuvat toiminnot peliin.
      *
      * @return Tieto pelaajan valinnasta
      */
     public String checkOrCall() {
-        if (bettingHistory.isEmpty()) {
-            return "Player checked";
-        }
-        if (bettingHistory.get(bettingHistory.size() - 1) == 0.0
-                || subtractLastTwoBets() == 0.0) {
-            return "Player checked";
+        if (lastBet() == 0.0) {
+            return "Player checks";
+        } else if (bettingHistory.size() == 1) {
+            double amount = player.bet(lastBet());
+            addToPot(amount);
+            bettingHistory.add(amount);
+            if (player.getChips() == 0) {
+                return "Player calls " + amount + " and is all in";
+            }
+            return "Player calls " + lastBet();
+        } else if (lastBet() == 15) {
+            return "Player checks";
         } else {
-            player.bet(subtractLastTwoBets());
-            addToPot(subtractLastTwoBets());
-            return "Player called " + subtractLastTwoBets();
+            double amount = subtractLastTwoBets();
+            bettingHistory.add(amount);
+            player.bet(amount);
+            addToPot(amount);
+            return "Player calls " + amount;
         }
     }
 
@@ -240,14 +250,25 @@ public class Game {
      * @return Tieto tekoälyn valinnasta
      */
     public String aiCalls() {
-        if (bettingHistory.isEmpty()) {
+        if (lastBet() == 0.0) {
             return "AI checks";
-        } else if (bettingHistory.get(bettingHistory.size() - 1) == 0.0) {
+        } else if (bettingHistory.size() == 1) {
+            double amount = ai.bet(lastBet());
+            addToPot(amount);
+            bettingHistory.add(amount);
+            if (ai.getChips() == 0) {
+                return "AI calls " + amount + " and is all in";
+            }
+            return "AI calls " + lastBet();
+        } else if (lastBet() == 15) {
             return "AI checks";
+        } else {
+            double amount = subtractLastTwoBets();
+            bettingHistory.add(amount);
+            ai.bet(amount);
+            addToPot(amount);
+            return "AI calls " + amount;
         }
-        addToPot(subtractLastTwoBets());
-        bettingHistory.add(subtractLastTwoBets());
-        return "AI calls " + subtractLastTwoBets() * -1;
     }
 
     /**
@@ -259,9 +280,20 @@ public class Game {
     public String aiBetsOrRaises(String action) {
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
-        bettingHistory.add(amount);
-        addToPot(amount);
-        return action;
+        if (amount >= ai.getChips()) {
+            amount = ai.getChips();
+            bettingHistory.add(amount);
+            ai.bet(amount);
+            addToPot(amount);
+            return "Ai goes all in with " + amount;
+        }
+        if (amount > 0.0) {
+            bettingHistory.add(amount);
+            ai.bet(amount);
+            addToPot(amount);
+            return "Ai raises " + amount;
+        }
+        return "Ai checks.";
     }
 
     /**
@@ -295,10 +327,17 @@ public class Game {
      * @return tesktiesitys pelaajan nostosta.
      */
     public String raise(double amount) {
+        if (amount >= player.getChips()) {
+            amount = player.getChips();
+            bettingHistory.add(amount);
+            player.bet(amount);
+            addToPot(amount);
+            return "Player goes all in with " + amount;
+        }
         player.bet(amount);
         bettingHistory.add(amount);
         addToPot(amount);
-        return "Player raised " + amount;
+        return "Player raises " + amount;
     }
 
     /**
@@ -331,10 +370,10 @@ public class Game {
      */
     public double subtractLastTwoBets() {
         if (bettingHistory.size() >= 2) {
-            return bettingHistory.get(bettingHistory.size() - 1)
-                    - bettingHistory.get(bettingHistory.size() - 2);
+            return (lastBet())
+                    - (bettingHistory.get(bettingHistory.size() - 2));
         } else if (bettingHistory.size() == 1) {
-            return bettingHistory.get(bettingHistory.size() - 1);
+            return lastBet();
         }
         return 0.0;
     }
@@ -345,10 +384,7 @@ public class Game {
      * @return tieto pelijärjestyksestä
      */
     public boolean bettingOrder() {
-        if (!player.isButton()) {
-            return false;
-        }
-        return true;
+        return player.isButton();
     }
 
     /**
@@ -368,10 +404,7 @@ public class Game {
      * @return totuusarvo, onko peli loppu (on, jos pelimerkit loppu)
      */
     public boolean end() {
-        if (player.getChips() == stackSize * 2 || ai.getChips() == stackSize * 2) {
-            return true;
-        }
-        return false;
+        return player.getChips() == stackSize * 2 || ai.getChips() == stackSize * 2;
     }
 
     public List<Double> getBettingHistory() {
@@ -409,7 +442,7 @@ public class Game {
     }
 
     /**
-     * Shows table cards.
+     * Näyttää pöytäkortit.
      *
      * @return tablecards
      */
@@ -418,7 +451,7 @@ public class Game {
     }
 
     /**
-     * Return pot size.
+     * Palauttaa potin koon.
      *
      * @return double pot size
      */
@@ -427,7 +460,7 @@ public class Game {
     }
 
     /**
-     * retursn bigblind.
+     * Palauttaa big blindin.
      *
      * @return bigblind double
      */
@@ -436,7 +469,7 @@ public class Game {
     }
 
     /**
-     * sets big blind's value.
+     * Asettaa big blindin.
      *
      * @param bigBlind double
      */
@@ -445,7 +478,7 @@ public class Game {
     }
 
     /**
-     * return the starting stack size of players.
+     * Palauttaa aloitustackin.
      *
      * @return double amount
      */
@@ -454,7 +487,7 @@ public class Game {
     }
 
     /**
-     * sets the starting stack size.
+     * Asettaa aloitusstackin.
      *
      * @param stackSize amount double
      */
@@ -475,21 +508,21 @@ public class Game {
     }
 
     /**
-     * gives player chips.
+     * Antaa pelaajalle chippejä.
      */
     public void setPlayerChips() {
         player.setChips(getStackSize());
     }
 
     /**
-     * gives ai chips.
+     * Antaa AI:lle chippejä.
      */
     public void setAiChips() {
         ai.setChips(getStackSize());
     }
 
     /**
-     * sets potsize.
+     * Asettaa pottikoon.
      *
      * @param potSize amound double.
      */

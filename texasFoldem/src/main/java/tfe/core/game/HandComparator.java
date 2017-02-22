@@ -12,24 +12,11 @@ import tfe.core.cards.Card;
  */
 public class HandComparator {
 
-    private List<Card> tableCards;
-    private List<Card> playerHand;
-    private List<Card> aiHand;
-
     /**
      * Konstruktori.
      *
-     * @param playerPocketCards cards
-     * @param aiPocketCards cards
-     * @param tableCards cards
      */
-    public HandComparator(List<Card> playerPocketCards, List<Card> aiPocketCards, List<Card> tableCards) {
-        this.playerHand = new ArrayList<>();
-        this.aiHand = new ArrayList<>();
-        playerHand.addAll(playerPocketCards);
-        playerHand.addAll(tableCards);
-        aiHand.addAll(playerPocketCards);
-        aiHand.addAll(tableCards);
+    public HandComparator() {
     }
 
     /**
@@ -39,10 +26,7 @@ public class HandComparator {
      * @return totuusarvo
      */
     public boolean pair(List<Card> hand) {
-        if (sameConsecutiveValues(hand) == 2) {
-            return true;
-        }
-        return false;
+        return sameConsecutiveValues(hand) == 2;
     }
 
     /**
@@ -52,10 +36,7 @@ public class HandComparator {
      * @return totuusarvo
      */
     public boolean trips(List<Card> hand) {
-        if (sameConsecutiveValues(hand) == 3) {
-            return true;
-        }
-        return false;
+        return sameConsecutiveValues(hand) == 3;
     }
 
     /**
@@ -65,10 +46,7 @@ public class HandComparator {
      * @return totuusarvo
      */
     public boolean quads(List<Card> hand) {
-        if (sameConsecutiveValues(hand) == 4) {
-            return true;
-        }
-        return false;
+        return sameConsecutiveValues(hand) == 4;
     }
 
     /**
@@ -104,20 +82,18 @@ public class HandComparator {
         int diamonds = 0;
         int clubs = 0;
         for (Card card : hand) {
-            if (card.getSuit().equals("Hearts")) {
-                hearts++;
-            } else if (card.getSuit().equals("Spades")) {
-                spades++;
-            } else if (card.getSuit().equals("Diamonds")) {
-                diamonds++;
-            } else {
-                clubs++;
+            switch (card.getSuit()) {
+                case "Hearts":
+                    hearts++;
+                case "Spades":
+                    spades++;
+                case "Diamonds":
+                    diamonds++;
+                case "Clubs":
+                    clubs++;
             }
         }
-        if (hearts == 5 || spades == 5 || diamonds == 5 || clubs == 5) {
-            return true;
-        }
-        return false;
+        return hearts == 5 || spades == 5 || diamonds == 5 || clubs == 5;
     }
 
     /**
@@ -127,11 +103,8 @@ public class HandComparator {
      * @return totuusarvo
      */
     public boolean straightFlush(List<Card> hand) {
-        if (straight(hand, 0, 4) && flush(hand) || straight(hand, 1, 5) && flush(hand)
-                || straight(hand, 2, 6)) {
-            return true;
-        }
-        return false;
+        return straight(hand, 0, 4) && flush(hand) || straight(hand, 1, 5) && flush(hand)
+                || straight(hand, 2, 6);
     }
 
     /**
@@ -147,11 +120,7 @@ public class HandComparator {
             int toBeRemoved = fullHouseHelperMethod(ints);
             cardRemover(hand, toBeRemoved);
         }
-        ints = cardsToIntArray(hand);
-        if (sameConsecutiveValues(hand) == 2) {
-            return true;
-        }
-        return false;
+        return sameConsecutiveValues(hand) == 2;
     }
 
     /**
@@ -234,4 +203,21 @@ public class HandComparator {
         return counter;
     }
 
+    public boolean pairOrBetter(List<Card> hand) {
+        if (hand.size() == 7) {
+            if (pair(hand) || trips(hand) || quads(hand) || flush(hand)
+                    || straight(hand, 0, 4) || straight(hand, 1, 5) || straight(hand, 2, 6)
+                    || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 6) {
+            if (pair(hand) || trips(hand) || quads(hand) || flush(hand)
+                    || straight(hand, 0, 4) || straight(hand, 1, 5) || straight(hand, 2, 6)
+                    || straightFlush(hand)) {
+                return true;
+            }
+        }
+        return pair(hand) || trips(hand) || quads(hand) || flush(hand)
+                || straight(hand, 0, 4) || straightFlush(hand);
+    }
 }

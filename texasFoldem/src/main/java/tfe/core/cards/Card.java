@@ -24,6 +24,7 @@ public class Card {
      *
      * @return tekstiesitys kortin arvosta ja maasta.
      */
+    @Override
     public String toString() {
         switch (this.value) {
             case 11:

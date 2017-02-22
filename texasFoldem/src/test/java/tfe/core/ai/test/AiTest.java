@@ -33,13 +33,6 @@ public class AiTest {
     }
 
     @Test
-    public void testBetRandomized() {
-        double x = ai.betRandomized();
-        double y = ai.betRandomized();
-        assertNotEquals(x, y);
-    }
-
-    @Test
     public void testGetHand() {
         List<Card> list = new ArrayList<>();
         List<Card> list2 = new ArrayList<>();
@@ -339,7 +332,7 @@ public class AiTest {
     public void testNormalAiBet() {
         double bigBlind = 30.0;
         ai.setChips(2000);
-        assertTrue(!ai.betNormalBet(bigBlind).equals(ai.betNormalBet(bigBlind)));
+        assertEquals(ai.betNormalBet(bigBlind), "AI bets:75.0");
     }
 
     @Test
@@ -391,7 +384,7 @@ public class AiTest {
     public void testAiRaises() {
         double y = 50.0;
         String x = ai.aiRaises(y);
-        assertTrue(!ai.aiRaises(y).equals(ai.aiRaises(y)));
+        assertEquals(x, "AI bets:150.0");
     }
 
     @Test
@@ -421,13 +414,14 @@ public class AiTest {
         ai.setChips(40);
         List<Double> bettingHistory = new ArrayList<>();
         bettingHistory.add(80.0);
-        assertEquals(ai.aiCalls(bettingHistory, 80), "AI is all-in with "
-                + ai.getChips() + " chips!!!");
+        assertEquals(ai.aiCalls(bettingHistory, 80), "AI calls");
     }
 
     @Test
     public void testNoRaises() {
         List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(15.0);
+        bettingHistory.add(30.0);
         assertTrue(ai.noRaises(bettingHistory));
     }
 
