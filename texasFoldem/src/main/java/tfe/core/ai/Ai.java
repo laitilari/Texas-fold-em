@@ -72,10 +72,6 @@ public class Ai {
         if (first.getValue() >= 13 || second.getValue() >= 13) {
             return true;
         }
-        if (first.getValue() >= 12 && second.getValue() >= 7 || second.getValue() >= 12
-                && first.getValue() >= 7) {
-            return true;
-        }
         return first.getValue() + second.getValue() >= 15;
     }
 
@@ -225,8 +221,8 @@ public class Ai {
      * @param bettingHistory panostushistoria
      * @return totuusarvo
      */
-    public boolean noRaises(List<Double> bettingHistory) {
-        return bettingHistory.get(bettingHistory.size() - 1) == 30;
+    public boolean raises(List<Double> bettingHistory) {
+        return bettingHistory.size() > 2;
     }
 
     /**
@@ -236,11 +232,11 @@ public class Ai {
      * @param bettingHistory bh
      * @return String
      */
-    public String actionToNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
+    public String actionToEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
         if (bettingHistory.size() < 4) {
             if (goodOrPremium()) {
                 return aiRaises(lastBet);
-            } else if (medium()) { 
+            } else if (medium()) {
                 return aiCalls(bettingHistory, lastBet);
             }
         } else {
@@ -248,20 +244,6 @@ public class Ai {
                 return allIn();
             }
             return aiFolds();
-        }
-        return aiFolds();
-    }
-
-    /**
-     * Vastaus epänormaalinkokoiseen panostukseen.
-     *
-     * @param lastBet lastbet
-     * @param bettingHistory bh
-     * @return String
-     */
-    public String actionToNotNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
-        if (goodOrPremium()) {
-            return aiCalls(bettingHistory, lastBet);
         }
         return aiFolds();
     }
@@ -306,10 +288,44 @@ public class Ai {
      */
     public String outOfPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
-        if (noRaises(bettingHistory)) {
-            return actionToEmptyBettingHistoryPreFlopHealthyStack(bigBlind);
+        if (raises(bettingHistory)) {
+            if (goodOrPremium()) {
+                allIn();
+            } else if (playablePocketCards()) {
+                return aiCalls(bettingHistory, lastBet);
+            }
         }
-        return aiCalls(bettingHistory, lastBet);
+        return actionToEmptyBettingHistoryPreFlopHealthyStack(bigBlind);
+    }
+
+    /**
+     * Action to call or normal bet size.
+     *
+     * @param lastBet last bet
+     * @param bettingHistory betting history
+     * @return action
+     */
+    public String actionToPlayerCallOrNormalBetPreFlopInPosition(double lastBet, List<Double> bettingHistory) {
+        if (goodOrPremium()) {
+            return aiRaises(lastBet);
+        } else if (playablePocketCards()) {
+            return aiCalls(bettingHistory, lastBet);
+        }
+        return aiFolds();
+    }
+
+    /**
+     * Action to bigger preflop bet
+     *
+     * @param lastBet last bet
+     * @param bettingHistory betting history
+     * @return action
+     */
+    public String actionToNotNormalEnemyBetPreFlopHealthyStack(double lastBet, List<Double> bettingHistory) {
+        if (goodOrPremium()) {
+            return allIn();
+        }
+        return aiFolds();
     }
 
     /**
@@ -325,7 +341,7 @@ public class Ai {
     public String inPositionPreFlopActionHealthyStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
         if (normalEnemyBet(bettingHistory, lastBet, bigBlind)) {
-            return actionToNormalEnemyBetPreFlopHealthyStack(lastBet, bettingHistory);
+            return actionToPlayerCallOrNormalBetPreFlopInPosition(lastBet, bettingHistory);
         }
         return actionToNotNormalEnemyBetPreFlopHealthyStack(lastBet, bettingHistory);
     }
@@ -342,10 +358,13 @@ public class Ai {
      */
     public String outOfPositionPreFlopActionDangeredStack(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
-        if (noRaises(bettingHistory)) {
+        if (!raises(bettingHistory)) {
             return actionToEmptyBettingHistoryPreFlopDangeredStack(bigBlind);
         }
-        return aiCalls(bettingHistory, lastBet);
+        if (goodOrPremium()) {
+            return allIn();
+        }
+        return aiFolds();
     }
 
     /**
@@ -360,7 +379,7 @@ public class Ai {
      */
     public String healthyStackPreFlopAction(List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips, double lastBet) {
-        if (!getButton()) {                         // if out of position
+        if (!getButton()) {
             return outOfPositionPreFlopActionHealthyStack(bettingHistory,
                     pot, bigBlind, playerChips, lastBet);
         }
@@ -523,7 +542,6 @@ public class Ai {
     public String action(List<Card> tableCards, List<Double> bettingHistory,
             double pot, double bigBlind, double playerChips) {
         double lastBet = lastBet(bettingHistory);
-        this.pocketCards.addAll(tableCards);
         HandComparator hc = new HandComparator();
         if (preFlop(tableCards)) {
             return preFlopActionDecider(bettingHistory,
@@ -555,8 +573,7 @@ public class Ai {
      * @return string
      */
     public String allIn() {
-        bet(getChips());
-        return "AI is all-in with " + getChips() + " chips!!!";
+        return "AI is all-in";
     }
 
     /**

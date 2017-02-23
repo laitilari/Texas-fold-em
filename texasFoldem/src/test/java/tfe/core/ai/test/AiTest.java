@@ -170,7 +170,7 @@ public class AiTest {
     public void testAllIn() {
         double chips = ai.getChips();
         String x = ai.allIn();
-        assertEquals(x, "AI is all-in with " + ai.getChips() + " chips!!!");
+        assertEquals(x, "AI is all-in");
     }
 
     @Test
@@ -422,18 +422,18 @@ public class AiTest {
         List<Double> bettingHistory = new ArrayList<>();
         bettingHistory.add(15.0);
         bettingHistory.add(30.0);
-        assertTrue(ai.noRaises(bettingHistory));
+        assertTrue(!ai.raises(bettingHistory));
     }
 
     @Test
     public void testYesRaises() {
         List<Double> bettingHistory = new ArrayList<>();
         bettingHistory.add(40.0);
-        assertTrue(!ai.noRaises(bettingHistory));
+        assertTrue(!ai.raises(bettingHistory));
     }
 
     @Test
-    public void testActionToNormalEnemyBetPreFlopWithPremiumOrGoodCards() {
+    public void testActionEnemyBetPreFlopWithPremiumOrGoodCards() {
         List<Double> bettingHistory = new ArrayList<>();
         bettingHistory.add(40.0);
         List<Card> pocketCards = new ArrayList<>();
@@ -442,7 +442,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
+        assertTrue(ai.actionToEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .contains("AI bets"));
     }
 
@@ -457,7 +457,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
+        assertTrue(ai.actionToEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI calls"));
     }
 
@@ -472,7 +472,7 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
+        assertTrue(ai.actionToEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI folds"));
     }
 
@@ -487,8 +487,8 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertTrue(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
-                .equals("AI calls"));
+        assertEquals(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory),
+                "AI is all-in");
     }
 
     @Test

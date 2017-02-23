@@ -48,6 +48,7 @@ public class UserInterface {
     public void prepareForNewRound() {
         game.prepareForNewRound();
         shuffle();
+        chipSituation();
         blinds();
         pocketCards();
     }
@@ -123,9 +124,6 @@ public class UserInterface {
             if (amount >= game.getBigBlind()) {
                 System.out.println(game.raise(amount));
                 break;
-            } else if (amount >= game.playerChipsLeft()) {
-                System.out.println(game.playerAllIn());
-                break;
             } else {
                 System.out.println("You must raise atleast big blind");
             }
@@ -169,7 +167,7 @@ public class UserInterface {
     }
 
     public void aiAllIn(String action) {
-        System.out.println(game.aiAllIn(action));
+        System.out.println(game.aiBetsOrRaises(action));
     }
 
     /**
@@ -212,26 +210,26 @@ public class UserInterface {
                     bettingRoundCounter = 0;
                     break;
                 }
-                String aiAction = aiAction();
-                if (aiAction.equals("f")) {
+                String ai = aiAction();
+                if (ai.equals("f")) {
                     playerWinsRound();
                     newRound();
                     bettingRoundCounter = 0;
                     break;
-                } else if (aiAction.equals("c")) {
+                } else if (ai.equals("c")) {
                     bettingRoundCounter = 0;
                     break;
                 } else {
                     bettingRoundCounter++;
-                    bettingRound();
+                    continue;
                 }
             } else {
-                String aiAction = aiAction();
-                if (bettingRoundCounter > 0 && aiAction.equals("c")) {
+                String ai = aiAction();
+                if (bettingRoundCounter > 0 && ai.equals("c")) {
                     bettingRoundCounter = 0;
                     break;
                 }
-                if (aiAction.equals("f")) {
+                if (ai.equals("f")) {
                     playerWinsRound();
                     newRound();
                     bettingRoundCounter = 0;
@@ -248,7 +246,7 @@ public class UserInterface {
                     break;
                 } else {
                     bettingRoundCounter++;
-                    bettingRound();
+                    continue;
                 }
             }
         }

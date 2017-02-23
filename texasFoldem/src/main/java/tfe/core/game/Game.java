@@ -250,20 +250,27 @@ public class Game {
      * @return Tieto tekoälyn valinnasta
      */
     public String aiCalls() {
-        if (lastBet() == 0.0) {
+        if (lastBet() == 0.0 || lastBet() == 15.0) {
             return "AI checks";
-        } else if (bettingHistory.size() == 1) {
-            double amount = ai.bet(lastBet());
-            addToPot(amount);
-            bettingHistory.add(amount);
-            if (ai.getChips() == 0) {
-                return "AI calls " + amount + " and is all in";
+        }
+        if (bettingHistory.size() == 1) {
+            double amount = lastBet();
+            if (ai.getChips() <= amount) {
+                return aiAllIn(amount);
+            } else {
+                amount = ai.bet(lastBet());
+                addToPot(amount);
+                bettingHistory.add(amount);
+                return "AI calls " + lastBet();
             }
-            return "AI calls " + lastBet();
-        } else if (lastBet() == 15) {
+        } else if (bettingHistory.isEmpty()) {
             return "AI checks";
         } else {
-            double amount = subtractLastTwoBets();
+            double amount = lastBet();
+            if (ai.getChips() <= amount) {
+                return aiAllIn(amount);
+            }
+            amount = subtractLastTwoBets();
             bettingHistory.add(amount);
             ai.bet(amount);
             addToPot(amount);
@@ -278,14 +285,13 @@ public class Game {
      * @return tekoälyn toiminnan tekstimuotoinen esitys
      */
     public String aiBetsOrRaises(String action) {
+        if (action.contains("all-in")) {
+            return action;
+        }
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
         if (amount >= ai.getChips()) {
-            amount = ai.getChips();
-            bettingHistory.add(amount);
-            ai.bet(amount);
-            addToPot(amount);
-            return "Ai goes all in with " + amount;
+            aiAllIn(amount);
         }
         if (amount > 0.0) {
             bettingHistory.add(amount);
@@ -314,10 +320,12 @@ public class Game {
      * @param action AI:n valinta
      * @return tekstiesitys AI:n valinnasta
      */
-    public String aiAllIn(String action) {
-        addToPot(ai.getChips());
-        bettingHistory.add(ai.getChips());
-        return action;
+    public String aiAllIn(double amount) {
+        amount = ai.getChips();
+        ai.bet(amount);
+        addToPot(amount);
+        bettingHistory.add(amount);
+        return "AI calls " + amount + " and is all in";
     }
 
     /**

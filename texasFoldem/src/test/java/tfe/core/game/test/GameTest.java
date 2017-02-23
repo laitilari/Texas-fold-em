@@ -168,9 +168,8 @@ public class GameTest {
     @Test
     public void testAiBetsOrRaises() {
         String given = "Ai bets:42.0";
-        game.getAi().setChips(30.0);
-        assertEquals(game.aiBetsOrRaises(given), "Ai goes all in with " + 30.0);
-        
+        game.getAi().setChips(50.0);
+        assertEquals(game.aiBetsOrRaises(given), "Ai raises 42.0");    
     }
 
     @Test
@@ -184,13 +183,9 @@ public class GameTest {
 
     @Test
     public void testAiAllIn() {
-        String x = "AI is all-in";
-        game.aiAllIn(x);
-        assertEquals(game.getPotSize(), game.aiChipsLeft(), 0.1);
-        assertEquals(game.getBettingHistory()
-                .get(game.getBettingHistory().size() - 1),
-                game.aiChipsLeft(), 0.1);
-        assertTrue(game.aiAllIn(x).contains("AI is all"));
+        double amount = 50.0;
+        game.getAi().setChips(49.0);
+        assertEquals(game.aiAllIn(amount), "AI calls " + 49.0 + " and is all in");
     }
 
     @Test
