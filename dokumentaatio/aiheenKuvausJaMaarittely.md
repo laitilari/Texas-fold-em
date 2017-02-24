@@ -37,4 +37,18 @@ Dealer-luokka toimii Game-luokan apuna korttien käsittelyssä. Game voi kutsua 
 
 Käyttäjän vastustaja on AI, jonka toiminta on määritelty AI-luokan koodiin. AI osaa valita pelin kehittäjän näkemyksen mukaisesti parhaita pelivalintoja kuhunkin tilanteeseen. AI:n valintaan vaikuttavat Game-luokalta saadut tiedot pelin tilanteesta. Nämä tiedot sisältävät muun muassa potin koon, pöytäkorttien arvon sekä vastustajan panostuksen koon ja pelimerkkien määrän.
 
+##Käyttöohjeet##
 
+###Johdanto###
+
+Peliä käytetään tekstikäyttöliittymän avulla, jonka Main-luokka avaa, kun ohjelma suoritetaan. Käyttöliittymään voit kirjoittaa näppäimistöllä. Saat ohjeet pelinäppäimistä käyttöliittymältä aina, kun sinulta vaaditaan toimintaa. Kirjoitettuasi valitsemaasi toimintaa vastaavan merkin käyttöliittymään, hyväksy valintasi painamalla Enter-näppäintä ja seuraa käyttöliittymästä toimintasi vaikutusta pelin tilanteeseen ja AI:n toimintaan.
+
+###Ohjeet###
+- Käynnistä ohjelman suoritus. 
+- Valitse tekstikäyttöliittymän ohjeiden mukaisesti pelin nopeus kirjoittamalla käyttöliittymään jokin annetuista vaihtoehdoista.
+- Seuraa käyttöliittymän tulostuksia. Tulostukset sisältävät mm. tietoja korttien sekoituksesta, blindien maksusta ja pelipositiosta.
+- Vuorollasi valitse haluamasi toiminta kirjoittamalla käyttöliittymän ohjeiden mukaisesti toimintoa vastaava merkki.
+- Valintavaihtoehtosi ovat normaaleja Texas Hold'emin toimintoja, kuten raise, call/check, fold.
+- Jos AI:lta loppuvat pelimerkit, olet voittanut pelin ja saat siitä ilmoituksen.
+- Jos sinulta loppuvat pelimerkit, AI voittaa ja saat ilmoituksen.
+- Kun peli on loppu, voit valita haluatko pelata uudestaan vai haluatko lopettaa.
