@@ -22,6 +22,19 @@ Pelaaja
 
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
 - Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
-- Pelaaja voi myös halutessaan luovuttaa pelin kesken.
+
+##Rakennekuvaus##
+
+Pelin luokkarakenne koostuu tekstikäyttöliittymäluokasta, logiikkaluokista sekä domainluokista. Näiden lisäksi erillisenä domainluokan ja logiikkaluokan sekoituksena on AI-luokka.
+
+Pelin keskiössä on Game.java, joka vastaa pelin logiikkaan liittyvistä tehtävistä. Ohjelman suoritus koostuu suurimmaksi osaksi Userinterface-luokan (UI) ja Game-luokan yhteistoiminnasta. UI pyörittää silmukoita, jotka vastaavat koko pelin toiminnan jatkamisesta, sekä yksittäisten kierrosten suorittamisesta. UI myös suorittaa kaikki pelin tulostukset.
+
+UI kutsuu Game-luokkaa toimintojen toteuttamiseen, joka kutsuu muita luokkia tarpeen mukaan. Eräs tyypillinen ketjutus on seuraava seuraava: UI pyytää Gamelta AI:n toimintaa pelin vaiheeseen. Game välittää AI:lle pelitilanteen muuttujat, joiden pohjalta AI-luokka valitsee parhaan toiminnan tilanteeseen. AI palauttaa toiminnastaan tiedon tekstinä Game luokalle, joka tutkii AI:n vastausta, suorittaa AI:n toiminnan peliin aiheuttamat vaikutukset, sekä palauttaa UI luokalle tulostettavaksi tekstikäyttöliittymään kuvauksen AI:n toiminnasta.
+
+UI-luokan apuna on ScannerClass-luokka, joka mahdollistaa käyttäjän syötteen lukemisen. Käyttäjän syöte välitetään Game-luokalle, joka suorittaa peliin käyttäjän toiminnasta aiheutuneet muutokset ja kutsuu muun muassa Player-luokkaa vähentämään omia pelimerkkejään käyttäjän määrittämän panostuksen verran.
+
+Dealer-luokka toimii Game-luokan apuna korttien käsittelyssä. Game voi kutsua Dealerin kautta korttipakan luomista, korttipakan sekoitusta tai korttien nostamista korttipakasta ja niiden jakamista. Luokka PackOfCards sisältää useita luokan Card olioita, kuten myös luokka TableCards, jota Dealer kutsuu, kun pelissä edetään.
+
+Käyttäjän vastustaja on AI, jonka toiminta on määritelty AI-luokan koodiin. AI osaa valita pelin kehittäjän näkemyksen mukaisesti parhaita pelivalintoja kuhunkin tilanteeseen. AI:n valintaan vaikuttavat Game-luokalta saadut tiedot pelin tilanteesta. Nämä tiedot sisältävät muun muassa potin koon, pöytäkorttien arvon sekä vastustajan panostuksen koon ja pelimerkkien määrän.
 
 
