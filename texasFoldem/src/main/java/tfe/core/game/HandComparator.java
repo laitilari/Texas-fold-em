@@ -202,7 +202,12 @@ public class HandComparator {
         }
         return counter;
     }
-
+    
+    /**
+     * Checks if the hand has pair or better values.
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
     public boolean pairOrBetter(List<Card> hand) {
         if (hand.size() == 7) {
             if (pair(hand) || trips(hand) || quads(hand) || flush(hand)
