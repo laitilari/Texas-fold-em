@@ -13,3 +13,7 @@ Päivä | Tunnit | Kuvaus
 15.02.2017 | 02 | HandComaprator luokan luonti ja aloitus
 16.02.2017 | 05 | HandComparator luokan kehittäminen
 17.02.2017 | 07 | Javadocin korjausta checkstylen kanssa, sekvenssikaaviot, luokkakaavion korjaus, HandComparator valmiiksi
+19.02.2017 | 04 | Ohjelman suorituksen korjausta.
+21.02.2017 | 02 | Jatkettu ohjelman suorituksen korjausta.
+23.02.2017 | 03 | Saatu demotilaisuutta varten suoritus toimimaan.
+24.02.2017 | 02 | Lisätty puuttuvia javadoceja, kirjoitettu käyttöohjeita ja kuvausta.
