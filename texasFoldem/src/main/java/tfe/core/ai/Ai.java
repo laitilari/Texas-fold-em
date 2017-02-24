@@ -315,7 +315,7 @@ public class Ai {
     }
 
     /**
-     * Action to bigger preflop bet
+     * Action to bigger preflop bet.
      *
      * @param lastBet last bet
      * @param bettingHistory betting history

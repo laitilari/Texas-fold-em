@@ -317,7 +317,7 @@ public class Game {
      * AI all-in.
      *
      * @see #playerAllIn()
-     * @param action AI:n valinta
+     * @param amount amount
      * @return tekstiesitys AI:n valinnasta
      */
     public String aiAllIn(double amount) {
