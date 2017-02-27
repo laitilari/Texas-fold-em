@@ -20,6 +20,7 @@ public class Game {
     private double potSize;
     private List<Double> bettingHistory;
     private HandComparator handComparator;
+    private boolean allIn;
 
     /**
      * Luodaan pelissä tarvittavat oliot ja alustetaan tarvittavat muuttujat.
@@ -28,16 +29,18 @@ public class Game {
         this.player = new Player();
         this.ai = new Ai();
         this.dealer = new Dealer();
-        this.bigBlind = 0;
+        this.bigBlind = 30;
         this.stackSize = 0.0;
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
+        this.allIn = false;
     }
 
     /**
      * Valmistelee korttipakan ja asettaa pelimerkit.
      */
     public void prepareGame() {
+        this.allIn = false;
         preparePack();
         setPlayerChips();
         setAiChips();
@@ -117,7 +120,8 @@ public class Game {
      * Lisää blindit pottiin.
      */
     public void addBlindsToPot() {
-        addToPot(bigBlind / 2 + bigBlind);
+        addToPot(bigBlind);
+        addToPot(bigBlind / 2);
     }
 
     /**
@@ -223,20 +227,27 @@ public class Game {
      * @return Tieto pelaajan valinnasta
      */
     public String checkOrCall() {
-        if (lastBet() == 0.0) {
+        if (lastBet() == 0.0 || lastBet() == 15.0) {
             return "Player checks";
-        } else if (bettingHistory.size() == 1) {
-            double amount = player.bet(lastBet());
-            addToPot(amount);
-            bettingHistory.add(amount);
-            if (player.getChips() == 0) {
-                return "Player calls " + amount + " and is all in";
+        }
+        if (bettingHistory.size() == 1) {
+            double amount = lastBet();
+            if (player.getChips() <= amount) {
+                return playerAllIn(amount);
+            } else {
+                amount = player.bet(lastBet());
+                addToPot(amount);
+                bettingHistory.add(amount);
+                return "Player calls " + lastBet();
             }
-            return "Player calls " + lastBet();
-        } else if (lastBet() == 15) {
+        } else if (bettingHistory.isEmpty()) {
             return "Player checks";
         } else {
-            double amount = subtractLastTwoBets();
+            double amount = lastBet();
+            if (player.getChips() <= amount) {
+                return playerAllIn(amount);
+            }
+            amount = subtractLastTwoBets();
             bettingHistory.add(amount);
             player.bet(amount);
             addToPot(amount);
@@ -286,7 +297,7 @@ public class Game {
      */
     public String aiBetsOrRaises(String action) {
         if (action.contains("all-in")) {
-            return action;
+            return aiAllIn(ai.getChips());
         }
         String[] parts = action.split(":");
         double amount = Double.parseDouble(parts[1]);
@@ -325,7 +336,20 @@ public class Game {
         ai.bet(amount);
         addToPot(amount);
         bettingHistory.add(amount);
-        return "AI calls " + amount + " and is all in";
+        return "AI is all in with " + amount;
+    }
+    
+    /**
+     * Player all-in.
+     * @param amount double
+     * @return string
+     */
+    public String playerAllIn(double amount) {
+        amount = player.getChips();
+        player.bet(amount);
+        addToPot(amount);
+        bettingHistory.add(amount);
+        return "Player is all in with " + amount;
     }
 
     /**
@@ -368,7 +392,7 @@ public class Game {
         player.winChips(potSize);
         return "Player wins the pot";
     }
-
+ 
     /**
      * Vähentää panostushistorian kaksi viimeisintä panosta toisistaan. Tätä
      * toiminnallisuutta tarvitaan, jotta pelaajan jo panostamia pelimerkkejä ei
@@ -413,6 +437,34 @@ public class Game {
      */
     public boolean end() {
         return player.getChips() == stackSize * 2 || ai.getChips() == stackSize * 2;
+    }
+
+    /**
+     * Sets that both are all in.
+     */
+    public void allIn() {
+        this.allIn = true;
+    }
+
+    /**
+     * Returns both all in status.
+     *
+     * @return boolean
+     */
+    public boolean getAllIn() {
+        return this.allIn;
+    }
+
+    /**
+     * Determines who won the game.
+     *
+     * @return winner
+     */
+    public String whoWon() {
+        if (player.getChips() == stackSize * 2) {
+            return "You win!";
+        }
+        return "Ai wins the game.";
     }
 
     public List<Double> getBettingHistory() {

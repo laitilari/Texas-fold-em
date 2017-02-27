@@ -105,6 +105,7 @@ public class GameTest {
         game.getBettingHistory().add(15.0);
         game.getBettingHistory().add(30.0);
         game.getBettingHistory().add(100.0);
+        game.getPlayer().setChips(500);
         assertEquals(game.checkOrCall(), "Player calls 70.0");
     }
 
@@ -123,7 +124,7 @@ public class GameTest {
     public void testPlayerCallsAndGoesAllIn() {
         game.getPlayer().setChips(50.0);
         game.getBettingHistory().add(50.0);
-        assertEquals(game.checkOrCall(), "Player calls 50.0 and is all in");
+        assertEquals(game.checkOrCall(), "Player is all in with 50.0");
     }
 
     @Test
@@ -185,7 +186,7 @@ public class GameTest {
     public void testAiAllIn() {
         double amount = 50.0;
         game.getAi().setChips(49.0);
-        assertEquals(game.aiAllIn(amount), "AI calls " + 49.0 + " and is all in");
+        assertEquals(game.aiAllIn(amount), "AI is all in with " + 49.0);
     }
 
     @Test
@@ -246,7 +247,7 @@ public class GameTest {
     public void testAiCallsAndGoesAllIn() {
         game.getAi().setChips(50.0);
         game.getBettingHistory().add(50.0);
-        assertEquals(game.aiCalls(), "AI calls 50.0 and is all in");
+        assertEquals(game.aiCalls(), "AI is all in with 50.0");
     }
 
     @Test

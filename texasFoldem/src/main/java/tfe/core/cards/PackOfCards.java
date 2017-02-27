@@ -66,6 +66,7 @@ public class PackOfCards {
      * Muodostaa korttipakan.
      */
     public void assemblePack() {
+        cards.clear();
         ArrayList<String> suits = new ArrayList<>();
         suits.add("Spades");
         suits.add("Clubs");

@@ -1,10 +1,5 @@
 package tfe.ui;
 
-import java.util.Scanner;
-import tfe.core.ai.Ai;
-import tfe.core.cards.TableCards;
-import tfe.core.player.Player;
-import tfe.core.game.Dealer;
 import tfe.core.game.Game;
 import tfe.core.support.ScannerClass;
 
@@ -61,8 +56,10 @@ public class UserInterface {
      * Starts the betting round for current street.
      */
     public void streetActions() {
+        if (!game.getAllIn()) {    
         prepareForNewStreet();
         bettingRound();
+        }
     }
 
     /**
@@ -88,8 +85,24 @@ public class UserInterface {
             river();
             streetActions();
             game.showDown();
+            if (game.end()) {
+                break;
+            }
         }
+        gameEndMessages();
+    }
+
+    /**
+     * Choises regarding the end of the game.
+     */
+    public void gameEndMessages() {
         System.out.println("Game ended");
+        System.out.println(game.whoWon());
+        System.out.println("Type 'y' to play again, type anything else to leave the game.");
+        String answer = scanner.use();
+        if (answer.equalsIgnoreCase("y")) {
+            go();
+        }
     }
 
     /**
@@ -197,10 +210,22 @@ public class UserInterface {
      * Määrittelee pelijärjestyksen Game-luokan bettingOrder metodin avulla.
      */
     public void bettingRound() {
+        boolean playerAllIn = false;
+        boolean aiAllIn = false;
         while (true) {
             if (!game.bettingOrder()) {
                 String playerAction = playerAction();
+                if (game.getPlayer().getChips() == 0 ||
+                        game.lastBet() >= game.getAi().getChips()) {
+                    playerAllIn = true;
+                    if (aiAllIn) {
+                        game.allIn();
+                    }
+                }
                 if (bettingRoundCounter > 0 && playerAction.equals("c")) {
+                    if (aiAllIn) {
+                        game.allIn();
+                    }
                     bettingRoundCounter = 0;
                     break;
                 }
@@ -211,12 +236,22 @@ public class UserInterface {
                     break;
                 }
                 String ai = aiAction();
+                if (game.getAi().getChips() == 0) {
+                    aiAllIn = true;
+                    if (playerAllIn) {
+                        game.allIn();
+                        break;
+                    }
+                }
                 if (ai.equals("f")) {
                     playerWinsRound();
                     newRound();
                     bettingRoundCounter = 0;
                     break;
                 } else if (ai.equals("c")) {
+                    if (playerAllIn) {
+                        game.allIn();
+                    }
                     bettingRoundCounter = 0;
                     break;
                 } else {
@@ -225,7 +260,17 @@ public class UserInterface {
                 }
             } else {
                 String ai = aiAction();
+                if (game.getAi().getChips() == 0 ||
+                        game.lastBet() >= game.getPlayer().getChips()) {
+                    aiAllIn = true;
+                    if (playerAllIn) {
+                        game.allIn();
+                    }
+                }
                 if (bettingRoundCounter > 0 && ai.equals("c")) {
+                    if (playerAllIn) {
+                        game.allIn();
+                    }
                     bettingRoundCounter = 0;
                     break;
                 }
@@ -236,12 +281,21 @@ public class UserInterface {
                     break;
                 }
                 String playerAction = playerAction();
+                if (game.getPlayer().getChips() == 0) {
+                    playerAllIn = true;
+                    if (aiAllIn) {
+                        game.allIn();
+                    }
+                }
                 if (playerAction.equals("f")) {
                     aiWinsRound();
                     newRound();
                     bettingRoundCounter = 0;
                     break;
                 } else if (playerAction.equals("c")) {
+                    if (aiAllIn) {
+                        game.allIn();
+                    }
                     bettingRoundCounter = 0;
                     break;
                 } else {
@@ -313,7 +367,7 @@ public class UserInterface {
      * seurata pelin kulkua ja tehdä valintoja pelimerkkien määrän perusteella.
      */
     public void chipSituation() {
-        System.out.println("There is " + game.getPotSize() + " chips in the pot");
+        System.out.println("There are " + game.getPotSize() + " chips in the pot");
         System.out.println("AI has " + game.aiChipsLeft() + "chips left");
         System.out.println("You have " + game.playerChipsLeft() + "chips left");
     }

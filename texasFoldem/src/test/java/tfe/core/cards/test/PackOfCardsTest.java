@@ -37,7 +37,7 @@ public class PackOfCardsTest {
     @Test
     public void testAssemblesPack() {
         pack.assemblePack();
-        assertEquals(pack.getCards().size(), 104);
+        assertEquals(pack.getCards().size(), 52);
     }
 
     @Test
