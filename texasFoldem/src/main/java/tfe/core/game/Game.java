@@ -1,10 +1,13 @@
 package tfe.core.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import tfe.core.ai.Ai;
+import tfe.core.cards.Card;
 import tfe.core.player.Player;
-import tfe.ui.UserInterface;
 
 /**
  * Tässä luokassa tapahtuu pelin suorittamisen keskeisin logiikka. Luokka
@@ -19,7 +22,7 @@ public class Game {
     private double stackSize;
     private double potSize;
     private List<Double> bettingHistory;
-    private HandComparator handComparator;
+    private HandComparator hc;
     private boolean allIn;
 
     /**
@@ -33,6 +36,7 @@ public class Game {
         this.stackSize = 0.0;
         this.potSize = 0.0;
         this.bettingHistory = new ArrayList<>();
+        this.hc = new HandComparator();
         this.allIn = false;
     }
 
@@ -59,10 +63,230 @@ public class Game {
     /**
      * Käsien vertailu.
      *
-     * @return string
+     * @return winner
      */
     public String showDown() {
-        return "";
+        List<Card> playerCards = player.getHand(dealer.getTableCards());
+        List<Card> aiCards = ai.getHand(dealer.getTableCards());
+        return compareHands(playerCards, aiCards);
+    }
+
+    /**
+     * Comapre higher pair.
+     *
+     * @param playerCards cards
+     * @param aiCards cards
+     * @return highest value
+     */
+    public String higherPair(List<Card> playerCards, List<Card> aiCards) {
+        ArrayList<Integer> aiValues = new ArrayList<>();
+        ArrayList<Integer> playerValues = new ArrayList<>();
+        for (Card c : playerCards) {
+            playerValues.add(c.getValue());
+        }
+        for (Card c : aiCards) {
+            aiValues.add(c.getValue());
+        }
+        int helper = 0;
+        int playerHighest = 0;
+        Collections.sort(aiValues);
+        Collections.sort(playerValues);
+        for (int i : playerValues) {
+            if (i == helper) {
+            playerHighest = helper;
+            }
+            helper = i;
+        }
+        helper = 0;
+        int aiHighest = 0;
+        for (int i : aiValues) {
+            if (i == helper) {
+            aiHighest = helper;
+            }
+            helper = i;
+        }
+        if (playerHighest > aiHighest) {
+            return playerWinsRoundAtShowDown("higher value pair (" + playerHighest + ")");
+        } else if (playerHighest < aiHighest) {
+            return aiWinsRoundAtShowDown("higher value pair (" + aiHighest + ")");
+        } else {
+            return splitPot();
+        }
+    }
+
+    /**
+     * Compare the hands.
+     *
+     * @param playerCards cards
+     * @param aiCards cards
+     * @return string
+     */
+    public String compareHands(List<Card> playerCards, List<Card> aiCards) {
+        String hand = "";
+        if (hc.pairOrBetter(aiCards) && !hc.pairOrBetter(playerCards)) {
+            hand = "pair";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.pairOrBetter(aiCards) && hc.pairOrBetter(playerCards)) {
+            hand = "pair";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (hc.pair(playerCards) && hc.pair(aiCards)) {
+            higherPair(playerCards, aiCards);
+        } else if (hc.pair(playerCards) && hc.tripsOrBetter(aiCards)) {
+            hand = "trips";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (hc.pair(aiCards) && hc.tripsOrBetter(playerCards)) {
+            hand = "trips";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (hc.straightOrBetter(aiCards) && !hc.straightOrBetter(playerCards)) {
+            hand = "straight";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.straightOrBetter(aiCards) && hc.straightOrBetter(playerCards)) {
+            hand = "straight";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (hc.straightOrBetter(aiCards) && hc.straightOrBetter(playerCards)) {
+            if (!hc.flushOrBetter(aiCards) && !hc.flushOrBetter(playerCards)) {
+                return compareHighCards(playerCards, aiCards);
+            }
+        } else if (hc.flushOrBetter(aiCards) && !hc.flushOrBetter(playerCards)) {
+            hand = "flush";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.flushOrBetter(aiCards) && hc.flushOrBetter(playerCards)) {
+            hand = "flush";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (!hc.flushOrBetter(aiCards) && !hc.flushOrBetter(playerCards)) {
+            return compareHighCards(playerCards, aiCards);
+        } else if (hc.fullHouseOrBetter(aiCards) && !hc.fullHouseOrBetter(playerCards)) {
+            hand = "full house";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.fullHouseOrBetter(aiCards) && hc.fullHouseOrBetter(playerCards)) {
+            hand = "full house";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (!hc.quadsOrBetter(aiCards) && !hc.fullHouseOrBetter(playerCards)) {
+            return compareHighCards(playerCards, aiCards);
+        } else if (hc.quadsOrBetter(aiCards) && !hc.quadsOrBetter(playerCards)) {
+            hand = "quads";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.quadsOrBetter(aiCards) && hc.quadsOrBetter(playerCards)) {
+            hand = "quads";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (!hc.straightFlush(aiCards) && !hc.straightFlush(playerCards)) {
+            return compareHighCards(playerCards, aiCards);
+        } else if (hc.straightFlush(aiCards) && !hc.straightFlush(playerCards)) {
+            hand = "straight flush";
+            return aiWinsRoundAtShowDown(hand);
+        } else if (!hc.straightFlush(aiCards) && hc.straightFlush(playerCards)) {
+            hand = "straight flush";
+            return playerWinsRoundAtShowDown(hand);
+        } else if (hc.straightFlush(aiCards) && hc.straightFlush(playerCards)) {
+            compareHighCards(playerCards, aiCards);
+        } else {
+            return compareHighCards(playerCards, aiCards);
+        }
+        return "Something went wrong";
+    }
+
+    /**
+     * Compare high cards.
+     *
+     * @param playerCards cards
+     * @param aiCards cards
+     * @return string
+     */
+    public String compareHighCards(List<Card> playerCards, List<Card> aiCards) {
+        String hand = "";
+        int[] playerValues = hc.cardsToIntArray(playerCards);
+        int[] aiValues = hc.cardsToIntArray(aiCards);
+        return highestCard(playerValues, aiValues, hand);
+    }
+
+    /**
+     * Highest value of arrays.
+     *
+     * @param playerValues player cards
+     * @param aiValues ai cards
+     * @return string
+     */
+    public String highestCard(int[] playerValues, int[] aiValues, String hand) {
+        hand = "high card";
+        if (playerValues[playerValues.length - 1] > aiValues[aiValues.length - 1]) {
+            return playerWinsRoundAtShowDown(hand);
+        } else if (aiValues[aiValues.length - 1] > playerValues[playerValues.length - 1]) {
+            return aiWinsRoundAtShowDown(hand);
+        } else {
+            return secondHighCard(playerValues, aiValues, hand);
+        }
+    }
+
+    /**
+     * Second highest value of arrays.
+     *
+     * @param playerValues player cards
+     * @param aiValues ai cards
+     * @return string
+     */
+    public String secondHighCard(int[] playerValues, int[] aiValues, String hand) {
+        hand = "second high card";
+        if (playerValues[playerValues.length - 2] > aiValues[aiValues.length - 2]) {
+            return playerWinsRoundAtShowDown(hand);
+        } else if (aiValues[aiValues.length - 2] > playerValues[playerValues.length - 2]) {
+            return aiWinsRoundAtShowDown(hand);
+        } else {
+            return thirdHighCard(playerValues, aiValues, hand);
+        }
+    }
+
+    /**
+     * Third highest value of arrays.
+     *
+     * @param playerValues player cards
+     * @param aiValues ai cards
+     * @return string
+     */
+    public String thirdHighCard(int[] playerValues, int[] aiValues, String hand) {
+        hand = "third high card";
+        if (playerValues[playerValues.length - 3] > aiValues[aiValues.length - 3]) {
+            return playerWinsRoundAtShowDown(hand);
+        } else if (aiValues[aiValues.length - 3] > playerValues[playerValues.length - 3]) {
+            return aiWinsRoundAtShowDown(hand);
+        } else {
+            return fourthHighCard(playerValues, aiValues, hand);
+        }
+    }
+
+    /**
+     * Fourth highest value of arrays.
+     *
+     * @param playerValues player cards
+     * @param aiValues ai cards
+     * @return string
+     */
+    public String fourthHighCard(int[] playerValues, int[] aiValues, String hand) {
+        hand = "fourth high card";
+        if (playerValues[playerValues.length - 4] > aiValues[aiValues.length - 4]) {
+            return playerWinsRoundAtShowDown(hand);
+        } else if (aiValues[aiValues.length - 4] > playerValues[playerValues.length - 4]) {
+            return aiWinsRoundAtShowDown(hand);
+        } else {
+            return fifthHighCard(playerValues, aiValues, hand);
+        }
+    }
+
+    /**
+     * Fifth highest value of arrays.
+     *
+     * @param playerValues player cards
+     * @param aiValues ai cards
+     * @return string
+     */
+    public String fifthHighCard(int[] playerValues, int[] aiValues, String hand) {
+        hand = "fifth high card";
+        if (playerValues[playerValues.length - 5] > aiValues[aiValues.length - 5]) {
+            return playerWinsRoundAtShowDown(hand);
+        } else if (aiValues[aiValues.length - 5] > playerValues[playerValues.length - 5]) {
+            return aiWinsRoundAtShowDown(hand);
+        } else {
+            return splitPot();
+        }
     }
 
     /**
@@ -338,9 +562,10 @@ public class Game {
         bettingHistory.add(amount);
         return "AI is all in with " + amount;
     }
-    
+
     /**
      * Player all-in.
+     *
      * @param amount double
      * @return string
      */
@@ -392,7 +617,36 @@ public class Game {
         player.winChips(potSize);
         return "Player wins the pot";
     }
- 
+
+    /**
+     * AI voittaa kierroksen showdownilla.
+     *
+     * @param hand cards
+     * @return tekstiesitys
+     */
+    public String aiWinsRoundAtShowDown(String hand) {
+        ai.winChips(potSize);
+        return "AI wins the pot with " + hand;
+    }
+
+    /**
+     * Pelaaja voittaa kierroksen.
+     *
+     * @param hand cards
+     * @see #aiWinsRound()
+     * @return tekstiesitys
+     */
+    public String playerWinsRoundAtShowDown(String hand) {
+        player.winChips(potSize);
+        return "Player wins the pot with " + hand;
+    }
+
+    public String splitPot() {
+        player.winChips(potSize / 2);
+        ai.winChips(potSize / 2);
+        return "Player and AI split the pot";
+    }
+
     /**
      * Vähentää panostushistorian kaksi viimeisintä panosta toisistaan. Tätä
      * toiminnallisuutta tarvitaan, jotta pelaajan jo panostamia pelimerkkejä ei

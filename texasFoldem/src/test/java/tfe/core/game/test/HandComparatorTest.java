@@ -51,20 +51,20 @@ public class HandComparatorTest {
 
     @Test
     public void testFlush() {
-        tableCards.add(new Card("Hearts", 1));
-        tableCards.add(new Card("Hearts", 6));
-        tableCards.add(new Card("Hearts", 7));
-        tableCards.add(new Card("Spades", 8));
-        tableCards.add(new Card("Spades", 13));
-        playerPocketCards.add(new Card("Hearts", 4));
-        playerPocketCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Clubs", 2));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Diamonds", 6));
+        tableCards.add(new Card("Diamonds", 8));
+        tableCards.add(new Card("Diamonds", 10));
+        playerPocketCards.add(new Card("Diamonds", 12));
+        playerPocketCards.add(new Card("Diamonds", 14));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.flush(tableCards));
     }
 
     @Test
-    public void testStraight() {
-        tableCards.add(new Card("Hearts", 1));
+    public void testStraightMiddle() {
+        tableCards.add(new Card("Hearts", 2));
         tableCards.add(new Card("Hearts", 6));
         tableCards.add(new Card("Hearts", 7));
         tableCards.add(new Card("Spades", 8));
@@ -73,6 +73,44 @@ public class HandComparatorTest {
         playerPocketCards.add(new Card("Diamonds", 5));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.straight(tableCards, 1, 5));
+    }
+    
+    @Test
+    public void testStraightFront() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 6));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 13));
+        playerPocketCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Diamonds", 5));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.straight(tableCards, 0, 4));
+    }
+    
+    @Test
+    public void testStraightLate() {
+        tableCards.add(new Card("Hearts", 1));
+        tableCards.add(new Card("Hearts", 6));
+        tableCards.add(new Card("Hearts", 10));
+        tableCards.add(new Card("Spades", 11));
+        tableCards.add(new Card("Spades", 12));
+        playerPocketCards.add(new Card("Hearts", 13));
+        playerPocketCards.add(new Card("Diamonds", 14));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.straight(tableCards, 2, 6));
+    }
+    
+    @Test
+    public void testStraightWith6Cards() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 11));
+        playerPocketCards.add(new Card("Hearts", 5));
+        playerPocketCards.add(new Card("Diamonds", 6));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.straight(tableCards, 0, 5));
     }
 
     @Test
@@ -121,7 +159,7 @@ public class HandComparatorTest {
         tableCards.add(new Card("Hearts", 8));
         tableCards.add(new Card("Spades", 14));
         tableCards.add(new Card("Spades", 13));
-        playerPocketCards.add(new Card("Hearts", 7));
+        playerPocketCards.add(new Card("Clubs", 7));
         playerPocketCards.add(new Card("Hearts", 7));
         tableCards.addAll(playerPocketCards);
         assertTrue(hc.pair(tableCards));
@@ -182,5 +220,77 @@ public class HandComparatorTest {
         int[] values = hc.cardsToIntArray(tableCards);
         int[] values2 = new int[]{2, 3, 4, 5, 6, 7, 8};
         assertEquals(values[4], values2[4]);
+    }
+    
+    @Test
+    public void testNoPairNorBetterWith7Cards() {
+        tableCards.add(new Card("Clubs", 2));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Clubs", 6));
+        tableCards.add(new Card("Spades", 8));
+        tableCards.add(new Card("Spades", 10));
+        playerPocketCards.add(new Card("Diamonds", 12));
+        playerPocketCards.add(new Card("Diamonds", 14));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(!hc.pairOrBetter(tableCards));
+    }
+    
+    @Test
+    public void testPairOrBetterWith7Cards() {
+        tableCards.add(new Card("Clubs", 2));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Clubs", 12));
+        tableCards.add(new Card("Spades", 12));
+        tableCards.add(new Card("Spades", 8));
+        playerPocketCards.add(new Card("Diamonds", 12));
+        playerPocketCards.add(new Card("Diamonds", 14));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.pairOrBetter(tableCards));
+    }
+    
+    @Test
+    public void testNotPairNorBetterWith6() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 8));
+        playerPocketCards.add(new Card("Diamonds", 5));
+        playerPocketCards.add(new Card("Clubs", 9));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(!hc.pairOrBetter(tableCards));
+    }
+    
+     @Test
+    public void testPairOrBetterWith6() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        tableCards.add(new Card("Spades", 8));
+        playerPocketCards.add(new Card("Clubs", 4));
+        playerPocketCards.add(new Card("Hearts", 9));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.pairOrBetter(tableCards));
+    }
+    
+    @Test
+    public void testNotPairNorBetterWith5() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Diamonds", 5));
+        playerPocketCards.add(new Card("Clubs", 9));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(!hc.pairOrBetter(tableCards));
+    }
+    
+    @Test
+    public void testPairOrBetterWith5() {
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Hearts", 3));
+        tableCards.add(new Card("Hearts", 4));
+        playerPocketCards.add(new Card("Diamonds", 2));
+        playerPocketCards.add(new Card("Clubs", 9));
+        tableCards.addAll(playerPocketCards);
+        assertTrue(hc.pairOrBetter(tableCards));
     }
 }

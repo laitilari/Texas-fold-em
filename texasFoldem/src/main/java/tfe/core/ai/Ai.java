@@ -503,7 +503,7 @@ public class Ai {
      */
     public String playerHasBet(List<Double> bettingHistory, List<Card> tableCards,
             double lastBet, HandComparator hc) {
-        if (hc.pairOrBetter(getHand(tableCards))) {
+        if (hc.pairOrBetter(getHand(tableCards)) || premium()) {
             return aiCalls(bettingHistory, lastBet);
         }
         return aiFolds();

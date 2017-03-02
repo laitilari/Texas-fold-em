@@ -84,7 +84,7 @@ public class UserInterface {
             streetActions();
             river();
             streetActions();
-            game.showDown();
+            System.out.println(game.showDown());
             if (game.end()) {
                 break;
             }
@@ -96,7 +96,6 @@ public class UserInterface {
      * Choises regarding the end of the game.
      */
     public void gameEndMessages() {
-        System.out.println("Game ended");
         System.out.println(game.whoWon());
         System.out.println("Type 'y' to play again, type anything else to leave the game.");
         String answer = scanner.use();

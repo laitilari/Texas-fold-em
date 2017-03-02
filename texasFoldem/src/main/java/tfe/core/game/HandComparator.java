@@ -1,8 +1,6 @@
 package tfe.core.game;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import tfe.core.cards.Card;
@@ -82,15 +80,14 @@ public class HandComparator {
         int diamonds = 0;
         int clubs = 0;
         for (Card card : hand) {
-            switch (card.getSuit()) {
-                case "Hearts":
-                    hearts++;
-                case "Spades":
-                    spades++;
-                case "Diamonds":
-                    diamonds++;
-                case "Clubs":
-                    clubs++;
+            if (card.getSuit().equals("Hearts")) {
+                hearts++;
+            } else if (card.getSuit().equals("Spades")) {
+                spades++;
+            } else if (card.getSuit().equals("Diamonds")) {
+                diamonds++;
+            } else if (card.getSuit().equals("Clubs")) {
+                clubs++;
             }
         }
         return hearts == 5 || spades == 5 || diamonds == 5 || clubs == 5;
@@ -115,7 +112,6 @@ public class HandComparator {
      */
     public boolean fullHouse(List<Card> hand) {
         int[] ints = cardsToIntArray(hand);
-        System.out.println(Arrays.toString(ints));
         if (sameConsecutiveValues(hand) == 4) {
             int toBeRemoved = fullHouseHelperMethod(ints);
             cardRemover(hand, toBeRemoved);
@@ -202,27 +198,128 @@ public class HandComparator {
         }
         return counter;
     }
-    
+
     /**
      * Checks if the hand has pair or better values.
+     *
      * @param hand list of cards to be checked
      * @return true or false
      */
     public boolean pairOrBetter(List<Card> hand) {
         if (hand.size() == 7) {
             if (pair(hand) || trips(hand) || quads(hand) || flush(hand)
-                    || straight(hand, 0, 4) || straight(hand, 1, 5) || straight(hand, 2, 6)
-                    || straightFlush(hand)) {
+                    || straight(hand, 0, 5) || straight(hand, 1, 6) || straight(hand, 2, 7)
+                    || fullHouse(hand) || straightFlush(hand)) {
                 return true;
             }
         } else if (hand.size() == 6) {
+            if (pair(hand) || trips(hand) || quads(hand) || straight(hand, 0, 5) || straight(hand, 1, 5)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 5) {
             if (pair(hand) || trips(hand) || quads(hand) || flush(hand)
-                    || straight(hand, 0, 4) || straight(hand, 1, 5) || straight(hand, 2, 6)
-                    || straightFlush(hand)) {
+                    || straight(hand, 0, 5) || fullHouse(hand) || straightFlush(hand)) {
                 return true;
             }
         }
-        return pair(hand) || trips(hand) || quads(hand) || flush(hand)
-                || straight(hand, 0, 4) || straightFlush(hand);
+        return false;
+    }
+
+    /**
+     * Checks if the hand has trips or better values.
+     *
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
+    public boolean tripsOrBetter(List<Card> hand) {
+        if (hand.size() == 7) {
+            if (trips(hand) || quads(hand) || flush(hand)
+                    || straight(hand, 0, 5) || straight(hand, 1, 6) || straight(hand, 2, 7)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 6) {
+            if (trips(hand) || quads(hand) || straight(hand, 0, 5) || straight(hand, 1, 5)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 5) {
+            if (trips(hand) || quads(hand) || flush(hand)
+                    || straight(hand, 0, 5) || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the hand has straight or better values.
+     *
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
+    public boolean straightOrBetter(List<Card> hand) {
+        if (hand.size() == 7) {
+            if (straight(hand, 0, 5) || straight(hand, 1, 6) || straight(hand, 2, 7)
+                    || quads(hand) || flush(hand)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 6) {
+            if (straight(hand, 0, 5) || straight(hand, 1, 6)
+                    || quads(hand) || flush(hand)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        } else if (hand.size() == 5) {
+            if (straight(hand, 0, 5) || quads(hand) || flush(hand)
+                    || fullHouse(hand) || straightFlush(hand)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the hand has flush or better values.
+     *
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
+    public boolean flushOrBetter(List<Card> hand) {
+        if (flush(hand) || quads(hand)
+                || fullHouse(hand) || straightFlush(hand)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the hand has fullhouse or better values.
+     *
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
+    public boolean fullHouseOrBetter(List<Card> hand) {
+        if (fullHouse(hand) || quads(hand)
+                || straightFlush(hand)) {
+            return true;
+
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the hand has quads or better values.
+     *
+     * @param hand list of cards to be checked
+     * @return true or false
+     */
+    public boolean quadsOrBetter(List<Card> hand) {
+        if (quads(hand) || straightFlush(hand)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -110,8 +110,17 @@ public class Player {
         this.chips = chips;
     }
 
+    /**
+     * Is button.
+     * @return boolean
+     */
     public boolean isButton() {
         return button;
+    }
+    
+    public List<Card> getHand(List<Card> tableCards) {
+        this.pocketCards.addAll(tableCards);
+        return this.pocketCards;
     }
 
 }

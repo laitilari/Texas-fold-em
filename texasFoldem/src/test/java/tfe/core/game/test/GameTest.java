@@ -259,4 +259,26 @@ public class GameTest {
             assertTrue(!game.bettingOrder());
         }
     }
+    
+    @Test
+    public void testHigherPair() {
+        ArrayList<Card> tableCards = new ArrayList<>();
+        ArrayList<Card> playerPocketCards = new ArrayList<>();
+        tableCards.add(new Card("Hearts", 5));
+        tableCards.add(new Card("Hearts", 2));
+        tableCards.add(new Card("Spades", 7));
+        tableCards.add(new Card("Spades", 14));
+        tableCards.add(new Card("Diamonds", 13));
+        
+        playerPocketCards.add(new Card("Diamonds", 5));
+        playerPocketCards.add(new Card("Clubs", 3));
+        playerPocketCards.addAll(tableCards);
+        
+        ArrayList<Card> aiPocketCards = new ArrayList<>();
+        aiPocketCards.add(new Card("Diamonds", 2));
+        aiPocketCards.add(new Card("Clubs", 8));
+        aiPocketCards.addAll(tableCards);
+        assertEquals(game.higherPair(playerPocketCards, aiPocketCards),
+                "Player wins the pot with higher value pair (5)");
+    }
 }
