@@ -17,7 +17,7 @@ public class Main {
      *
      * @param args args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         UserInterface ui = new UserInterface();
         ui.greet();
         ui.go();

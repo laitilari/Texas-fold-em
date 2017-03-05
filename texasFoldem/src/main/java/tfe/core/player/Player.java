@@ -118,6 +118,11 @@ public class Player {
         return button;
     }
     
+    /**
+     * Returns hand.
+     * @param tableCards tablecards
+     * @return hand
+     */
     public List<Card> getHand(List<Card> tableCards) {
         this.pocketCards.addAll(tableCards);
         return this.pocketCards;

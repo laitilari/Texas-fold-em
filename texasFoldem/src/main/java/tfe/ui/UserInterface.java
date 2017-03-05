@@ -1,5 +1,6 @@
 package tfe.ui;
 
+import java.util.concurrent.TimeUnit;
 import tfe.core.game.Game;
 import tfe.core.support.ScannerClass;
 
@@ -23,7 +24,7 @@ public class UserInterface {
     /**
      * Tervehtii pelaajaa.
      */
-    public void greet() {
+    public void greet() throws InterruptedException {
         System.out.println("Welcome to Texas Fold'em!");
         go();
     }
@@ -31,7 +32,7 @@ public class UserInterface {
     /**
      * Metodi kutsuu pelin valmisteluun liittyviä metodeja.
      */
-    public void go() {
+    public void go() throws InterruptedException {
         setGameSpeed(askGameSpeed());
         game.prepareGame();
         newRound();
@@ -40,12 +41,16 @@ public class UserInterface {
     /**
      * Kutsuu uuden kierroksen valmisteluun liittyviä metodeja.
      */
-    public void prepareForNewRound() {
+    public void prepareForNewRound() throws InterruptedException {
         game.prepareForNewRound();
         shuffle();
+        TimeUnit.SECONDS.sleep(2);
         chipSituation();
+        TimeUnit.SECONDS.sleep(4);
         blinds();
+        TimeUnit.SECONDS.sleep(4);
         pocketCards();
+        TimeUnit.SECONDS.sleep(2);
     }
 
     public void buttonChange() {
@@ -55,10 +60,11 @@ public class UserInterface {
     /**
      * Starts the betting round for current street.
      */
-    public void streetActions() {
-        if (!game.getAllIn()) {    
-        prepareForNewStreet();
-        bettingRound();
+    public void streetActions() throws InterruptedException {
+        if (!game.getAllIn()) {
+            prepareForNewStreet();
+            TimeUnit.SECONDS.sleep(4);
+            bettingRound();
         }
     }
 
@@ -73,16 +79,19 @@ public class UserInterface {
     /**
      * Kutsuu käden suoritukseen liittyviä metodeja.
      */
-    public void newRound() {
+    public void newRound() throws InterruptedException {
         while (!game.end()) {
             prepareForNewRound();
             bettingRound();
             prepareForNewStreet();
             flop();
+            TimeUnit.SECONDS.sleep(4);
             streetActions();
             turn();
+            TimeUnit.SECONDS.sleep(4);
             streetActions();
             river();
+            TimeUnit.SECONDS.sleep(4);
             streetActions();
             System.out.println(game.showDown());
             if (game.end()) {
@@ -95,13 +104,14 @@ public class UserInterface {
     /**
      * Choises regarding the end of the game.
      */
-    public void gameEndMessages() {
+    public void gameEndMessages() throws InterruptedException {
         System.out.println(game.whoWon());
         System.out.println("Type 'y' to play again, type anything else to leave the game.");
         String answer = scanner.use();
-        if (answer.equalsIgnoreCase("y")) {
+        if (answer.equals("y")) {
             go();
         }
+        System.exit(0);
     }
 
     /**
@@ -208,21 +218,23 @@ public class UserInterface {
     /**
      * Määrittelee pelijärjestyksen Game-luokan bettingOrder metodin avulla.
      */
-    public void bettingRound() {
+    public void bettingRound() throws InterruptedException {
         boolean playerAllIn = false;
         boolean aiAllIn = false;
         while (true) {
             if (!game.bettingOrder()) {
+                double playerChips = game.getPlayer().getChips();
                 String playerAction = playerAction();
-                if (game.getPlayer().getChips() == 0 ||
-                        game.lastBet() >= game.getAi().getChips()) {
+                if (game.getPlayer().getChips() == 0
+                        || game.lastBet() >= game.getAi().getChips()) {
                     playerAllIn = true;
                     if (aiAllIn) {
                         game.allIn();
                     }
                 }
                 if (bettingRoundCounter > 0 && playerAction.equals("c")) {
-                    if (aiAllIn) {
+                    if (aiAllIn || game.getBettingHistory().get(game.getBettingHistory().size() - 2)
+                            >= playerChips) {
                         game.allIn();
                     }
                     bettingRoundCounter = 0;
@@ -238,6 +250,7 @@ public class UserInterface {
                 if (game.getAi().getChips() == 0) {
                     aiAllIn = true;
                     if (playerAllIn) {
+                        bettingRoundCounter = 0;
                         game.allIn();
                         break;
                     }
@@ -258,20 +271,27 @@ public class UserInterface {
                     continue;
                 }
             } else {
+                double aiChips = game.getAi().getChips();
                 String ai = aiAction();
-                if (game.getAi().getChips() == 0 ||
-                        game.lastBet() >= game.getPlayer().getChips()) {
+                TimeUnit.SECONDS.sleep(2);
+                if (game.getAi().getChips() == 0
+                        || game.lastBet() >= game.getPlayer().getChips()) {
                     aiAllIn = true;
                     if (playerAllIn) {
+                        bettingRoundCounter = 0;
                         game.allIn();
                     }
                 }
                 if (bettingRoundCounter > 0 && ai.equals("c")) {
-                    if (playerAllIn) {
+                    if (playerAllIn || game.getBettingHistory().get(game.getBettingHistory().size() - 2)
+                            >= aiChips) {
                         game.allIn();
                     }
                     bettingRoundCounter = 0;
                     break;
+                }
+                if (bettingRoundCounter > 0 && ai.equals("bet")) {
+                    continue;
                 }
                 if (ai.equals("f")) {
                     playerWinsRound();
@@ -280,9 +300,11 @@ public class UserInterface {
                     break;
                 }
                 String playerAction = playerAction();
+                TimeUnit.SECONDS.sleep(2);
                 if (game.getPlayer().getChips() == 0) {
                     playerAllIn = true;
                     if (aiAllIn) {
+                        bettingRoundCounter = 0;
                         game.allIn();
                     }
                 }
@@ -338,7 +360,7 @@ public class UserInterface {
      *
      * @param answer Pelaajan valitsema nopeus
      */
-    public void setGameSpeed(String answer) {
+    public void setGameSpeed(String answer) throws InterruptedException {
         if (answer.contains("fast")) {
             game.setBigBlind(30);
             game.setStackSize(500);

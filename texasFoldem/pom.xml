@@ -33,6 +33,12 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>1.1.8</version>
+                <configuration>
+                    <excludedClasses>
+                        <excludedClass>tfe.ui.*</excludedClass>
+                        <excludedClass>tfe.core.support.*</excludedClass>
+                    </excludedClasses>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

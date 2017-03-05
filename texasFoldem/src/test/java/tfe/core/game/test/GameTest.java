@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import tfe.core.cards.Card;
+import tfe.core.cards.PackOfCards;
 import tfe.core.game.Game;
 
 /**
@@ -29,6 +30,20 @@ public class GameTest {
     public void setUp() {
         game = new Game();
         game.setBigBlind(30);
+        game.setStackSize(1000);
+    }
+    
+    @Test
+    public void testAllIN() {
+        assertTrue(!game.getAllIn());
+    }
+    
+    @Test
+    public void testPrepareGame() {
+        game.prepareGame();
+        assertTrue(!game.getAllIn());
+        assertEquals(game.getPlayer().getChips(), 1000.0, 0);
+        assertEquals(game.getAi().getChips(), 1000.0, 0);
     }
 
     @Test
@@ -149,7 +164,18 @@ public class GameTest {
     }
 
     @Test
-    public void testEnd() {
+    public void testEndNotTrue() {
+        assertTrue(!game.end());
+        game.end();
+        game.getPlayer().setChips(2000.0);
+        assertTrue(game.end());
+    }
+    
+        @Test
+    public void testEndTrue() {
+        assertTrue(!game.end());
+        game.end();
+        game.getPlayer().setChips(2000.0);
         assertTrue(game.end());
     }
 
@@ -171,6 +197,23 @@ public class GameTest {
         String given = "Ai bets:42.0";
         game.getAi().setChips(50.0);
         assertEquals(game.aiBetsOrRaises(given), "Ai raises 42.0");    
+    }
+    
+    @Test
+    public void testPlayerInPosition() {
+        assertEquals(game.playerInPosition(), "You bet big blind (" + 30.0 + ")"
+                + ", AI bets small blind (" + 30.0 / 2 + ")");
+    }
+    
+    @Test
+    public void testShuffle() {
+        assertEquals(game.shuffle(), "Shuffling...");
+    }
+    
+    @Test
+    public void testAiInPosition() {
+        assertEquals(game.aiInPosition(), "AI bets big blind (" + 30.0 + ")"
+                + ", you bet small blind (" + 30.0 / 2 + ")");
     }
 
     @Test
@@ -264,21 +307,66 @@ public class GameTest {
     public void testHigherPair() {
         ArrayList<Card> tableCards = new ArrayList<>();
         ArrayList<Card> playerPocketCards = new ArrayList<>();
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Hearts", 10));
+        tableCards.add(new Card("Spades", 2));
+        tableCards.add(new Card("Spades", 9));
+        tableCards.add(new Card("Diamonds", 5));
+        
+        playerPocketCards.add(new Card("Diamonds", 7));
+        playerPocketCards.add(new Card("Clubs", 6));
+        playerPocketCards.addAll(tableCards);
+        
+        ArrayList<Card> aiPocketCards = new ArrayList<>();
+        aiPocketCards.add(new Card("Diamonds", 14));
+        aiPocketCards.add(new Card("Clubs", 5));
+        aiPocketCards.addAll(tableCards);
+        assertEquals(game.higherPair(playerPocketCards, aiPocketCards),
+                "Player wins the pot");
+    }
+    
+    @Test
+    public void testSecondHighestCard() {
+        ArrayList<Card> tableCards = new ArrayList<>();
+        ArrayList<Card> playerPocketCards = new ArrayList<>();
+        tableCards.add(new Card("Hearts", 7));
+        tableCards.add(new Card("Hearts", 10));
+        tableCards.add(new Card("Spades", 2));
+        tableCards.add(new Card("Spades", 9));
+        tableCards.add(new Card("Diamonds", 14));
+        
+        playerPocketCards.add(new Card("Diamonds", 14));
+        playerPocketCards.add(new Card("Clubs", 13));
+        playerPocketCards.addAll(tableCards);
+        
+        ArrayList<Card> aiPocketCards = new ArrayList<>();
+        aiPocketCards.add(new Card("Diamonds", 14));
+        aiPocketCards.add(new Card("Clubs", 5));
+        aiPocketCards.addAll(tableCards);
+        assertEquals(game.higherPair(playerPocketCards, aiPocketCards),
+                "Player wins the pot");
+    }
+    
+    @Test
+    public void testCompareHands() {
+        ArrayList<Card> tableCards = new ArrayList<>();
+        
         tableCards.add(new Card("Hearts", 5));
         tableCards.add(new Card("Hearts", 2));
-        tableCards.add(new Card("Spades", 7));
+        tableCards.add(new Card("Hearts", 7));
         tableCards.add(new Card("Spades", 14));
         tableCards.add(new Card("Diamonds", 13));
         
-        playerPocketCards.add(new Card("Diamonds", 5));
+        ArrayList<Card> playerPocketCards = new ArrayList<>();
+        playerPocketCards.add(new Card("Diamonds", 12));
         playerPocketCards.add(new Card("Clubs", 3));
         playerPocketCards.addAll(tableCards);
         
         ArrayList<Card> aiPocketCards = new ArrayList<>();
-        aiPocketCards.add(new Card("Diamonds", 2));
-        aiPocketCards.add(new Card("Clubs", 8));
+        aiPocketCards.add(new Card("Hearts", 12));
+        aiPocketCards.add(new Card("Hearts", 8));
         aiPocketCards.addAll(tableCards);
-        assertEquals(game.higherPair(playerPocketCards, aiPocketCards),
-                "Player wins the pot with higher value pair (5)");
+        
+        assertEquals(game.compareHands(playerPocketCards, aiPocketCards), "AI wins the pot");
     }
 }

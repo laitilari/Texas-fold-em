@@ -111,10 +111,13 @@ public class HandComparator {
      * @return totuusarvo
      */
     public boolean fullHouse(List<Card> hand) {
+        boolean firstTrue = false;
+        boolean secondTrue = false;
         int[] ints = cardsToIntArray(hand);
         if (sameConsecutiveValues(hand) == 4) {
+            firstTrue = true;
             int toBeRemoved = fullHouseHelperMethod(ints);
-            cardRemover(hand, toBeRemoved);
+            hand = cardRemover(hand, toBeRemoved);
         }
         return sameConsecutiveValues(hand) == 2;
     }
@@ -288,8 +291,7 @@ public class HandComparator {
      * @return true or false
      */
     public boolean flushOrBetter(List<Card> hand) {
-        if (flush(hand) || quads(hand)
-                || fullHouse(hand) || straightFlush(hand)) {
+        if (flush(hand) || fullHouse(hand) || quads(hand) || straightFlush(hand)) {
             return true;
         }
         return false;
@@ -305,7 +307,6 @@ public class HandComparator {
         if (fullHouse(hand) || quads(hand)
                 || straightFlush(hand)) {
             return true;
-
         }
         return false;
     }

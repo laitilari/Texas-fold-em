@@ -110,6 +110,10 @@ public class Dealer {
         return table.getCards().toString();
     }
 
+    /**
+     * Returns tableCards.
+     * @return cards
+     */
     public List<Card> getTableCards() {
         return table.getCards();
     }

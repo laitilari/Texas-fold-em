@@ -50,6 +50,18 @@ public class PlayerTest {
         player.betSmallBlind(15);
         assertEquals(player.getChips(), 85, 0.1);
     }
+    
+    @Test
+    public void testSmallBlindDoesntGoUnderZero() {
+        player.betSmallBlind(150.0);
+        assertEquals(player.getChips(), 0.0, 0);
+    }
+    
+    @Test
+    public void testBigBlindDoesntGoUnderZero() {
+        player.betBigBlind(150.0);
+        assertEquals(player.getChips(), 0.0, 0);
+    }
 
     @Test
     public void testBetBigBlind() {
@@ -77,6 +89,29 @@ public class PlayerTest {
         assertTrue(!player.isButton());
         player.buttonChange();
         assertTrue(player.isButton());
+    }
+    
+    @Test
+    public void testGetChips() {
+        assertEquals(player.getChips(), 100.0, 0);
+    }
+    
+    @Test
+    public void testSetChips() {
+        player.setChips(50.0);
+        assertEquals(player.getChips(), 50.0, 0);
+    }
+    
+    @Test
+    public void testGetHand() {
+        List<Card> list = new ArrayList<>();
+        List<Card> list2 = new ArrayList<>();
+        Card c = new Card("Spade", 2);
+        Card c2 = new Card("Spade", 3);
+        list.add(c);
+        list2.add(c2);
+        player.drawPocketCards(list);
+        assertTrue(player.getHand(list2).size() == 2);
     }
 
 }

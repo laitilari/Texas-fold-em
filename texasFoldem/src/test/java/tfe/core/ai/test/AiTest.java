@@ -7,14 +7,12 @@ package tfe.core.ai.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import tfe.core.ai.Ai;
 import tfe.core.cards.Card;
+import tfe.core.game.HandComparator;
 
 /**
  *
@@ -477,6 +475,36 @@ public class AiTest {
     }
 
     @Test
+    public void testPlayerHasBetWithPremium() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 13);
+        Card card2 = new Card("Heart", 13);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        HandComparator hc = new HandComparator();
+        assertEquals(ai.playerHasBet(bettingHistory, pocketCards, 20.0, hc), "AI calls");
+    }
+
+    @Test
+    public void testPlayerHasBetWithNothing() {
+        List<Double> bettingHistory = new ArrayList<>();
+        ai.setChips(2000);
+        bettingHistory.add(40.0);
+        List<Card> pocketCards = new ArrayList<>();
+        Card card = new Card("Spade", 2);
+        Card card2 = new Card("Heart", 3);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        ai.drawPocketCards(pocketCards);
+        HandComparator hc = new HandComparator();
+        assertEquals(ai.playerHasBet(bettingHistory, pocketCards, 20.0, hc), "AI folds");
+    }
+
+    @Test
     public void testActionToNotNormalEnemyBetPreFlopWithGoodOrPremium() {
         List<Double> bettingHistory = new ArrayList<>();
         ai.setChips(2000);
@@ -487,8 +515,8 @@ public class AiTest {
         pocketCards.add(card);
         pocketCards.add(card2);
         ai.drawPocketCards(pocketCards);
-        assertEquals(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory),
-                "AI is all-in");
+        HandComparator hc = new HandComparator();
+        assertEquals(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40.0, bettingHistory), "AI is all-in");
     }
 
     @Test
@@ -504,6 +532,35 @@ public class AiTest {
         ai.drawPocketCards(pocketCards);
         assertTrue(ai.actionToNotNormalEnemyBetPreFlopHealthyStack(40, bettingHistory)
                 .equals("AI folds"));
+    }
+
+    @Test
+    public void testEmptyOrCheckedWithEmptyBettingHistory() {
+        List<Double> bettingHistory = new ArrayList<>();
+        double lastBet = 50.0;
+        assertTrue(ai.emptyOrChecked(bettingHistory, lastBet));
+    }
+
+    @Test
+    public void testEmptyOrCheckedWithEmptyLastBet() {
+        List<Double> bettingHistory = new ArrayList<>();
+        bettingHistory.add(215.0);
+        double lastBet = 0.0;
+        assertTrue(ai.emptyOrChecked(bettingHistory, lastBet));
+    }
+
+    @Test
+    public void testActionToEmptyBet() {
+        List<Double> bettingHistory = new ArrayList<>();
+        List<Card> pocketCards = new ArrayList<>();
+        bettingHistory.add(215.0);
+        Card card = new Card("Spade", 7);
+        Card card2 = new Card("Heart", 8);
+        pocketCards.add(card);
+        pocketCards.add(card2);
+        HandComparator hc = new HandComparator();
+        ai.drawPocketCards(pocketCards);
+        assertEquals(ai.actionToEmptyBet(pocketCards, bettingHistory, 0, 0, 0, hc), "AI bets:0.0");
     }
 
     @Test
