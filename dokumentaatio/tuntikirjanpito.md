@@ -17,3 +17,9 @@ Päivä | Tunnit | Kuvaus
 21.02.2017 | 02 | Jatkettu ohjelman suorituksen korjausta.
 23.02.2017 | 03 | Saatu demotilaisuutta varten suoritus toimimaan.
 24.02.2017 | 02 | Lisätty puuttuvia javadoceja, kirjoitettu käyttöohjeita ja kuvausta.
+27.02.2017 | 04 | Korjattu uusia ilmenneitä bugeja ohjelman suorituksessa.
+28.02.2017 | 02 | Korjattu uusia ilmenneitä bugeja ohjelman suorituksessa.
+01.03.2017 | 06 | Korjattu bugeja, saatu lähes kaikki korjattua.
+02.03.2017 | 06 | Korjattu ohjelma. Toimii nyt lähes joka tilanteessa, tunnistettu puutteet.
+03.03.2017 | 08 | Aloitettu käsiä vertailevan koodin kirjoittaminen.
+05.03.2017 | 12 | Viimeistelty palautusta varten ohjeistuksen mukaan. Refaktoroitu, tunnistettu puutteet ja kirjoitettu dokumentaatiota. 
