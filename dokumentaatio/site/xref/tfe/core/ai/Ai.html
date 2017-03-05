@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_GB" lang="en_GB">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>Ai xref</title>
 <link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
@@ -511,7 +511,7 @@
 <a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L504" href="#L504">504</a>     <strong class="jxr_keyword">public</strong> String playerHasBet(List&lt;Double&gt; bettingHistory, List&lt;Card&gt; tableCards,
 <a class="jxr_linenumber" name="L505" href="#L505">505</a>             <strong class="jxr_keyword">double</strong> lastBet, <a href="../../../tfe/core/game/HandComparator.html">HandComparator</a> hc) {
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>         <strong class="jxr_keyword">if</strong> (hc.pairOrBetter(getHand(tableCards))) {
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>         <strong class="jxr_keyword">if</strong> (hc.pairOrBetter(getHand(tableCards)) || premium()) {
 <a class="jxr_linenumber" name="L507" href="#L507">507</a>             <strong class="jxr_keyword">return</strong> aiCalls(bettingHistory, lastBet);
 <a class="jxr_linenumber" name="L508" href="#L508">508</a>         }
 <a class="jxr_linenumber" name="L509" href="#L509">509</a>         <strong class="jxr_keyword">return</strong> aiFolds();
