@@ -1,0 +1,13 @@
+#Testausdokumentaatio#
+##Testikattavuus##
+Testikattavuus jäi kurssin tavoitekattavuudesta (90%) reilulla 20%:lla. Syynä tälle oli ajanpuute ja oma jaksaminen. Taidon puute saattoi myös vaikuttaa, sillä, esimerkin mainitakseni, yritin tehdä testejä Dealer.java -luokalle, jonka lähes kaikki metodit ovat sellaisia, jotka vain kutsuvat toisen luokan toiminnallisuutta. Tein silti näihin metodeihin testejä, jotta saisin rivikattavuutta ylöspäin, mutta nämä yritykseni eivät kasvattaneet luokan testikattavuutta, vaikka testejä tuli kirjoitettua useampi. Ilmeisesti siis tällaisten, toisen luokan metodeja kutsuvien metodien testaus ei kasvata rivikattavuutta, jos metodin on jo testattu toisessa luokassa. Asia jäi kuitenkin yhä epäselväksi.
+##Testauksen onnistuminen##
+Projektin testaamisen onnistuminen heijastelee projektin yleistä onnistumista: valitsin liian haastavan ja omille taidoilleni kunnianhimoisen aiheen projektilleni. Koodirivejä oli hurjasti, jolloin myös testejä piti tehdä paljon. Tähän aikani, jaksamiseni ja kykyni eivät riittäneet.
+##Testien käyttö osana kehitystyötä##
+Niistä testeistä, joita ehdin tehdä, oli paljon hyötä ohjelman kehittämisessä. Huomatessani, että jokin ohjelman toiminnallisuus ei toiminut, yritin löytää siihen syytä testien avulla, mikä usein onnistui hyvin. Muistaakseni kertaakaan ei kuitenkaan käynyt niin, että muuttaessani jotain kohtaa koodissa, jonkin toisen luokant estit olisivat menneet rikki. Useammin kävi niin, että jouduin muokata testejä vastaamaan uutta toteutustapaa, kun ne eivät menneet enää läpi muuttoksen jälkeen.
+##Testittömät luokat##
+En tehnyt testejä käyttöliittymäluokalle, mutta sen lisäksi jätin pois ScannerClass-luokan, jolla on vain yksi metodi ja joka on vain käyttöliittymän käytössä. Päättelin, että Javan Scanner -luokan nextLine() -metodin testaus ei ole oleellista.
+##Bugit##
+Sovelluksen toimintaa testattiin usein ajamalla sovellusta läpi etsien mahdollisia virhetilanteita. Nämä virhetilanteet saattoivat olla virheitä koodissa, tai virheitä AI:n Texas Holdem -logiikassa. Virheitä esiintyi paljon ja niiden korjaamisessa kului hyvin paljon aikaa. Sain kuitenkin lähes kaikki ohjelman suorituksen kannalta oleelliset bugit korjattua. Sovelluksessa saattaa silti ilmetä vielä bugeja AI:n logiikassa, mutta ei pitäisi olla mitään ohjelman kaatumiseen johtavia tilanteita.
+##Käyttötestaus##
+Kuten edellä mainittiin, käyttötestausta suoritettiin ajamalla sovellusta läpi omaksuen käyttäjän rooli. Käyttäjän roolin omaksuminen johti joihinkin muutostöihin, kuten ohjelman suorituksen ajoittamiseen, jotta käyttäjä ehtii lukea tekstikäyttöliittymän viestit. Myös virheelliset syötteet korjattiin tässä vaiheessa.
