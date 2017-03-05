@@ -21,8 +21,8 @@ Pelaaja
 ####Pelaajan toiminnot
 
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
-- Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
-- Pelin päätyttyä pelaajalla on mahdollisuus lopetaa peli tai pelata uudestaan.
+- Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään: fold, check, call ja raise.
+- Pelin päätyttyä pelaajalla on mahdollisuus lopettaa peli tai pelata uudestaan.
 
 ##Rakennekuvaus##
 
