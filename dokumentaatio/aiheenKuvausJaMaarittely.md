@@ -10,9 +10,9 @@
 
 *Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat samat, kuin perinteisen Texas Hold'emin säännöt. Texas Fold'emissa pelaaja pelaa tekoälyä vastaan. Pelaajan tehtävänä on voittaa peli. Pelin voittaa, jos tekoälyltä loppuvat pelimerkit. Pelaaja häviää, jos pelaajalta itseltään loppuvat pelimerkit.*
 
-*Pelin kehityksen tarkoituksena on luoda niin hyvä tekoäly, että sitä ei ole ainakaan ihan helppo voittaa. Tavoite on kunnianhimoinen, ja tekoälyn ominaisuuksia tullaan kehittämään ajan puitteissa.*
+*Pelin kehityksen tarkoituksena oli luoda niin hyvä tekoäly, että sitä ei olisi ainakaan ihan helppo voittaa. Tavoite oli kunnianhimoinen, mutta onnistui silti kohtalaisesti. Tekoäly pystyy voittamaan kokemattoman pelaajan.*
 
-*Käyttöliittymässä voi olla, että kortit esitetään vain tekstimuodossa, mutta jos aikaa on, voivat ne olla myös kuvina. Muutenkin projektin aikararajan (7 viikkoa) vuoksi projektin lopullisia ominaisuuksia ei voida lyödä lukkoon.*
+*Projektin käyttöliittymä on tavoitteesta poiketen tekstuaalinen. Projektiin käytettävä aika (7 vk), aiheen haasteellisuus ja tekijän ohjelmointikokemus sekä muut kiireet synnyttivät lopputuloksen, joka on välttävästi onnistunut ja sisältää vielä paljon parannettavaa.*
 
 ###Käyttäjä(t)
 
@@ -22,6 +22,7 @@ Pelaaja
 
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
 - Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään, fold, check, call, raise.
+- Pelin päätyttyä pelaajalla on mahdollisuus lopetaa peli tai pelata uudestaan.
 
 ##Rakennekuvaus##
 
