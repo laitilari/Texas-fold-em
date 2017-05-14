@@ -1,12 +1,12 @@
-#Aiheen kuvaus ja määrittely#
-##Luokkakaavio##
+# Aiheen kuvaus ja määrittely #
+## Luokkakaavio ##
 ![Luokkakaavio](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
-##Sekvenssikaaviot##
+## Sekvenssikaaviot ##
 ![Aseta pelin nopeus](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Setting game speed.png)
 ![Pelaaja nostaa](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Player raise.png)
 ![Valmistele peli](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Prepare game.png)
 
-##Aihe##
+## Aihe ##
 
 *Texas Fold'em on interaktiivinen korttipeli, jonka säännöt ovat samat, kuin perinteisen Texas Hold'emin säännöt. Texas Fold'emissa pelaaja pelaa tekoälyä vastaan. Pelaajan tehtävänä on voittaa peli. Pelin voittaa, jos tekoälyltä loppuvat pelimerkit. Pelaaja häviää, jos pelaajalta itseltään loppuvat pelimerkit.*
 
@@ -14,17 +14,17 @@
 
 *Projektin käyttöliittymä on tavoitteesta poiketen tekstuaalinen. Projektiin käytettävä aika (7 vk), aiheen haasteellisuus ja tekijän ohjelmointikokemus sekä muut kiireet synnyttivät lopputuloksen, joka on välttävästi onnistunut ja sisältää vielä paljon parannettavaa.*
 
-###Käyttäjä(t)
+### Käyttäjä(t)
 
 Pelaaja
 
-####Pelaajan toiminnot
+#### Pelaajan toiminnot
 
 - Pelaaja voi valita pelin nopeuden: nopea, normaali, hidas. Pelin nopeuteen vaikuttaa aloituspelimerkkien määrä.
 - Pelaajalla on kaikki Texas Hold'emiin kuuluvat valinnat käytössään: fold, check, call ja raise.
 - Pelin päätyttyä pelaajalla on mahdollisuus lopettaa peli tai pelata uudestaan.
 
-##Rakennekuvaus##
+## Rakennekuvaus ##
 
 Pelin luokkarakenne koostuu tekstikäyttöliittymäluokasta, logiikkaluokista sekä domainluokista. Näiden lisäksi erillisenä domainluokan ja logiikkaluokan sekoituksena on AI-luokka.
 
@@ -38,13 +38,13 @@ Dealer-luokka toimii Game-luokan apuna korttien käsittelyssä. Game voi kutsua 
 
 Käyttäjän vastustaja on AI, jonka toiminta on määritelty AI-luokan koodiin. AI osaa valita pelin kehittäjän näkemyksen mukaisesti parhaita pelivalintoja kuhunkin tilanteeseen. AI:n valintaan vaikuttavat Game-luokalta saadut tiedot pelin tilanteesta. Nämä tiedot sisältävät muun muassa potin koon, pöytäkorttien arvon sekä vastustajan panostuksen koon ja pelimerkkien määrän.
 
-##Käyttöohjeet##
+## Käyttöohjeet ##
 
-###Johdanto###
+### Johdanto ###
 
 Peliä käytetään tekstikäyttöliittymän avulla, jonka Main-luokka avaa, kun ohjelma suoritetaan. Käyttöliittymään voit kirjoittaa näppäimistöllä. Saat ohjeet pelinäppäimistä käyttöliittymältä aina, kun sinulta vaaditaan toimintaa. Kirjoitettuasi valitsemaasi toimintaa vastaavan merkin käyttöliittymään, hyväksy valintasi painamalla Enter-näppäintä ja seuraa käyttöliittymästä toimintasi vaikutusta pelin tilanteeseen ja AI:n toimintaan.
 
-###Ohjeet###
+### Ohjeet ###
 - Käynnistä ohjelman suoritus. 
 - Valitse tekstikäyttöliittymän ohjeiden mukaisesti pelin nopeus kirjoittamalla käyttöliittymään jokin annetuista vaihtoehdoista.
 - Seuraa käyttöliittymän tulostuksia. Tulostukset sisältävät mm. tietoja korttien sekoituksesta, blindien maksusta ja pelipositiosta.
