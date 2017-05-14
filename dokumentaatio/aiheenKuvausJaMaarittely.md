@@ -2,9 +2,9 @@
 ## Luokkakaavio ##
 ![Luokkakaavio](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Luokkakaavio.png)
 ## Sekvenssikaaviot ##
-![Aseta pelin nopeus](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Setting game speed.png)
-![Pelaaja nostaa](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Player raise.png)
-![Valmistele peli](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Prepare game.png)
+![Aseta pelin nopeus](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Setting%20game%20speed.png)
+![Pelaaja nostaa](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Player%20raise.png)
+![Valmistele peli](https://github.com/laitilari/Texas-fold-em/blob/master/dokumentaatio/Prepare%20game.png)
 
 ## Aihe ##
 
